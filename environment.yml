@@ -1,0 +1,13 @@
+name: winkler-env
+channels:
+- qttesting
+- conda-forge
+- defaults
+dependencies:
+- python=3.5.3=0
+- gsw=3.2.0=py35_0
+- pyserial=3.4=py35_0
+- numpy=1.12.1=py35_0
+- pandas=0.20.2=np112py35_0
+- pip:
+  - pyqt5==5.9.2
