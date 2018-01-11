@@ -17,8 +17,6 @@ from model import serialDevices as sd
 from model import iomod
 from model import titration as ti
 import numpy as np
-import pandas as pd
-
 
 Mthios = 0.200
 
@@ -72,14 +70,7 @@ class chartUpdater(QThread):
         while True:
             if os.path.getsize(self.filename) > self.filesize:
                 self.filesize = os.path.getsize(self.filename)
-                #df = pd.read_csv('./model/data/current.csv')
-                #endpoint_str = str(df.as_matrix(['v_end_est'][-1])
-                #cumvol = int(df.as_matrix(['uL'][-1]))
                 self.sig_chart.emit()
-                #self.sig_chart.emit((df.as_matrix(['uL']),df.as_matrix(['mV']),\
-                #                     df.as_matrix(['gF'])))
-                #self.sig_cumvol.emit(cumvol)
-
 
 
 class AppWindow(QMainWindow,winkler.Ui_MainWindow):
@@ -108,16 +99,11 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
 
 
     def plot_data(self):
-        #x = xydata[0]
-        #v_end = xydata[2]
         
         self.widget_MPL.canvas.ax.cla()
         self.widget_MPL.canvas.ax.grid()
         self.widget_MPL.canvas.ax.set_xlabel('uL')
-        #if self.checkBox_zoom.isChecked():
-        #        self.widget_MPL.canvas.ax.set_xlim(self.titr.v_end-30,\
-        #                                           self.titr.v_end + 30)
-        #self.widget_MPL.canvas.ax.plot(x,y,'.-')
+
         if hasattr(self,'titr'):
             if self.checkBox_zoom.isChecked():
                 d = np.where(np.abs(self.titr.uL-self.titr.v_end) < 30)
@@ -136,7 +122,6 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
             self.widget_MPL.canvas.draw()
             self.lcdNumber_dispensed.display(self.titr.cumvol)
             self.lcdNumber_endpoint.display(self.titr.v_end)
-        #print('lcd ' +lcdNumber_dispensed.value())
 
             
     def connect(self):
@@ -159,8 +144,8 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         
     def flask_clicked(self):
         filename = QFileDialog.getOpenFileName(None,'Test Dialog')
-        print(filename)
-        self.botdict = iomod.import_flasks(filename)
+        print(filename[0])
+        self.botdict = iomod.import_flasks(filename[0])
         botid = sorted(self.botdict.keys())
         for bot in botid:
             self.comboBox_flasks.addItem(bot)
@@ -181,13 +166,13 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         print('initial guess is ' + str(guess))
         flaskid = self.comboBox_flasks.currentText()
         flaskvol = self.botdict[flaskid]
-        print('flask volume =' + flaskvol)
+        print('flask volume =' + str(flaskvol))
         if self.checkBox_rapid.isChecked():
             timode = 'rapid'
         else:
             timode = 'normal'
         #print(flaskvol.type())
-        self.titr = ti.titration(self.meter,self.pump,flaskid,flaskvol[0],0.2,\
+        self.titr = ti.titration(self.meter,self.pump,flaskid,flaskvol,0.2,\
                             mode=timode)
         self.ti_thr = runTitration(self.titr,guess)
         self.ti_thr.start()
@@ -217,20 +202,6 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     def dispense_custom(self):
         vol = self.lcdNumber_customvol.value
         self.dispense(vol)
-        
-            
-            
-    
-#    def show_warning(self,warn_text):
-#        QMessageBox.warning(warn_text)
-        
-
-
-
-        #self.show()
-        #ports = getPorts()
-        #for i in range(len(ports)):
-        #    self.ui.comboBox_meter.setItemText(i, ports[i])
 
 
 def getPorts():
