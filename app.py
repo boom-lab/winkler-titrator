@@ -163,6 +163,8 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     
     def titrate_clicked(self):
         guess = float(self.spinBox_guess.value())
+        self.lcdNumber_endpoint.display(0)
+        self.lcdNumber_dispensed.display(0)
         print('initial guess is ' + str(guess))
         flaskid = self.comboBox_flasks.currentText()
         flaskvol = self.botdict[flaskid]

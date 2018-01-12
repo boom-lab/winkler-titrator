@@ -14,8 +14,8 @@ class titration():
     """
     Class representing a Winkler titration of a single sample (or std)
     """
-    
-    def __init__(self,meter,pump,botid,vbot,Mthios,datadir='Documents/LAB/Winkler/Qt/model/data',mode='normal'):
+    root_dir = os.path.dirname(os.path.realpath(__file__))
+    def __init__(self,meter,pump,botid,vbot,Mthios,datadir=os.path.join(root_dir,'data'),mode='normal'):
         """
         Initialize titration
         INPUTS:
@@ -40,13 +40,12 @@ class titration():
         self.v_end_est = np.array([])
         #self.pump.setPos(0)
         self.vbot = vbot
-        self.DEBUG = True
-        self.dummy_meter = True
+        self.DEBUG = False
+        self.dummy_meter = False
         self.O2 = np.array([])
         self.Vblank = 0
         self.init_time = strftime("%Y%m%d%H%M%S", gmtime())
-        self.current_file = os.path.join(os.path.expanduser('~'),datadir,\
-                                         'current.csv')
+        self.current_file = os.path.join(datadir,'current.csv')
         with open(self.current_file,'w') as self.f:
             self.f.write('time,uL,mV,gF,temp,v_end_est\n')
              
