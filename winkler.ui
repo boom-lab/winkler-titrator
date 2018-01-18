@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Winkler Titrator</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -28,17 +28,7 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,3,0,0">
-      <item>
-       <widget class="QToolButton" name="toolButton">
-        <property name="text">
-         <string>blurb</string>
-        </property>
-        <property name="icon">
-         <iconset theme="open"/>
-        </property>
-       </widget>
-      </item>
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="3,0,0">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_upper">
         <item>
@@ -579,22 +569,6 @@ border-color: rgb(0, 116, 0);</string>
     <hint type="destinationlabel">
      <x>290</x>
      <y>528</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>toolButton</sender>
-   <signal>released()</signal>
-   <receiver>toolButton</receiver>
-   <slot>toggle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>41</x>
-     <y>45</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>41</x>
-     <y>45</y>
     </hint>
    </hints>
   </connection>

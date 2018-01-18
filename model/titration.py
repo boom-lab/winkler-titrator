@@ -25,7 +25,7 @@ class titration():
          M_thios: Molarity of thiosulfate titrant
          datadir: directory path for saving output
          mode:    'normal' or 'rapid' (rapid stops before endpoint and 
-                                       traverses more quickly)
+         traverses titration curve more quickly)
         """
         self.mode = mode
         self.meter = meter
@@ -40,11 +40,16 @@ class titration():
         self.v_end_est = np.array([])
         #self.pump.setPos(0)
         self.vbot = vbot
-        self.DEBUG = False
-        self.dummy_meter = False
+        # when True there are no actual pumping or meter reads  
+        self.DEBUG = True
+        # when True the meter makes a reading (e.g. in DI water) but dummy_read
+        # is called and mock data returned
+        self.dummy_meter = True
         self.O2 = np.array([])
         self.Vblank = 0
         self.init_time = strftime("%Y%m%d%H%M%S", gmtime())
+        # Output is written to a temporary file which is accessed by the 
+        # plotting GUI
         self.current_file = os.path.join(datadir,'current.csv')
         with open(self.current_file,'w') as self.f:
             self.f.write('time,uL,mV,gF,temp,v_end_est\n')
@@ -199,12 +204,12 @@ class titration():
             elif vol_to_end > 20:
                 return(10)
             elif vol_to_end > 10:
-                return(3)
-            elif vol_to_end > 2:
+                return(5)
+            elif vol_to_end > 1.5:
                 return(1)
-            elif vol_to_end > -2:
+            elif vol_to_end > -1.5:
                 return(0.5)
-            elif vol_to_end > -10:
+            elif vol_to_end > -5:
                 return(1)
             elif vol_to_end > -20:
                 return(5)
@@ -219,6 +224,7 @@ class titration():
         pickle.dumps(self,open(fname,'wb'))
         return fname
     
+    # parse titration object to write a line of text
     def latest_line(self):
         line_list = (strftime("%Y%m%d%H%M%S", gmtime()),str(self.uL[-1]), \
                 str(self.mV[-1]),str(self.gF[-1]),str(self.T[-1]),\
@@ -230,6 +236,7 @@ class titration():
     
     def dummy_read(self,vol):  
         # dummy titration data for debugging code w/o having to titrate...
+        # below data is copied from output of a real titration
         uLp = np.array((80,160,240,320,470,520,570,620,670,720,740,760,780,790,800,803,\
               806,809,810,811,812,813,814,815,815.5,816,816.5,817.5,818.5,\
               819.5,820.5,821.5,822.5,827.5,837.5,847.5,857.5))
