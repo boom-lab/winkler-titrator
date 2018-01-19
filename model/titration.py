@@ -9,6 +9,7 @@ import os
 import numpy as np
 from gsw import density as dens
 from time import strftime,gmtime,sleep
+import json
 
 class titration():
     """
@@ -41,16 +42,19 @@ class titration():
         #self.pump.setPos(0)
         self.vbot = vbot
         # when True there are no actual pumping or meter reads  
-        self.DEBUG = True
+        self.DEBUG = False
         # when True the meter makes a reading (e.g. in DI water) but dummy_read
         # is called and mock data returned
-        self.dummy_meter = True
+        self.dummy_meter = False
         self.O2 = np.array([])
         self.Vblank = 0
+        self.reagO2 = 7.6e-8; # concentration of O2 dissolved in reagents
+        self.reagvol = 2;  # mL of reagent added
         self.init_time = strftime("%Y%m%d%H%M%S", gmtime())
         # Output is written to a temporary file which is accessed by the 
         # plotting GUI
         self.current_file = os.path.join(datadir,'current.csv')
+        self.datadir = datadir
         with open(self.current_file,'w') as self.f:
             self.f.write('time,uL,mV,gF,temp,v_end_est\n')
              
@@ -132,9 +136,10 @@ class titration():
         self.endpoint = self.v_end
         print('endpoint reached: ' + str(self.v_end) + ' uL')
         self.gran_fac()
-        self.O2 = self.concentration()
         self.end_time = strftime("%Y%m%d%H%M%S", gmtime())            
         self.is_complete = True
+        #self.O2 = self.concentration()
+        self.toJSON()
             
                                
     def dispense(self,vol):
@@ -178,7 +183,7 @@ class titration():
         if mode == 'rapid':
             print(v_end,self.cumvol)
             gran_tgt = v_end + np.array([-400,-200, -100,-60, -30, -10, -5, -3])
-            gran_window = v_end + np.array([-450,-230, -120,-70, -35, -13, -7, -4])
+            gran_window = v_end + np.array([-450,-230, -120,-70, -35, -15, -8, -5])
             windowdiff = gran_window - self.cumvol
             
             tgtdiff = gran_tgt-self.cumvol
@@ -203,8 +208,10 @@ class titration():
                 return(20)
             elif vol_to_end > 20:
                 return(10)
-            elif vol_to_end > 10:
+            elif vol_to_end > 8:
                 return(5)
+            elif vol_to_end > 5:
+                return(3)
             elif vol_to_end > 1.5:
                 return(1)
             elif vol_to_end > -1.5:
@@ -218,6 +225,22 @@ class titration():
             elif vol_to_end <= -30:
                 return False
     
+    def toJSON(self):
+        titr = {}
+        attributes = ('botid','Mthios','vbot','Vblank','init_time','v_end',\
+                      'end_time','endpoint','mode')
+        npatts = ('mV','uL','T','v_end_est','endpoint')
+        for att in attributes:
+            titr[att] = getattr(self,att)
+        for npatt in npatts:
+            titr[npatt] = getattr(self,npatt).tolist()
+        j = json.dumps(titr, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
+        with open(os.path.join(self.datadir,'titration_'+\
+                               strftime("%Y%m%d%H%M%S", gmtime())+'.json'),'w') as f:
+            f.write(j)
+        return j
+        
     def save(self):
         import pickle
         fname = 'o2_' + self.end_time + '_' + self.botid

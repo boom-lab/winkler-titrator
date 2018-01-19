@@ -8,7 +8,6 @@ Created on Tue Dec 19 16:16:18 2017
 
 import sys
 import os
-import time
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,QMessageBox
 from PyQt5.QtCore import QThread,pyqtSignal
 import serial.tools.list_ports
