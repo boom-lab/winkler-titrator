@@ -8,7 +8,7 @@ dependencies:
 - gsw=3.2.0=py35_0
 - matplotlib=2.1.1=py35_0
 - pyserial=3.4=py35_0
-- numpy=1.12.1=py35_0
+- numpy=1.14.2=py35_0
 - xlrd=1.1.0=py35_0
 - pip:
   - pyqt5==5.9.2

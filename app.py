@@ -181,6 +181,9 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.plt_thr.sig_chart.connect(self.plot_data)
         #self.plt_thr.sig_cumvol.connect(self.lcdNumber_dispensed.value)
         self.plt_thr.start()
+        if self.titr.is_complete:
+            QMessageBox.warning(self,'','titration complete: endpoint=' + str(self.titr.endpoint), \
+                                QMessageBox.Ok)
     
     def dispense_vol(self,vol):
         try:
