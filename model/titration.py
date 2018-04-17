@@ -134,7 +134,7 @@ class titration():
                 break
         # cleanup and save when done
         self.endpoint = self.v_end
-        to_endpoint_vol = self.endpoint - self.pump.getPos()
+        to_endpoint_vol = self.endpoint - self.cumvol
         if to_endpoint_vol > 0:
             self.pump.movr(str(to_endpoint_vol))
             print(str(to_endpoint_vol) + ' uL dispensed to reach endpoint')

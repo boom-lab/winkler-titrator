@@ -29,7 +29,7 @@ class meter(serial.Serial):
             if c:
                 line += c
                 if line[-leneol:] == eol:
-                    break
+                    return bytes(line[:-leneol])
             else:
                 break
         return bytes(line[:-leneol])
