@@ -10,4 +10,4 @@ dependencies:
 - pyserial=3.4=py36_0
 - xlrd=1.1.0=py36_0
 - pip:
-  - pyqt5==5.9.2
+  - pyqt5==5.11.2
