@@ -19,7 +19,7 @@ class meter(serial.Serial):
     Be sure meter probe and serial cables are connected
     """
 
-    def readline(self,eol=b'\r'): ###########################################
+    def readline(self,eol=b'\n\r'): ###########################################
     #def readline(self,eol='\r'):
         """
         read line of output -  meter uses '\r' terminator. replaces
@@ -45,8 +45,8 @@ class meter(serial.Serial):
         makes single meter measurement for mV and T
         """
         if self.in_waiting:
-            self.flush()
-        self.write(b'GETMEAS\r') #add \n here???
+            self.reset_input_buffer()
+        self.write(b'GETMEAS\r')
         # wait for echo
         time.sleep(0.2)
         try:
@@ -55,7 +55,7 @@ class meter(serial.Serial):
                 bline = self.readline()
                 time.sleep(0.1)
             if self.in_waiting:
-                bline = str(self.readline())
+                bline = self.readline()
                 print(bline)
                 line = str(bline)
                 meas_list = line.split(',')
@@ -65,7 +65,6 @@ class meter(serial.Serial):
                 return (mV,T)
         except:
              print('no response')
-
 
 
 class pump(serial.Serial):
@@ -96,12 +95,12 @@ class pump(serial.Serial):
         valstr = str(val)
         self.write((var + '=' + valstr + eol).encode('utf-8'))
 
-    # this function may not be working....
     def getVar(self,var,eol=TERMINATOR):
         self.reset_input_buffer()
         #bmsg = ('PR ' + var.lower() + eol).encode('utf-8')
         bmsg = ('PR ' + var.lower() + eol).encode('utf-8')
         print(var.lower)
+        print(var.lower())
         self.write(bmsg)
         time.sleep(.5)
         if self.in_waiting:
@@ -120,7 +119,7 @@ class pump(serial.Serial):
 
     def setPos(self,val,eol=TERMINATOR):
         valstr = str(val)
-        self.write(('P = ' + valstr + eol).encode('utf-8'))
+        self.write(('P =' + valstr + eol).encode('utf-8'))
 
     def getPos(self,eol=TERMINATOR):
         self.reset_input_buffer()
@@ -129,10 +128,11 @@ class pump(serial.Serial):
         time.sleep(0.2)
         if self.in_waiting:
             bline = self.readline()
+            bline = self.readline()
             # if command is echoed, read next line
             if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
                 bline = self.readline()
-            pos = float(bline)
+            pos = float(bline)/2310
             return pos
         else:
             print('no response -- check connnection')
@@ -141,20 +141,20 @@ class pump(serial.Serial):
     def movr(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
         # 1 ul = 23104 steps
-        steps = int(uL)*23104
+        steps = int(float(uL))*2310
         print ('MR ' + str(steps))
         self.write(('MR ' + str(steps) + eol).encode('utf-8'))
 
 
     def mova(self,uL,eol=TERMINATOR):
         # dispense - move pump to absolute position
-        steps = int(uL)*23104
+        steps = int(float(uL))*2310
         print ('MA ' + str(steps))
         self.write(('MA ' + str(steps) + eol).encode('utf-8'))
 
     def setVM(self,uL,eol=TERMINATOR):
         # dispense - set rate
-        steps = int(uL)*23104
+        steps = int(float(uL))*2310
         print('VM ' + str(steps))
         self.write(('VM ' + str(steps) + eol).encode('utf-8'))
 
@@ -164,7 +164,7 @@ class pump(serial.Serial):
         # maximum rate in uL sec-1
         #self.write(('MR ' + str(uL*23104) + eol).encode('utf-8'))
         max_rate = self.getVar('VM') # steps per second
-        steps = int(uL)*23104
+        steps = int(float(uL))*2310
         #max_rate = steps
         # wait for dispense to complete (add 0.2 secs for accel/decel)
         wait_time = steps / max_rate + 0.2
