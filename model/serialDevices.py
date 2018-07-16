@@ -75,7 +75,11 @@ class pump(serial.Serial):
     since this is a 422 device, it requires an address which precedes each comman
     default is A
     """
-    #TERMINATOR = '\r\n'
+    def __init__():
+        self.setPos(self,0)
+        self.MUNIT = 2432
+        super().__init__()
+        
     TERMINATOR = '\r\n' ##########################################################################
     # redefine readline to work for \r line termination
     def readline(self,eol=TERMINATOR.encode('utf-8')):
@@ -119,7 +123,7 @@ class pump(serial.Serial):
 
     def setPos(self,val,eol=TERMINATOR):
         valstr = str(val)
-        self.write(('P =' + valstr + eol).encode('utf-8'))
+        self.write(('P = ' + valstr + eol).encode('utf-8'))
 
     def getPos(self,eol=TERMINATOR):
         self.reset_input_buffer()
@@ -132,7 +136,7 @@ class pump(serial.Serial):
             # if command is echoed, read next line
             if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
                 bline = self.readline()
-            pos = float(bline)/2310
+            pos = float(bline)/self.MUNIT
             return pos
         else:
             print('no response -- check connnection')
@@ -141,20 +145,20 @@ class pump(serial.Serial):
     def movr(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
         # 1 ul = 23104 steps
-        steps = int(float(uL))*2310
+        steps = int(float(uL))*self.MUNIT
         print ('MR ' + str(steps))
         self.write(('MR ' + str(steps) + eol).encode('utf-8'))
 
 
     def mova(self,uL,eol=TERMINATOR):
         # dispense - move pump to absolute position
-        steps = int(float(uL))*2310
+        steps = int(float(uL))*self.MUNIT
         print ('MA ' + str(steps))
         self.write(('MA ' + str(steps) + eol).encode('utf-8'))
 
     def setVM(self,uL,eol=TERMINATOR):
         # dispense - set rate
-        steps = int(float(uL))*2310
+        steps = int(float(uL))*self.MUNIT
         print('VM ' + str(steps))
         self.write(('VM ' + str(steps) + eol).encode('utf-8'))
 
@@ -162,9 +166,9 @@ class pump(serial.Serial):
         #uLynx
         #called from titration.py
         # maximum rate in uL sec-1
-        #self.write(('MR ' + str(uL*23104) + eol).encode('utf-8'))
+        #self.write(('MR ' + str(uL*self.MUNIT4) + eol).encode('utf-8'))
         max_rate = self.getVar('VM') # steps per second
-        steps = int(float(uL))*2310
+        steps = int(float(uL))*self.MUNIT
         #max_rate = steps
         # wait for dispense to complete (add 0.2 secs for accel/decel)
         wait_time = steps / max_rate + 0.2
