@@ -1,10 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Dec 19 16:16:18 2017
-
-@author: dnicholson
-"""
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
+from PyQt5.QtWidgets import QMainWindow
 
 import sys
 import os
@@ -20,9 +15,9 @@ import numpy as np
 Mthios = 0.200
 
 class runTitration(QThread):
-    
+
     sig_done = pyqtSignal(bool)
-    
+
     def __init__(self, titration, guess):
         """
         Make a new thread instance to run a titation without locking gui
@@ -30,24 +25,24 @@ class runTitration(QThread):
         QThread.__init__(self)
         self.current_titration = titration
         self.guess = np.float(guess)
-        
+
 
     def __del__(self):
         self.wait()
-        
+
     def run(self):
         """
         start a titration (triggered by click of pushButton_titrate)
         """
         self.current_titration.titrate(self.guess)
         self.sig_done.emit(True)
-        
+
 
 class chartUpdater(QThread):
-    
+
     sig_chart = pyqtSignal()
     sig_cumvol = pyqtSignal(int)
-    
+
     def __init__(self, fpath):
         """
         loads latest titration data from file and send to plot
@@ -57,11 +52,11 @@ class chartUpdater(QThread):
         self.filesize = os.path.getsize(self.filename)
         self.sig_chart.connect
         self.sig_cumvol.connect
-        
+
 
     def __del__(self):
         self.wait()
-        
+
     def run(self):
         """
         start a titration (triggered by click of pushButton_titrate)
@@ -89,16 +84,16 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.pushButton_100uL.clicked.connect(self.dispense_100uL)
         self.pushButton_1000uL.clicked.connect(self.dispense_1000uL)
         self.pushButton_5000uL.clicked.connect(self.dispense_5000uL)
-        self.pushButton_customvol.clicked.connect(self.dispense_custom)                                 
-          
+        self.pushButton_customvol.clicked.connect(self.dispense_custom)
+
         self.checkBox_gran.stateChanged.connect(self.plot_data)
         self.checkBox_zoom.stateChanged.connect(self.plot_data)
-        
+
         self.load_ports()
 
 
     def plot_data(self):
-        
+
         self.widget_MPL.canvas.ax.cla()
         self.widget_MPL.canvas.ax.grid()
         self.widget_MPL.canvas.ax.set_xlabel('uL')
@@ -107,7 +102,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
             if self.checkBox_zoom.isChecked():
                 d = np.where(np.abs(self.titr.uL-self.titr.v_end) < 30)
                 print(d)
-            else: 
+            else:
                 d = range(len(self.titr.uL))
             if self.checkBox_gran.isChecked():
                 y = self.titr.gF
@@ -115,14 +110,14 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
             else:
                 y = self.titr.mV
                 self.widget_MPL.canvas.ax.set_ylabel('mV')
-            
+
             self.widget_MPL.canvas.ax.plot(self.titr.uL[d],y[d],'.-')
             self.widget_MPL.canvas.ax.plot(self.titr.uL[-1],y[-1],'ro')
             self.widget_MPL.canvas.draw()
             self.lcdNumber_dispensed.display(self.titr.cumvol)
             self.lcdNumber_endpoint.display(self.titr.v_end)
 
-            
+
     def connect(self):
         #if not (hasattr(self,'pump') and hasattr(self,'meter')):
         #    self.load_ports()
@@ -139,8 +134,8 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         except:
             QMessageBox.warning(self,'Connect Warning',\
                                 'Pump connection failed',QMessageBox.Ok)
-        
-        
+
+
     def flask_clicked(self):
         filename = QFileDialog.getOpenFileName(None,'Test Dialog')
         print(filename[0])
@@ -149,17 +144,17 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         for bot in botid:
             self.comboBox_flasks.addItem(bot)
         return filename
-    
+
     def load_ports(self):
         self.comboBox_meter.clear()
         self.comboBox_pump.clear()
         ports = serial.tools.list_ports.comports()
         for p in ports:
-            if True:#if 'usb' in p.device or 'COM' in p.device:            
+            if True:#if 'usb' in p.device or 'COM' in p.device:
                 self.comboBox_meter.addItem(p.device)
-                self.comboBox_pump.addItem(p.device) 
-    
-    
+                self.comboBox_pump.addItem(p.device)
+
+
     def titrate_clicked(self):
         guess = float(self.spinBox_guess.value())
         self.lcdNumber_endpoint.display(0)
@@ -184,7 +179,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         if self.titr.is_complete:
             QMessageBox.warning(self,'','titration complete: endpoint=' + str(self.titr.endpoint), \
                                 QMessageBox.Ok)
-    
+
     def dispense_vol(self,vol):
         try:
             print('dispensing ' + str(vol) + ' uL')
@@ -200,7 +195,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     def dispense_100uL(self):
         self.dispense_vol(100)
     def dispense_1000uL(self):
-        self.dispense_vol(1000) 
+        self.dispense_vol(1000)
     def dispense_5000uL(self):
         self.dispense_vol(5000)
     def dispense_custom(self):
@@ -215,10 +210,11 @@ def getPorts():
     else:
         return ports
 
-
 if __name__ == '__main__':
+    appctxt = ApplicationContext()       # 1. Instantiate ApplicationContext
     app = QApplication(sys.argv)
     MainWindow = QMainWindow()
     prog = AppWindow()
     prog.show()
-    sys.exit(app.exec_())
+    exit_code = appctxt.app.exec_()      # 2. Invoke appctxt.app.exec_()
+    sys.exit(exit_code)

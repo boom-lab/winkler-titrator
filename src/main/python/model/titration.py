@@ -15,7 +15,7 @@ class titration():
     """
     Class representing a Winkler titration of a single sample (or std)
     """
-    root_dir = os.path.dirname(os.path.realpath(__file__))
+    root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
     def __init__(self,meter,pump,botid,vbot,Mthios,datadir=os.path.join(root_dir,'data'),mode='normal'):
         """
         Initialize titration
@@ -43,7 +43,7 @@ class titration():
         #self.pump.setPos(0)
         self.vbot = vbot
         # when True there are no actual pumping or meter reads
-        self.DEBUG = False
+        self.DEBUG = True
         # when True the meter makes a reading (e.g. in DI water) but dummy_read
         # is called and mock data returned
         self.dummy_meter = False
@@ -56,6 +56,8 @@ class titration():
         # plotting GUI
         self.current_file = os.path.join(datadir,'current.csv')
         self.datadir = datadir
+        if not os.path.exists(datadir):
+            os.makedirs(datadir)
         with open(self.current_file,'w') as self.f:
             self.f.write('time,uL,mV,gF,temp,v_end_est\n')
 
