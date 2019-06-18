@@ -43,7 +43,7 @@ class titration():
         #self.pump.setPos(0)
         self.vbot = vbot
         # when True there are no actual pumping or meter reads
-        self.DEBUG = True
+        self.DEBUG = False
         # when True the meter makes a reading (e.g. in DI water) but dummy_read
         # is called and mock data returned
         self.dummy_meter = False
