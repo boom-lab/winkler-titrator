@@ -200,7 +200,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.dispense_vol(5000)
     def dispense_custom(self):
         vol = self.lcdNumber_customvol.value
-        self.dispense(vol)
+        self.dispense_vol(vol)
 
 
 def getPorts():
