@@ -66,20 +66,10 @@ class meter(serial.Serial):
         except:
              print('no response')
 
-
 class pump(serial.Serial):
-    """
-    original controller uLynx
-    Serial device object for milligat LF pump with MFORCE controller
-    Be sure pump is powered and serial cable connected
-    since this is a 422 device, it requires an address which precedes each comman
-    default is A
-    """
     def __init__():
-        self.setPos(self,0)
-        self.MUNIT = 2432
         super().__init__()
-        
+
     TERMINATOR = '\r\n' ##########################################################################
     # redefine readline to work for \r line termination
     def readline(self,eol=TERMINATOR.encode('utf-8')):
@@ -94,6 +84,24 @@ class pump(serial.Serial):
             else:
                 break
         return bytes(line[:-leneol])
+
+    def setVar(self,var,val,eol=TERMINATOR):
+        valstr = str(val)
+        self.write((var + '=' + valstr + eol).encode('utf-8'))
+
+class mforce_pump(pump):
+    """
+    original controller uLynx
+    Serial device object for milligat LF pump with MFORCE controller
+    Be sure pump is powered and serial cable connected
+    since this is a 422 device, it requires an address which precedes each comman
+    default is A
+    """
+    def __init__(address='A',munit=2432):
+        self.setPos(self,0)
+        self.MUNIT = munit
+        self.addr = address
+        super().__init__()
 
     def setVar(self,var,val,eol=TERMINATOR):
         valstr = str(val)
@@ -173,4 +181,65 @@ class pump(serial.Serial):
         # wait for dispense to complete (add 0.2 secs for accel/decel)
         wait_time = steps / max_rate + 0.2
         print('wait time ' + str(wait_time))
+        return wait_time
+
+
+
+class mlynx_pump(pump):
+    """
+    Serial device object for milligat LF pump with microlynx controller
+    Be sure pump is powered and serial cable connected
+    """
+    TERMINATOR = '\r\n'
+    # redefine readline to work for \r line termination
+    def getVar(self,var,eol=TERMINATOR):
+        self.reset_input_buffer()
+        bmsg = ('print ' + var.lower() + eol).encode('utf-8')
+        self.write(bmsg)
+        time.sleep(0.2)
+        if self.in_waiting:
+            bline = self.readline()
+            # if command is echoed, read next line
+            if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
+                bline = self.readline()
+            print(bline)
+            val = float(bline)
+            return val
+        else:
+            print('no response -- check connnection')
+
+    def setPos(self,val,eol=TERMINATOR):
+        valstr = str(val)
+        self.write(('pos =' + valstr + eol).encode('utf-8'))
+
+    def getPos(self,eol=TERMINATOR):
+        self.reset_input_buffer()
+        bmsg = ('print pos' + eol).encode('utf-8')
+        self.write(bmsg)
+        time.sleep(0.2)
+        if self.in_waiting:
+            bline = self.readline()
+            # if command is echoed, read next line
+            if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
+                bline = self.readline()
+            pos = float(bline)
+            return pos
+        else:
+            print('no response -- check connnection')
+
+
+    def movr(self,uL,eol=TERMINATOR):
+        # dispense - relative pump movement
+        self.write(('movr ' + uL + eol).encode('utf-8'))
+
+
+    def mova(self,uL,eol=TERMINATOR):
+        # dispense - move pump to absolute position
+        self.write(('mova ' + uL + eol).encode('utf-8'))
+
+    def wait_for_dispense(self,uL,eol=TERMINATOR):
+        # maximum rate in uL sec-1
+        max_rate = self.getVar('VM')
+        # wait for dispense to complete (add 0.2 secs for accel/decel)
+        wait_time = uL / float(max_rate) + 0.2
         return wait_time
