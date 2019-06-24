@@ -10,6 +10,6 @@ dependencies:
 - pyserial
 - xlrd
 - pip:
-  - pyqt5==5.9.2
+  - pyqt5
   - fbs
   - PyInstaller==3.4

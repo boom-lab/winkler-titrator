@@ -11,6 +11,7 @@ from model import serialDevices as sd
 from model import iomod
 from model import titration as ti
 import numpy as np
+import config as CONFIG
 
 Mthios = 0.200
 
@@ -130,7 +131,10 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
             QMessageBox.warning(self,'Connect Warning',\
                                 'Meter connection failed',QMessageBox.Ok)
         try:
-            self.pump = sd.pump(self.comboBox_pump.currentText())
+            if CONFIG.PUMP_CTRL == 'MLYNX':
+                self.pump = sd._mlynx_pump(self.comboBox_pump.currentText())
+            elif CONFIG.PUMP_CTRL == 'MFORCE':
+                self.pump = sd._mforce_pump(self.comboBox_pump.currentText())
         except:
             QMessageBox.warning(self,'Connect Warning',\
                                 'Pump connection failed',QMessageBox.Ok)
