@@ -78,7 +78,7 @@ class mforce_pump(serial.Serial):
 
     print('hello')
     addr='A'
-    MUNIT=23104
+    MUNIT=2432
     TERMINATOR = '\r\n'
 
     def setVar(self,var,val,eol=TERMINATOR):
