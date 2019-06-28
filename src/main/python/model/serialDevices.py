@@ -60,33 +60,12 @@ class meter(serial.Serial):
                 line = str(bline)
                 meas_list = line.split(',')
                 if meas_list:
-                    mV = float(meas_list[10])
-                    T = float(meas_list[12])
+                    mV = float(meas_list[8])
+                    T = float(meas_list[10])
                 return (mV,T)
         except:
              print('no response')
 
-class pump(serial.Serial):
-    def __init__():
-        super().__init__()
-    TERMINATOR = '\r\n'
-    # redefine readline to work for \r line termination
-    def readline(self,eol=TERMINATOR.encode('utf-8')):
-        leneol = len(eol)
-        line = bytearray()
-        while True:
-            c = self.read(1)
-            if c:
-                line += c
-                if line[-leneol:] == eol:
-                    break
-            else:
-                break
-        return bytes(line[:-leneol])
-
-    def setVar(self,var,val,eol=TERMINATOR):
-        valstr = str(val)
-        self.write((var + '=' + valstr + eol).encode('utf-8'))
 
 class mforce_pump(serial.Serial):
     """
@@ -96,13 +75,11 @@ class mforce_pump(serial.Serial):
     since this is a 422 device, it requires an address which precedes each comman
     default is A
     """
+
+    print('hello')
+    addr='A'
+    MUNIT=23104
     TERMINATOR = '\r\n'
-    def __init__():
-        print('hello')
-        super().__init__()
-        self.setPos(self,0)
-        self.address='A'
-        self.MUNIT=23104
 
     def setVar(self,var,val,eol=TERMINATOR):
         valstr = str(val)
@@ -130,9 +107,13 @@ class mforce_pump(serial.Serial):
         else:
             print('no response -- check connnection')
 
+    def setVar(self,var,val,eol=TERMINATOR):
+            valstr = str(val)
+            self.write((self.addr + var + ' ' + valstr + eol).encode('utf-8'))
+
     def setPos(self,val,eol=TERMINATOR):
         valstr = str(val)
-        self.write((self.addr + 'P = ' + valstr + eol).encode('utf-8'))
+        self.write((self.addr + 'P ' + valstr + eol).encode('utf-8'))
 
     def getPos(self,eol=TERMINATOR):
         self.reset_input_buffer()
@@ -169,13 +150,13 @@ class mforce_pump(serial.Serial):
         # dispense - set rate
         steps = int(float(uL))*self.MUNIT
         print('VM ' + str(steps))
-        self.write((self.addr + 'VM ' + str(steps) + eol).encode('utf-8'))
+        self.write((s.self.addr + 'VM ' + str(steps) + eol).encode('utf-8'))
 
     def wait_for_dispense(self,uL,eol=TERMINATOR):
         #uLynx
         #called from titration.py
         # maximum rate in uL sec-1
-        #self.write(('MR ' + str(uL*self.MUNIT4) + eol).encode('utf-8'))
+        #self.write(('MR ' + str(uL*MUNIT4) + eol).encode('utf-8'))
         max_rate = self.getVar('VM') # steps per second
         steps = int(float(uL))*self.MUNIT
         #max_rate = steps
@@ -184,7 +165,7 @@ class mforce_pump(serial.Serial):
         print('wait time ' + str(wait_time))
         return wait_time
 
-class mlynx_pump(pump):
+class mlynx_pump(serial.Serial):
     """
     Serial device object for milligat LF pump with microlynx controller
     Be sure pump is powered and serial cable connected
