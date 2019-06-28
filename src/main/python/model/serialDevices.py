@@ -69,7 +69,7 @@ class meter(serial.Serial):
 class pump(serial.Serial):
     def __init__():
         super().__init__()
-    TERMINATOR = '\r\n' 
+    TERMINATOR = '\r\n'
     # redefine readline to work for \r line termination
     def readline(self,eol=TERMINATOR.encode('utf-8')):
         leneol = len(eol)
@@ -88,7 +88,7 @@ class pump(serial.Serial):
         valstr = str(val)
         self.write((var + '=' + valstr + eol).encode('utf-8'))
 
-class mforce_pump(pump):
+class mforce_pump(serial.Serial):
     """
     original controller uLynx
     Serial device object for milligat LF pump with MFORCE controller
@@ -97,20 +97,21 @@ class mforce_pump(pump):
     default is A
     """
     TERMINATOR = '\r\n'
-    def __init__(address='A',munit=2432):
-        self.setPos(self,0)
-        self.MUNIT = munit
-        self.addr = address
+    def __init__():
+        print('hello')
         super().__init__()
+        self.setPos(self,0)
+        self.address='A'
+        self.MUNIT=23104
 
     def setVar(self,var,val,eol=TERMINATOR):
         valstr = str(val)
-        self.write((var + '=' + valstr + eol).encode('utf-8'))
+        self.write(self.addr + (var + '=' + valstr + eol).encode('utf-8'))
 
     def getVar(self,var,eol=TERMINATOR):
         self.reset_input_buffer()
         #bmsg = ('PR ' + var.lower() + eol).encode('utf-8')
-        bmsg = ('PR ' + var.lower() + eol).encode('utf-8')
+        bmsg = (self.addr + 'PR ' + var.lower() + eol).encode('utf-8')
         print(var.lower)
         print(var.lower())
         self.write(bmsg)
@@ -131,11 +132,11 @@ class mforce_pump(pump):
 
     def setPos(self,val,eol=TERMINATOR):
         valstr = str(val)
-        self.write(('P = ' + valstr + eol).encode('utf-8'))
+        self.write((self.addr + 'P = ' + valstr + eol).encode('utf-8'))
 
     def getPos(self,eol=TERMINATOR):
         self.reset_input_buffer()
-        bmsg = ('PR P' + eol).encode('utf-8')
+        bmsg = (self.addr + 'PR P' + eol).encode('utf-8')
         self.write(bmsg)
         time.sleep(0.2)
         if self.in_waiting:
@@ -154,21 +155,21 @@ class mforce_pump(pump):
         # dispense - relative pump movement
         # 1 ul = 23104 steps
         steps = int(float(uL))*self.MUNIT
-        print ('MR ' + str(steps))
-        self.write(('MR ' + str(steps) + eol).encode('utf-8'))
+        print (self.addr + 'MR ' + str(steps))
+        self.write((self.addr + 'MR ' + str(steps) + eol).encode('utf-8'))
 
 
     def mova(self,uL,eol=TERMINATOR):
         # dispense - move pump to absolute position
         steps = int(float(uL))*self.MUNIT
-        print ('MA ' + str(steps))
-        self.write(('MA ' + str(steps) + eol).encode('utf-8'))
+        print (self.addr + 'MA ' + str(steps))
+        self.write((self.addr + 'MA ' + str(steps) + eol).encode('utf-8'))
 
     def setVM(self,uL,eol=TERMINATOR):
         # dispense - set rate
         steps = int(float(uL))*self.MUNIT
         print('VM ' + str(steps))
-        self.write(('VM ' + str(steps) + eol).encode('utf-8'))
+        self.write((self.addr + 'VM ' + str(steps) + eol).encode('utf-8'))
 
     def wait_for_dispense(self,uL,eol=TERMINATOR):
         #uLynx
