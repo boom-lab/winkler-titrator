@@ -38,7 +38,6 @@ class runTitration(QThread):
         self.current_titration.titrate(self.guess)
         self.sig_done.emit(True)
 
-
 class chartUpdater(QThread):
 
     sig_chart = pyqtSignal()
@@ -161,7 +160,6 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 self.comboBox_meter.addItem(p.device)
                 self.comboBox_pump.addItem(p.device)
 
-
     def titrate_clicked(self):
         guess = float(self.spinBox_guess.value())
         self.lcdNumber_endpoint.display(0)
@@ -183,9 +181,11 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.plt_thr.sig_chart.connect(self.plot_data)
         #self.plt_thr.sig_cumvol.connect(self.lcdNumber_dispensed.value)
         self.plt_thr.start()
-        if self.titr.is_complete:
-            QMessageBox.warning(self,'','titration complete: endpoint=' + str(self.titr.endpoint), \
-                                QMessageBox.Ok)
+        self.ti_thr.finished.connect(self.titration_done)
+
+    def titration_done(self):
+        QMessageBox.warning(self,'','titration complete: endpoint=' +  \
+        str(self.titr.endpoint),QMessageBox.Ok)
 
     def dispense_vol(self,vol):
         try:
