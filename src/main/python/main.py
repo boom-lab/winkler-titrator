@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import QMainWindow
 
 import sys
 import os
+import logging
+from time import strftime,gmtime
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,QMessageBox
 from PyQt5.QtCore import QThread,pyqtSignal
 import serial.tools.list_ports
@@ -13,7 +15,12 @@ from model import titration as ti
 import numpy as np
 import config as CONFIG
 
+
 Mthios = 0.200
+root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
+logging.basicConfig(filename=os.path.join(root_dir,'log'+strftime("%Y%m%d", \
+    gmtime())),level='INFO',format='%(levelname)s %(asctime)s %(message)s')
+logging.info('Im logging!')
 
 class runTitration(QThread):
 
@@ -101,7 +108,6 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         if hasattr(self,'titr'):
             if self.checkBox_zoom.isChecked():
                 d = np.where(np.abs(self.titr.uL-self.titr.v_end) < 30)
-                print(d)
             else:
                 d = range(len(self.titr.uL))
             if self.checkBox_gran.isChecked():
@@ -121,17 +127,20 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     def connect(self):
         #if not (hasattr(self,'pump') and hasattr(self,'meter')):
         #    self.load_ports()
-        print(self.comboBox_meter.currentText())
-        print(self.comboBox_pump.currentText())
+        #print(self.comboBox_meter.currentText())
+        #print(self.comboBox_pump.currentText())
+        logging.info('connecting serial devices')
         try:
             self.meter = sd.meter(self.comboBox_meter.currentText())
+            logging.info('meter connected on ' + self.comboBox_meter.currentText())
         except Exception as ex:
-            print(ex)
+            logging.warning(ex)
             QMessageBox.warning(self,'Connect Warning',\
                                 'Meter connection failed',QMessageBox.Ok)
         try:
-            print ('connecting')
+            #print ('connecting')
             self.pump = sd.mforce_pump(self.comboBox_pump.currentText())
+            logging.info('pump connected on ' + self.comboBox_pump.currentText())
             #if CONFIG.PUMP_CTRL == 'MLYNX':
             #    self.pump = sd._mlynx_pump(self.comboBox_pump.currentText())
             #elif CONFIG.PUMP_CTRL == 'MFORCE':
@@ -140,11 +149,12 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         except:
             QMessageBox.warning(self,'Connect Warning',\
                                 'Pump connection failed',QMessageBox.Ok)
+            logging.warning('Pump connection failed')
 
 
     def flask_clicked(self):
         filename = QFileDialog.getOpenFileName(None,'Test Dialog')
-        print(filename[0])
+        logging.info('bottle file '+filename[0]+ ' loaded')
         self.botdict = iomod.import_flasks(filename[0])
         botid = sorted(self.botdict.keys())
         for bot in botid:
@@ -164,10 +174,12 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         guess = float(self.spinBox_guess.value())
         self.lcdNumber_endpoint.display(0)
         self.lcdNumber_dispensed.display(0)
-        print('initial guess is ' + str(guess))
+        logging.info('titration started with initial guess '+ str(guess))
+        #print('initial guess is ' + str(guess))
         flaskid = self.comboBox_flasks.currentText()
         flaskvol = self.botdict[flaskid]
-        print('flask volume =' + str(flaskvol))
+        logging.info('flask ' + flaskid + ' with volume = ' + str(flaskvol))
+        #print('flask volume =' + str(flaskvol))
         if self.checkBox_rapid.isChecked():
             timode = 'rapid'
         else:
@@ -185,12 +197,13 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
 
     def titration_done(self):
         QMessageBox.warning(self,'','titration complete: endpoint=' +  \
-        str(self.titr.endpoint),QMessageBox.Ok)
+                str(self.titr.endpoint),QMessageBox.Ok)
 
     def dispense_vol(self,vol):
         try:
-            print('dispensing ' + str(vol) + ' uL')
+            #print('dispensing ' + str(vol) + ' uL')
             self.pump.movr(str(vol))
+            logging.info('dispensed  '+str(vol) + ' uL')
         except Exception as ex:
             print(ex)
             QMessageBox.warning(self,'','dispense ' + str(vol) + ' failed', \
