@@ -131,7 +131,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         #print(self.comboBox_pump.currentText())
         logging.info('connecting serial devices')
         try:
-            self.meter = sd.meter(self.comboBox_meter.currentText())
+            self.meter = sd.meter(self.comboBox_meter.currentText(),CONFIG.mVpos,CONFIG.Tpos)
             logging.info('meter connected on ' + self.comboBox_meter.currentText())
         except Exception as ex:
             logging.warning(ex)
@@ -139,13 +139,13 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                                 'Meter connection failed',QMessageBox.Ok)
         try:
             #print ('connecting')
-            self.pump = sd.mforce_pump(self.comboBox_pump.currentText())
-            logging.info('pump connected on ' + self.comboBox_pump.currentText())
-            #if CONFIG.PUMP_CTRL == 'MLYNX':
-            #    self.pump = sd._mlynx_pump(self.comboBox_pump.currentText())
-            #elif CONFIG.PUMP_CTRL == 'MFORCE':
+            if CONFIG.PUMP_CTRL == 'MFORCE':
+                self.pump = sd.mforce_pump(self.comboBox_pump.currentText())
+                logging.info('MFORCE pump connected on ' + self.comboBox_pump.currentText())
+            elif CONFIG.PUMP_CTRL == 'MLYNX':
+                self.pump = sd.mforce_pump(self.comboBox_pump.currentText())
+                logging.info('MLYNX pump connected on ' + self.comboBox_pump.currentText())
 
-        #        self.pump = sd._mforce_pump(self.comboBox_pump.currentText())
         except:
             QMessageBox.warning(self,'Connect Warning',\
                                 'Pump connection failed',QMessageBox.Ok)

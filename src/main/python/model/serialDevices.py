@@ -18,6 +18,10 @@ class meter(serial.Serial):
     Serial device object for Thermo Orion Meter
     Be sure meter probe and serial cables are connected
     """
+    def __init__(self,port,mVpos,Tpos):
+        self.mVpos = mVpos
+        self.Tpos = Tpos
+        super().__init__(port)
 
     def readline(self,eol=b'\n\r'): ###########################################
     #def readline(self,eol='\r'):
@@ -60,8 +64,8 @@ class meter(serial.Serial):
                 line = str(bline)
                 meas_list = line.split(',')
                 if meas_list:
-                    mV = float(meas_list[8])
-                    T = float(meas_list[10])
+                    mV = float(meas_list[mVpos])
+                    T = float(meas_list[Tpos])
                 return (mV,T)
         except:
              print('no response')
