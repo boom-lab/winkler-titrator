@@ -39,6 +39,7 @@ class titration():
         self.mV = np.array([])
         self.T = np.array([])
         self.v_end_est = np.array([])
+        self.v_end = 0
         #self.pump.setPos(0)
         self.vbot = vbot
         # when True there are no actual pumping or meter reads
