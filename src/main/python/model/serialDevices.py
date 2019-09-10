@@ -187,7 +187,7 @@ class mlynx_pump(serial.Serial):
             if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
                 bline = self.readline()
             print(bline)
-            val = float(bline)
+            #val = float(bline)
             return val
         else:
             print('no response -- check connnection')

@@ -138,12 +138,12 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
             QMessageBox.warning(self,'Connect Warning',\
                                 'Meter connection failed',QMessageBox.Ok)
         try:
-            #print ('connecting')
+            print ('connecting ' + CONFIG.PUMP_CTRL)
             if CONFIG.PUMP_CTRL == 'MFORCE':
                 self.pump = sd.mforce_pump(self.comboBox_pump.currentText())
                 logging.info('MFORCE pump connected on ' + self.comboBox_pump.currentText())
             elif CONFIG.PUMP_CTRL == 'MLYNX':
-                self.pump = sd.mforce_pump(self.comboBox_pump.currentText())
+                self.pump = sd.mlynx_pump(self.comboBox_pump.currentText())
                 logging.info('MLYNX pump connected on ' + self.comboBox_pump.currentText())
 
         except:
