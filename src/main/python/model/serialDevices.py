@@ -23,7 +23,7 @@ class meter(serial.Serial):
         self.Tpos = Tpos
         super().__init__(port)
 
-    def readline(self,eol=b'\n\r'): ###########################################
+    def readline(self,eol=b'\n\r'): #need to change to \n\r for AXXX meters?
     #def readline(self,eol='\r'):
         """
         read line of output -  meter uses '\r' terminator. replaces
@@ -183,11 +183,13 @@ class mlynx_pump(serial.Serial):
         time.sleep(0.2)
         if self.in_waiting:
             bline = self.readline()
+            bline = self.readline()
             # if command is echoed, read next line
             if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
                 bline = self.readline()
+                print('second ' + bline)
+            val = float(bline)
             print(bline)
-            #val = float(bline)
             return val
         else:
             print('no response -- check connnection')
@@ -202,6 +204,7 @@ class mlynx_pump(serial.Serial):
         self.write(bmsg)
         time.sleep(0.2)
         if self.in_waiting:
+            bline = self.readline()
             bline = self.readline()
             # if command is echoed, read next line
             if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:

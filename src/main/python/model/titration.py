@@ -47,7 +47,7 @@ class titration():
         self.DEBUG = False
         # when True the meter makes a reading (e.g. in DI water) but dummy_read
         # is called and mock data returned
-        self.dummy_meter = True
+        self.dummy_meter = False
         self.O2 = np.array([])
         self.Vblank = 0
         self.reagO2 = 7.6e-8; # concentration of O2 dissolved in reagents
@@ -102,6 +102,7 @@ class titration():
         ini_vol = 0.1*guess
         # titrate to 40% and predict endpoint
         for x in range(4):
+            print('starting x= ' + str(x))
             if self.DEBUG:
                 self.dispense_from_data(ini_vol)
             else:
@@ -160,6 +161,7 @@ class titration():
         self.cumvol = self.pump.getPos()
         logging.info('cumulative vol: ' + str(self.cumvol) + ' uL')
         mV,T = self.meter.meas()
+        print(str(mv)+ ' T: '+str(T))
         if self.dummy_meter:
             T = 20
             mV = self.dummy_read(self.cumvol)
