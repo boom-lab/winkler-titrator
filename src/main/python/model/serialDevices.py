@@ -58,7 +58,6 @@ class meter(serial.Serial):
                 # first line is echo of command
                 bline = self.readline()
                 time.sleep(0.1)
-            if self.in_waiting:
                 bline = self.readline()
                 print(bline)
                 line = str(bline)
