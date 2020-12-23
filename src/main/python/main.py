@@ -13,10 +13,11 @@ from model import serialDevices as sd
 from model import iomod
 from model import titration as ti
 import numpy as np
-import config as CONFIG
+import configparser
 
-
-Mthios = 0.200
+config = configparser.ConfigParser()
+config.read('wink.INI')
+Mthios = float(config.Mthios)
 root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
 logging.basicConfig(filename=os.path.join(root_dir,'log'+strftime("%Y%m%d", \
     gmtime())),level='INFO',format='%(levelname)s %(asctime)s %(message)s')
@@ -139,12 +140,15 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                                 'Meter connection failed',QMessageBox.Ok)
         try:
             print ('connecting ' + CONFIG.PUMP_CTRL)
-            if CONFIG.PUMP_CTRL == 'MFORCE':
+            if config[PUMP][Controller] == 'MFORCE':
                 self.pump = sd.mforce_pump(self.comboBox_pump.currentText())
                 logging.info('MFORCE pump connected on ' + self.comboBox_pump.currentText())
-            elif CONFIG.PUMP_CTRL == 'MLYNX':
+            elif config[PUMP][Controller] == 'MLYNX':
                 self.pump = sd.mlynx_pump(self.comboBox_pump.currentText())
                 logging.info('MLYNX pump connected on ' + self.comboBox_pump.currentText())
+            elif config[PUMP][Controller] == 'KLOEHN':
+                self.pump = sd.kloehn_pump(self.comboBox_pump.currentText())
+                logging.info('KLOEHN pump connected on ' + self.comboBox_pump.currentText())
 
         except:
             QMessageBox.warning(self,'Connect Warning',\

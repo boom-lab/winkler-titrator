@@ -12,6 +12,10 @@ Created on Wed Dec 20 15:09:00 2017
 
 import serial
 import time
+import configparser
+
+config = configparser.ConfigParser()
+config.read('./wink.INI')
 
 class meter(serial.Serial):
     """
@@ -225,6 +229,77 @@ class mlynx_pump(serial.Serial):
     def wait_for_dispense(self,uL,eol=TERMINATOR):
         # maximum rate in uL sec-1
         max_rate = self.getVar('VM')
+        # wait for dispense to complete (add 0.2 secs for accel/decel)
+        wait_time = uL / float(max_rate) + 0.2
+        return wait_time
+
+class kloehn_pump(serial.Serial):
+    """
+    Serial device object for milligat LF pump with microlynx controller
+    Be sure pump is powered and serial cable connected
+    """
+    def __init__(self,port):
+        self.SF = float(config['PUMP']['Steps'])/float(config['PUMP']['SyringeVol'])
+        self.VM = float(config['PUMP']['MaxVelocity'])
+        super().__init__(port)
+        bmsg = ('/1' + 'V' + self.VM + 'R' + eol).encode('utf-8')
+
+
+    TERMINATOR = '\r\n'
+    # redefine readline to work for \r line termination
+    def isBusy(self,var,eol=TERMINATOR):
+        self.reset_input_buffer()
+        bmsg = ('/1' + eol).encode('utf-8')
+        self.write(bmsg)
+        bline = self.readline()
+        if string(bline) = '@':
+            return True
+        elseif string(bline).st
+            return False
+
+        return(bline)
+
+    # funtion to pass any command to pump (not tested)
+    def sendCommand(self,msg,eol=TERMINATOR):
+        self.reset_input_buffer()
+        bmsg = (msg.lower() + eol).encode('utf-8')
+        self.write(bmsg)
+        time.sleep(0.2)
+        if self.in_waiting:
+            bline = self.readline()
+            bline = self.readline()
+            # if command is echoed, read next line
+            if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
+                bline = self.readline()
+                print('second ' + bline)
+            val = float(bline)
+            print(bline)
+            return val
+        else:
+            print('no response -- check connnection')
+
+
+    def getValvePos(self,eol=TERMINATOR):
+        self.reset_input_buffer()
+        bmsg = ('?8' + eol).encode('utf-8')
+
+    # move to absolute position
+    def movr(self,uL,eol=TERMINATOR):
+        # dispense - relative pump movement
+        steps = step = round(val*self.SF)
+        stepstr = str(step)
+        self.write(('/1P' + valstr + 'R' + eol).encode('utf-8'))
+
+    # move relative amount
+    def mova(self,uL,eol=TERMINATOR):
+        # dispense - move pump to absolute position
+        step = round(val*self.SF)
+        stepstr = str(step)
+        self.write(('/1A' + valstr + eol).encode('utf-8'))
+
+    def wait_for_dispense(self,uL,eol=TERMINATOR):
+        # maximum rate in uL sec-1
+        max_rate = self.VM*self.SF
         # wait for dispense to complete (add 0.2 secs for accel/decel)
         wait_time = uL / float(max_rate) + 0.2
         return wait_time
