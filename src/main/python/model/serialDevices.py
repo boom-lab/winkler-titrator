@@ -6,13 +6,10 @@ Created on Wed Dec 20 15:09:00 2017
 @author: dnicholson
 """
 
-#CHANGES TRACKED WITH:
-###########################################################################
-# RI
-
 import serial
 import time
 import configparser
+import logging
 
 config = configparser.ConfigParser()
 config.read('./wink.INI')
@@ -242,22 +239,24 @@ class kloehn_pump(serial.Serial):
         self.SF = float(config['PUMP']['Steps'])/float(config['PUMP']['SyringeVol'])
         self.VM = float(config['PUMP']['MaxVelocity'])
         super().__init__(port)
-        bmsg = ('/1' + 'V' + self.VM + 'R' + eol).encode('utf-8')
+        loggin.INFO('connecting kloehn pump')
+        #bmsg = ('/1' + 'V' + self.VM + 'R' + eol).encode('utf-8')
 
 
     TERMINATOR = '\r\n'
     # redefine readline to work for \r line termination
-    def isBusy(self,var,eol=TERMINATOR):
-        self.reset_input_buffer()
-        bmsg = ('/1' + eol).encode('utf-8')
-        self.write(bmsg)
-        bline = self.readline()
-        if string(bline) = '@':
-            return True
-        elseif string(bline).st
-            return False
+    # def isBusy(self,var,eol=TERMINATOR):
+        # self.reset_input_buffer()
+        # bmsg = ('/1' + eol).encode('utf-8')
+        # self.write(bmsg)
+        # bline = self.readline()
+        # if string(bline) = '@':
+            # return True
+        # elseif string(bline).st
+            # return False
 
-        return(bline)
+#
+
 
     # funtion to pass any command to pump (not tested)
     def sendCommand(self,msg,eol=TERMINATOR):

@@ -15,13 +15,16 @@ from model import titration as ti
 import numpy as np
 import configparser
 
-config = configparser.ConfigParser()
-config.read('wink.INI')
-Mthios = float(config.Mthios)
+
+#Mthios = float(config.Mthios)
 root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
+config = configparser.ConfigParser()
+config.read(os.path.join(root_dir,'wink.ini'))
+Mthios = config['PUMP']['Mthios']
 logging.basicConfig(filename=os.path.join(root_dir,'log'+strftime("%Y%m%d", \
     gmtime())),level='INFO',format='%(levelname)s %(asctime)s %(message)s')
 logging.info('Im logging!')
+logging.info(config['PUMP']['Controller'])
 
 class runTitration(QThread):
 
@@ -131,22 +134,24 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         #print(self.comboBox_meter.currentText())
         #print(self.comboBox_pump.currentText())
         logging.info('connecting serial devices')
+        logging.info('pump set to ' + config['PUMP']['Controller'])
+        logging.info('meter set to ' + config['METER']['Series'])
         try:
-            self.meter = sd.meter(self.comboBox_meter.currentText(),CONFIG.mVpos,CONFIG.Tpos)
+            self.meter = sd.meter(self.comboBox_meter.currentText(),config['METER']['mVpos'],config['METER']['Tpos'])
             logging.info('meter connected on ' + self.comboBox_meter.currentText())
         except Exception as ex:
             logging.warning(ex)
             QMessageBox.warning(self,'Connect Warning',\
                                 'Meter connection failed',QMessageBox.Ok)
         try:
-            print ('connecting ' + CONFIG.PUMP_CTRL)
-            if config[PUMP][Controller] == 'MFORCE':
+            print ('connecting ' + config['PUMP']['Controller'] + ' series pump')
+            if config['PUMP']['Controller'] == 'MFORCE':
                 self.pump = sd.mforce_pump(self.comboBox_pump.currentText())
                 logging.info('MFORCE pump connected on ' + self.comboBox_pump.currentText())
-            elif config[PUMP][Controller] == 'MLYNX':
+            elif config['PUMP']['Controller'] == 'MLYNX':
                 self.pump = sd.mlynx_pump(self.comboBox_pump.currentText())
                 logging.info('MLYNX pump connected on ' + self.comboBox_pump.currentText())
-            elif config[PUMP][Controller] == 'KLOEHN':
+            elif config['PUMP']['Controller'] == 'KLOEHN':
                 self.pump = sd.kloehn_pump(self.comboBox_pump.currentText())
                 logging.info('KLOEHN pump connected on ' + self.comboBox_pump.currentText())
 
