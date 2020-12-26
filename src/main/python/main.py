@@ -87,6 +87,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.pushButton_reload.clicked.connect(self.load_ports)
         self.pushButton_flask.clicked.connect(self.flask_clicked)
         self.pushButton_titrate.clicked.connect(self.titrate_clicked)
+        self.pushButton_standard.clicked.connect(self.dispense_standard_clicked)
         #self.comboBox_meter.activated.connect(self.load_ports)
         #self.comboBox_pump.activated.connect(self.load_ports)
         # Connect dispense buttons
@@ -95,10 +96,12 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.pushButton_100uL.clicked.connect(self.dispense_100uL)
         self.pushButton_1000uL.clicked.connect(self.dispense_1000uL)
         self.pushButton_5000uL.clicked.connect(self.dispense_5000uL)
-        self.pushButton_customvol.clicked.connect(self.dispense_custom)
+        #self.pushButton_customvol.clicked.connect(self.dispense_custom)
 
         self.checkBox_gran.stateChanged.connect(self.plot_data)
         self.checkBox_zoom.stateChanged.connect(self.plot_data)
+
+        #self.verticalSlider_standard.valueChanged.connect(self.lcdNumber_standard.display)
 
         self.load_ports()
 
@@ -160,6 +163,22 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                                 'Pump connection failed',QMessageBox.Ok)
             logging.warning('Pump connection failed')
 
+        # Connect pump for dispensing standard (KIO3)
+        try:
+            if config['STD_PUMP']['Controller'] == 'MFORCE':
+                self.std_pump = sd.mforce_pump(self.comboBox_standard.currentText())
+                logging.info('MFORCE pump connected on ' + self.comboBox_standard.currentText())
+            elif config['STD_PUMP']['Controller'] == 'MLYNX':
+                self.std_pump = sd.mlynx_pump(self.comboBox_standard.currentText())
+                logging.info('MLYNX pump connected on ' + self.comboBox_standard.currentText())
+            elif config['STD_PUMP']['Controller'] == 'KLOEHN':
+                self.std_pump = sd.kloehn_pump(self.comboBox_standard.currentText())
+                logging.info('KLOEHN pump connected on ' + self.comboBox_standard.currentText())
+        except:
+            QMessageBox.warning(self,'Connect Warning',\
+                            'Standard Pump connection failed',QMessageBox.Ok)
+            logging.warning('Standard Pump connection failed')
+
 
     def flask_clicked(self):
         filename = QFileDialog.getOpenFileName(None,'Test Dialog')
@@ -173,11 +192,13 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     def load_ports(self):
         self.comboBox_meter.clear()
         self.comboBox_pump.clear()
+        self.comboBox_standard.clear()
         ports = serial.tools.list_ports.comports()
         for p in ports:
             if True:#if 'usb' in p.device or 'COM' in p.device:
                 self.comboBox_meter.addItem(p.device)
                 self.comboBox_pump.addItem(p.device)
+                self.comboBox_standard.addItem(p.device)
 
     def titrate_clicked(self):
         guess = float(self.spinBox_guess.value())
@@ -193,7 +214,6 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
             timode = 'rapid'
         else:
             timode = 'normal'
-        #print(flaskvol.type())
         self.titr = ti.titration(self.meter,self.pump,flaskid,flaskvol,0.2,\
                             mode=timode)
         self.ti_thr = runTitration(self.titr,guess)
@@ -207,6 +227,16 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     def titration_done(self):
         QMessageBox.warning(self,'','titration complete: endpoint=' +  \
                 str(self.titr.endpoint),QMessageBox.Ok)
+
+    def dispense_standard_clicked(self):
+        dispense_vol = self.spinBox_standard.value()
+        print(dispense_vol)
+        self.pump.mova('0')
+        self.pump.movr(str(dispense_vol))
+        logging.info('dispensed  '+str(vol) + ' uL of standard')
+
+
+
 
     def dispense_vol(self,vol):
         try:
@@ -227,9 +257,9 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.dispense_vol(1000)
     def dispense_5000uL(self):
         self.dispense_vol(5000)
-    def dispense_custom(self):
-        vol = self.lcdNumber_customvol.value
-        self.dispense_vol(vol)
+#    def dispense_custom(self):
+#        vol = self.lcdNumber_customvol.value
+#        self.dispense_vol(vol)
 
 
 def getPorts():
