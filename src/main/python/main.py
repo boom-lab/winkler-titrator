@@ -87,7 +87,10 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.pushButton_reload.clicked.connect(self.load_ports)
         self.pushButton_flask.clicked.connect(self.flask_clicked)
         self.pushButton_titrate.clicked.connect(self.titrate_clicked)
-        self.pushButton_standard.clicked.connect(self.dispense_standard_clicked)
+        self.pushButton_dispenseStandard.clicked.connect(self.dispense_standard_clicked)
+        self.pushButton_loadStandard.clicked.connect(self.fill_standard_clicked)
+        self.pushButton_dispenseThios.clicked.connect(self.dispense_thios_clicked)
+        self.pushButton_loadThios.clicked.connect(self.fill_thios_clicked)
         #self.comboBox_meter.activated.connect(self.load_ports)
         #self.comboBox_pump.activated.connect(self.load_ports)
         # Connect dispense buttons
@@ -175,12 +178,14 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 self.std_pump = sd.mlynx_pump(self.comboBox_standard.currentText())
                 logging.info('MLYNX pump connected on ' + self.comboBox_standard.currentText())
             elif config['STD_PUMP']['Controller'] == 'KLOEHN':
-                self.std_pump = sd.kloehn_pump(self.comboBox_standard.currentText())
-                logging.info('KLOEHN pump connected on ' + self.comboBox_standard.currentText())
-        except:
+                sf = float(config['STD_PUMP']['Steps'])/float(config['STD_PUMP']['SyringeVol'])
+                self.std_pump = sd.kloehn_pump(self.comboBox_standard.currentText(),SF=sf)
+                logging.info('KLOEHN pump connected on ' + self.comboBox_standard.currentText()+'with sf='+ str(sf))
+        except Exception as ex:
             QMessageBox.warning(self,'Connect Warning',\
                             'Standard Pump connection failed',QMessageBox.Ok)
             logging.warning('Standard Pump connection failed')
+            logging.warning(ex)
 
 
     def flask_clicked(self):
@@ -234,9 +239,28 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     def dispense_standard_clicked(self):
         dispense_vol = self.spinBox_standard.value()
         print(dispense_vol)
-        self.pump.mova('0')
-        self.pump.movr(str(dispense_vol))
-        logging.info('dispensed  '+str(vol) + ' uL of standard')
+        self.std_pump.dispense(str(dispense_vol))
+        logging.info('dispensed  '+str(dispense_vol) + ' uL of standard')
+
+    def fill_standard_clicked(self):
+        load_vol = self.spinBox_standard.value()
+        print(load_vol)
+        self.std_pump.fill(str(load_vol))
+        logging.info('filled  '+str(load_vol) + ' uL of standard')
+
+
+    def dispense_thios_clicked(self):
+        dispense_vol = self.spinBox_thios.value()
+        print(dispense_vol)
+        self.pump.dispense(str(dispense_vol))
+        logging.info('dispensed  '+str(dispense_vol) + ' uL of thiosulfate')
+
+    def fill_thios_clicked(self):
+
+        load_vol = self.spinBox_thios.value()
+        print(load_vol)
+        self.pump.fill(str(load_vol))
+        logging.info('filled  '+str(load_vol) + ' uL of thiosulfate')
 
 
 
