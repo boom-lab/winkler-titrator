@@ -155,13 +155,16 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 self.pump = sd.mlynx_pump(self.comboBox_pump.currentText())
                 logging.info('MLYNX pump connected on ' + self.comboBox_pump.currentText())
             elif config['PUMP']['Controller'] == 'KLOEHN':
-                self.pump = sd.kloehn_pump(self.comboBox_pump.currentText())
+                sf = float(config['PUMP']['Steps'])/float(config['PUMP']['SyringeVol'])
+                vm = float(config['PUMP']['MaxVelocity'])
+                self.pump = sd.kloehn_pump(self.comboBox_pump.currentText(),SF=sf)
                 logging.info('KLOEHN pump connected on ' + self.comboBox_pump.currentText())
 
-        except:
+        except Exception as ex:
             QMessageBox.warning(self,'Connect Warning',\
                                 'Pump connection failed',QMessageBox.Ok)
             logging.warning('Pump connection failed')
+            logging.warning(ex)
 
         # Connect pump for dispensing standard (KIO3)
         try:
