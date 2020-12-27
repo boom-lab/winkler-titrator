@@ -10,9 +10,11 @@ import serial
 import time
 import configparser
 import logging
+import os
 
+root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
 config = configparser.ConfigParser()
-config.read('./wink.INI')
+config.read(os.path.join(root_dir,'wink.ini'))
 
 class meter(serial.Serial):
     """
@@ -232,18 +234,28 @@ class mlynx_pump(serial.Serial):
 
 class kloehn_pump(serial.Serial):
     """
-    Serial device object for milligat LF pump with microlynx controller
+    Serial device object kloehn v6 syringe pump
     Be sure pump is powered and serial cable connected
     """
-    def __init__(self,port):
-        self.SF = float(config['PUMP']['Steps'])/float(config['PUMP']['SyringeVol'])
-        self.VM = float(config['PUMP']['MaxVelocity'])
+    TERMINATOR = '\r\n'
+    def __init__(self,port,SF,VM='1000',InAddr='1o1R',OutAddr='/1o2R'):
+        #self.SF = float(config['PUMP']['Steps'])/float(config['PUMP']['SyringeVol'])
+        #self.VM = float(config['PUMP']['MaxVelocity'])
+        eol = '\r\n'
+        self.SF = SF
+        self.VM = VM
         super().__init__(port)
-        loggin.INFO('connecting kloehn pump')
+        #intitialize command required on power-up
+        self.write(('/W4R'+eol).encode('utf-8'))
+        #set max velocity (steps/sec)
+        bmsg = ('/V'+VM+'R'+ eol).encode('utf-8')
+        self.write(bmsg)
+        print('connecting kloehn pump')
+        #logging.INFO('connecting kloehn pump')
         #bmsg = ('/1' + 'V' + self.VM + 'R' + eol).encode('utf-8')
 
 
-    TERMINATOR = '\r\n'
+
     # redefine readline to work for \r line termination
     # def isBusy(self,var,eol=TERMINATOR):
         # self.reset_input_buffer()
@@ -255,9 +267,6 @@ class kloehn_pump(serial.Serial):
         # elseif string(bline).st
             # return False
 
-#
-
-
     # funtion to pass any command to pump (not tested)
     def sendCommand(self,msg,eol=TERMINATOR):
         self.reset_input_buffer()
@@ -266,14 +275,9 @@ class kloehn_pump(serial.Serial):
         time.sleep(0.2)
         if self.in_waiting:
             bline = self.readline()
-            bline = self.readline()
-            # if command is echoed, read next line
-            if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
-                bline = self.readline()
-                print('second ' + bline)
-            val = float(bline)
             print(bline)
-            return val
+            return bline
+
         else:
             print('no response -- check connnection')
 
@@ -285,20 +289,32 @@ class kloehn_pump(serial.Serial):
     # move to absolute position
     def movr(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
-        steps = step = round(val*self.SF)
-        stepstr = str(step)
-        self.write(('/1P' + valstr + 'R' + eol).encode('utf-8'))
+        val = float(uL)
+        step = round(val*self.SF)
+        if step >= 0:
+            stepstr = str(step)
+            self.write(('/1D' + stepstr + 'R' + eol).encode('utf-8'))
+        else:
+            stepstr = str(abs(step))
+            self.write(('/1P' + stepstr + 'R' + eol).encode('utf-8'))
+
 
     # move relative amount
     def mova(self,uL,eol=TERMINATOR):
         # dispense - move pump to absolute position
+        val = float(uL)
         step = round(val*self.SF)
         stepstr = str(step)
-        self.write(('/1A' + valstr + eol).encode('utf-8'))
+        print(stepstr)
+        self.write(('/1A' + stepstr + 'R' + eol).encode('utf-8'))
 
-    def wait_for_dispense(self,uL,eol=TERMINATOR):
+    def dispense(self,uL,eol=TERMINATOR):
+        self.movr(uL)
+        sleep(self.wait_for_dispense(uL))
+
+    def wait_for_dispense(self,uL):
         # maximum rate in uL sec-1
         max_rate = self.VM*self.SF
         # wait for dispense to complete (add 0.2 secs for accel/decel)
-        wait_time = uL / float(max_rate) + 0.2
+        wait_time = abs(uL) / float(max_rate) + 0.2
         return wait_time
