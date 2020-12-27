@@ -193,7 +193,7 @@ border-color: rgb(0, 116, 0);</string>
       <item>
        <widget class="QTabWidget" name="tabs">
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_Settings">
          <attribute name="title">
@@ -264,41 +264,6 @@ border-color: rgb(0, 116, 0);</string>
              <item>
               <widget class="QComboBox" name="comboBox_standard"/>
              </item>
-            </layout>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_5">
-             <item>
-              <widget class="QPushButton" name="pushButton_connect">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>100</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>16</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Connect</string>
-               </property>
-              </widget>
-             </item>
              <item>
               <widget class="QPushButton" name="pushButton_reload">
                <property name="text">
@@ -307,6 +272,27 @@ border-color: rgb(0, 116, 0);</string>
               </widget>
              </item>
             </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_connect">
+             <property name="minimumSize">
+              <size>
+               <width>160</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Connect</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_5"/>
            </item>
            <item>
             <spacer name="horizontalSpacer_5">
@@ -657,7 +643,7 @@ border-color: rgb(0, 116, 0);</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>100</height>
+                 <height>80</height>
                 </size>
                </property>
                <property name="text">
@@ -689,6 +675,9 @@ border-color: rgb(0, 116, 0);</string>
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="1" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_10"/>
     </item>
    </layout>
   </widget>
