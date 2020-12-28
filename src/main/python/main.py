@@ -143,7 +143,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         logging.info('pump set to ' + config['PUMP']['Controller'])
         logging.info('meter set to ' + config['METER']['Series'])
         try:
-            self.meter = sd.meter(self.comboBox_meter.currentText(),config['METER']['mVpos'],config['METER']['Tpos'])
+            self.meter = sd.meter(self.comboBox_meter.currentText(),int(config['METER']['mVpos']),int(config['METER']['Tpos']))
             logging.info('meter connected on ' + self.comboBox_meter.currentText())
         except Exception as ex:
             logging.warning(ex)
@@ -158,9 +158,11 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 self.pump = sd.mlynx_pump(self.comboBox_pump.currentText())
                 logging.info('MLYNX pump connected on ' + self.comboBox_pump.currentText())
             elif config['PUMP']['Controller'] == 'KLOEHN':
-                sf = float(config['PUMP']['Steps'])/float(config['PUMP']['SyringeVol'])
+                #sf = float(config['PUMP']['Steps'])/float(config['PUMP']['SyringeVol'])
                 vm = float(config['PUMP']['MaxVelocity'])
-                self.pump = sd.kloehn_pump(self.comboBox_pump.currentText(),SF=sf)
+                svol = float(config['PUMP']['SyringeVol'])
+                steps = float(config['PUMP']['Steps'])
+                self.pump = sd.kloehn_pump(self.comboBox_pump.currentText(),steps=steps,syringe_vol=svol,VM=vm)
                 logging.info('KLOEHN pump connected on ' + self.comboBox_pump.currentText())
 
         except Exception as ex:
@@ -178,9 +180,12 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 self.std_pump = sd.mlynx_pump(self.comboBox_standard.currentText())
                 logging.info('MLYNX pump connected on ' + self.comboBox_standard.currentText())
             elif config['STD_PUMP']['Controller'] == 'KLOEHN':
-                sf = float(config['STD_PUMP']['Steps'])/float(config['STD_PUMP']['SyringeVol'])
-                self.std_pump = sd.kloehn_pump(self.comboBox_standard.currentText(),SF=sf)
-                logging.info('KLOEHN pump connected on ' + self.comboBox_standard.currentText()+'with sf='+ str(sf))
+                #sf = float(config['STD_PUMP']['Steps'])/float(config['STD_PUMP']['SyringeVol'])
+                vm = float(config['STD_PUMP']['MaxVelocity'])
+                svol = float(config['STD_PUMP']['SyringeVol'])
+                steps = float(config['STD_PUMP']['Steps'])
+                self.std_pump = sd.kloehn_pump(self.comboBox_standard.currentText(),steps=steps,syringe_vol=svol,VM=vm)
+                logging.info('KLOEHN pump connected on ' + self.comboBox_standard.currentText()+'with '+ str(svol) + ' uL syringe')
         except Exception as ex:
             QMessageBox.warning(self,'Connect Warning',\
                             'Standard Pump connection failed',QMessageBox.Ok)
@@ -222,8 +227,10 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
             timode = 'rapid'
         else:
             timode = 'normal'
+        #logging.info(str(timode))
         self.titr = ti.titration(self.meter,self.pump,flaskid,flaskvol,0.2,\
                             mode=timode)
+        print('running titration')
         self.ti_thr = runTitration(self.titr,guess)
         self.ti_thr.start()
         self.plt_thr = chartUpdater(self.titr.current_file)

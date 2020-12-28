@@ -44,10 +44,10 @@ class titration():
         #self.pump.setPos(0)
         self.vbot = vbot
         # when True there are no actual pumping or meter reads
-        self.DEBUG = True
+        self.DEBUG = False
         # when True the meter makes a reading (e.g. in DI water) but dummy_read
         # is called and mock data returned
-        self.dummy_meter = False
+        self.dummy_meter = True
         self.O2 = np.array([])
         self.Vblank = 0
         self.reagO2 = 7.6e-8; # concentration of O2 dissolved in reagents
@@ -61,6 +61,7 @@ class titration():
             os.makedirs(datadir)
         with open(self.current_file,'w') as self.f:
             self.f.write('time,uL,mV,gF,temp,v_end_est\n')
+        self.pump.setPos(0)
 
     def gran_fac(self):
         """
@@ -148,6 +149,7 @@ class titration():
         self.is_complete = True
         #self.O2 = self.concentration()
         self.toJSON()
+        self.pump.setPos(0)
 
 
     def dispense(self,vol):
@@ -155,13 +157,17 @@ class titration():
         dispense a given volume, then read meter and update fields
         """
         dispense_time = self.pump.wait_for_dispense(vol)
+        print(str(dispense_time) + 'secs')
         self.pump.movr(str(vol))
         logging.info('dispensing ' + str(vol) + ' uL')
         sleep(dispense_time)
-        self.cumvol = self.pump.getPos()
+        sleep(0.5)
         logging.info('cumulative vol: ' + str(self.cumvol) + ' uL')
+        sleep(0.5)
+        print('reading meter...')
         mV,T = self.meter.meas()
-        print(str(mv)+ ' T: '+str(T))
+        self.cumvol = self.pump.getPos()
+        print(str(mV)+ ' T: '+str(T))
         if self.dummy_meter:
             T = 20
             mV = self.dummy_read(self.cumvol)

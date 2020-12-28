@@ -51,26 +51,31 @@ class meter(serial.Serial):
         """
         makes single meter measurement for mV and T
         """
-        if self.in_waiting:
-            self.reset_input_buffer()
-        self.write(b'GETMEAS\r')
-        # wait for echo
         time.sleep(0.2)
+        self.write(b'\r')
+        self.read(self.in_waiting)
+        #self.reset_output_buffer()
+        #self.reset_input_buffer()
+        time.sleep(0.5)
+        nin = self.write(b'GETMEAS\r')
+        time.sleep(0.3)
+        nw = self.in_waiting
+        while nw <= 40:
+            time.sleep(1)
+            nw = self.in_waiting
+        time.sleep(0.5)
+        b = self.read(self.in_waiting)
+        print(b)
+        meas_list = b.decode().split(',')
         try:
-            if self.in_waiting:
-                # first line is echo of command
-                bline = self.readline()
-                time.sleep(0.1)
-                bline = self.readline()
-                print(bline)
-                line = str(bline)
-                meas_list = line.split(',')
-                if meas_list:
-                    mV = float(meas_list[mVpos])
-                    T = float(meas_list[Tpos])
-                return (mV,T)
+            mV = float(meas_list[self.mVpos])
+            T = float(meas_list[self.Tpos])
+            return (mV,T)
         except:
-             print('no response')
+            print('read failed')
+
+
+
 
 
 class mforce_pump(serial.Serial):
@@ -232,25 +237,30 @@ class mlynx_pump(serial.Serial):
         wait_time = uL / float(max_rate) + 0.2
         return wait_time
 
+"""
+Kloehn V6 pump
+"""
+
 class kloehn_pump(serial.Serial):
     """
     Serial device object kloehn v6 syringe pump
     Be sure pump is powered and serial cable connected
     """
     TERMINATOR = '\r\n'
-    def __init__(self,port,SF,VM='1000',InAddr='/1o1R',OutAddr='/1o2R'):
-        #self.SF = float(config['PUMP']['Steps'])/float(config['PUMP']['SyringeVol'])
-        #self.VM = float(config['PUMP']['MaxVelocity'])
+    def __init__(self,port,steps=48000,syringe_vol=1000,VM=500,InAddr='/1o1R',OutAddr='/1o2R'):
+
         eol = '\r\n'
-        self.SF = float(SF)
+        self.SF = float(steps)/float(syringe_vol)
         self.VM = float(VM)
+        self.syringe_vol = syringe_vol
+        self.steps = steps
         self.InAddr = InAddr
         self.OutAddr = OutAddr
         super().__init__(port)
         #intitialize command required on power-up
-        self.write(('/W4R'+eol).encode('utf-8'))
+        self.write(('/W4R'+ eol).encode('utf-8'))
         #set max velocity (steps/sec)
-        bmsg = ('/V'+VM+'R'+ eol).encode('utf-8')
+        bmsg = ('/V'+str(VM)+'R'+ eol).encode('utf-8')
         self.write(bmsg)
         print('connecting kloehn pump')
         #logging.INFO('connecting kloehn pump')
@@ -268,6 +278,25 @@ class kloehn_pump(serial.Serial):
             # return True
         # elseif string(bline).st
             # return False
+    def setPos(self,pos=0,eol=TERMINATOR):
+        self.write((self.InAddr + 'R' + eol).encode('utf-8'))
+        time.sleep(1)
+        self.mova(self.syringe_vol)
+
+    def getPos(self,eol=TERMINATOR):
+        b =self.read(self.in_waiting)
+        while self.in_waiting < 10:
+            self.write('/1?\r'.encode('utf-8'))
+            time.sleep(0.1)
+        b =self.read(self.in_waiting)
+        print(b)
+        l = str(b).split("`")
+        l2 = l[1].split("\\")
+        posstr = str(l2[0])
+        print(posstr)
+        pos = int(posstr)
+        return (self.steps-pos)/self.SF
+
 
     # funtion to pass any command to pump (not tested)
     def sendCommand(self,msg,eol=TERMINATOR):
@@ -292,6 +321,7 @@ class kloehn_pump(serial.Serial):
     def movr(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
         val = float(uL)
+        print('moving ' + str(uL))
         step = round(val*self.SF)
         if step >= 0:
             stepstr = str(step)
@@ -312,18 +342,20 @@ class kloehn_pump(serial.Serial):
 
     def dispense(self,uL,eol=TERMINATOR):
         self.write((self.OutAddr + 'R' + eol).encode('utf-8'));
+        time.sleep(0.5)
         self.movr(uL)
         time.sleep(self.wait_for_dispense(uL))
 
     def fill(self,uL,eol=TERMINATOR):
         self.write((self.InAddr + 'R' + eol).encode('utf-8'));
+        time.sleep(0.5)
         self.movr('-'+uL)
-
+        time.sleep(self.wait_for_dispense(uL))
 
     def wait_for_dispense(self,uL):
         # maximum rate in uL sec-1
         uL = float(uL)
-        max_rate = self.VM*self.SF
+        max_rate = self.VM/self.SF
         # wait for dispense to complete (add 0.2 secs for accel/decel)
         wait_time = abs(uL) / float(max_rate) + 0.2
         return wait_time
