@@ -10,12 +10,13 @@ import numpy as np
 from gsw import density as dens
 from time import strftime,gmtime,sleep
 import json
+import logging
 
 class titration():
     """
     Class representing a Winkler titration of a single sample (or std)
     """
-    root_dir = os.path.dirname(os.path.realpath(__file__))
+    root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
     def __init__(self,meter,pump,botid,vbot,Mthios,datadir=os.path.join(root_dir,'data'),mode='normal'):
         """
         Initialize titration
@@ -46,7 +47,7 @@ class titration():
         self.DEBUG = False
         # when True the meter makes a reading (e.g. in DI water) but dummy_read
         # is called and mock data returned
-        self.dummy_meter = False
+        self.dummy_meter = True
         self.O2 = np.array([])
         self.Vblank = 0
         self.reagO2 = 7.6e-8; # concentration of O2 dissolved in reagents
@@ -56,8 +57,11 @@ class titration():
         # plotting GUI
         self.current_file = os.path.join(datadir,'current.csv')
         self.datadir = datadir
+        if not os.path.exists(datadir):
+            os.makedirs(datadir)
         with open(self.current_file,'w') as self.f:
             self.f.write('time,uL,mV,gF,temp,v_end_est\n')
+        self.pump.setPos(0)
 
     def gran_fac(self):
         """
@@ -89,16 +93,17 @@ class titration():
         """
         if not self.DEBUG:
             if not self.pump.is_open:
-                print('pump not connected')
+                logging.INFO('pump not connected')
             elif not self.meter.is_open:
-                print('meter not connected')
+                logging.warning('meter not connected')
             elif self.is_complete:
-                print('sample already titrated')
+                logging.warning('sample already titrated')
         self.pump.setPos(0)
         sleep(0.1)
         ini_vol = 0.1*guess
         # titrate to 40% and predict endpoint
         for x in range(4):
+            print('starting x= ' + str(x))
             if self.DEBUG:
                 self.dispense_from_data(ini_vol)
             else:
@@ -111,25 +116,24 @@ class titration():
         # predicted endpoint with some safety bounds
         self.v_end = np.clip(fit[1],0,vmax)
         self.v_end_est[-1] = fit[1]
-        print ('1st estimated endpoint: '+  str(fit[1]) + ' uL' )
+        logging.info('1st estimated endpoint: '+  str(fit[1]) + ' uL' )
         tgt_vol = self.target(self.v_end,self.mode)
-        print(tgt_vol)
-        print(tgt_vol)
+        logging.info('target: ' + str(tgt_vol))
         while True:
             if self.DEBUG:
                 self.dispense_from_data(tgt_vol)
             else:
                 self.dispense(tgt_vol)
             fit = np.polyfit(self.gF[-4:],self.uL[-4:],1)
-            print(fit)
+            logging.info('fit: ' + str(fit))
             self.v_end_est = np.append(self.v_end_est,fit[1])
             self.latest_line()
-            print ('estimated endpoint: '+  str(fit[1]) + ' uL' )
+            logging.info('estimated endpoint: '+  str(fit[1]) + ' uL' )
             # predicted endpoint with some safety bounds
             if self.gF[-1] / self.gF[1] > 0.005:
                 self.v_end = np.clip(fit[1],0,vmax)
             tgt_vol = self.target(self.v_end,mode=self.mode)
-            print('target is: ' + str(tgt_vol) + ', uL is ' + str(self.cumvol)\
+            logging.info('target is: ' + str(tgt_vol) + ', uL is ' + str(self.cumvol)\
                   + 'cumvol is: ' + str(self.cumvol))
             if not tgt_vol:
                 break
@@ -138,13 +142,14 @@ class titration():
         to_endpoint_vol = self.endpoint - self.cumvol
         if to_endpoint_vol > 0:
             self.pump.movr(str(to_endpoint_vol))
-            print(str(to_endpoint_vol) + ' uL dispensed to reach endpoint')
-        print('endpoint reached: ' + str(self.v_end) + ' uL')
+            logging.info(str(to_endpoint_vol) + ' uL dispensed to reach endpoint')
+        logging.warning('endpoint reached: ' + str(self.v_end) + ' uL')
         self.gran_fac()
         self.end_time = strftime("%Y%m%d%H%M%S", gmtime())
         self.is_complete = True
         #self.O2 = self.concentration()
         self.toJSON()
+        self.pump.setPos(0)
 
 
     def dispense(self,vol):
@@ -152,12 +157,17 @@ class titration():
         dispense a given volume, then read meter and update fields
         """
         dispense_time = self.pump.wait_for_dispense(vol)
+        print(str(dispense_time) + 'secs')
         self.pump.movr(str(vol))
-        print('dispensing ' + str(vol) + ' uL')
+        logging.info('dispensing ' + str(vol) + ' uL')
         sleep(dispense_time)
-        self.cumvol = self.pump.getPos()
-        print('cumulative vol: ' + str(self.cumvol) + ' uL')
+        sleep(0.5)
+        logging.info('cumulative vol: ' + str(self.cumvol) + ' uL')
+        sleep(0.5)
+        print('reading meter...')
         mV,T = self.meter.meas()
+        self.cumvol = self.pump.getPos()
+        print(str(mV)+ ' T: '+str(T))
         if self.dummy_meter:
             T = 20
             mV = self.dummy_read(self.cumvol)
@@ -172,7 +182,7 @@ class titration():
         """
         virtual debug titration for when neither pump nor meter are connected
         """
-        print('dispense from data ' + str(vol) + ' uL')
+        logging.info('dispense from data ' + str(vol) + ' uL')
         T = 20
         self.T = np.append(self.T,T)
         self.cumvol += vol
@@ -186,22 +196,22 @@ class titration():
         calculate how much to dispense in next step
         """
         if mode == 'rapid':
-            print(v_end,self.cumvol)
+            #logging.info(v_end,self.cumvol)
             gran_tgt = v_end + np.array([-400,-200, -100,-60, -30, -10, -5, -3])
             gran_window = v_end + np.array([-450,-230, -120,-70, -35, -15, -8, -5])
             windowdiff = gran_window - self.cumvol
 
             tgtdiff = gran_tgt-self.cumvol
-            print('target ranges are ')
-            print(tgtdiff,windowdiff)
+            logging.info('target ranges are: ' + str(tgtdiff))
+            #logging.info(str(tgtdiff,windowdiff))
             # the first target that is at least 1 uL more than amount dispensed
             itgt = np.argmax(windowdiff > 1)
 
             if not itgt and windowdiff[0] <= 1:
                 return False
             else:
-                print('gran target ' + str(gran_tgt[itgt]))
-                print('vol target ' + str(tgtdiff[itgt]))
+                logging.info('gran target ' + str(gran_tgt[itgt]))
+                logging.info('vol target ' + str(tgtdiff[itgt]))
                 return np.round(tgtdiff[itgt])
         else:
             vol_to_end = v_end-self.cumvol;

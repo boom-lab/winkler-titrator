@@ -3,6 +3,10 @@
 
 model/data/*
 
+*.dmg
+
+target/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
