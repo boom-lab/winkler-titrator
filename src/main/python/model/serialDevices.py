@@ -341,7 +341,7 @@ class kloehn_pump(serial.Serial):
     def dispense(self,uL,eol=TERMINATOR):
         stepstr = str(int(float(uL)*self.SF+0.5))
         print('step: '+ stepstr)
-        self.write((self.InAddr + 'R' + eol).encode('utf-8'));
+        self.write((self.OutAddr + 'R' + eol).encode('utf-8'));
         time.sleep(0.5)
         self.write(('/1D' + stepstr + 'R' + eol).encode('utf-8'))
         time.sleep(self.wait_for_dispense(uL))
