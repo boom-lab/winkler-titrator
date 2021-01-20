@@ -317,7 +317,7 @@ class kloehn_pump(serial.Serial):
         self.reset_input_buffer()
         bmsg = ('?8' + eol).encode('utf-8')
 
-    # move to absolute position
+    # move relative amount
     def movr(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
         val = float(uL)
@@ -331,7 +331,7 @@ class kloehn_pump(serial.Serial):
             self.write(('/1P' + stepstr + 'R' + eol).encode('utf-8'))
 
 
-    # move relative amount
+    # move absolute amount
     def mova(self,uL,eol=TERMINATOR):
         # dispense - move pump to absolute position
         val = float(uL)
@@ -342,13 +342,13 @@ class kloehn_pump(serial.Serial):
 
     def dispense(self,uL,eol=TERMINATOR):
         self.write((self.OutAddr + 'R' + eol).encode('utf-8'));
-        time.sleep(0.5)
+        #time.sleep(0.5)
         self.movr(uL)
         time.sleep(self.wait_for_dispense(uL))
 
     def fill(self,uL,eol=TERMINATOR):
         self.write((self.InAddr + 'R' + eol).encode('utf-8'));
-        time.sleep(0.5)
+        #time.sleep(0.5)
         self.movr('-'+uL)
         time.sleep(self.wait_for_dispense(uL))
 

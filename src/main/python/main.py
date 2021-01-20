@@ -88,9 +88,11 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.pushButton_flask.clicked.connect(self.flask_clicked)
         self.pushButton_titrate.clicked.connect(self.titrate_clicked)
         self.pushButton_dispenseStandard.clicked.connect(self.dispense_standard_clicked)
-        self.pushButton_loadStandard.clicked.connect(self.fill_standard_clicked)
+        self.pushButton_loadStandard.clicked.connect(self.load_standard_clicked)
+        self.pushButton_emptyStandard.clicked.connect(self.empty_standard_clicked)
+        self.pushButton_fillStandard.clicked.connect(self.fill_standard_clicked)
         self.pushButton_dispenseThios.clicked.connect(self.dispense_thios_clicked)
-        self.pushButton_loadThios.clicked.connect(self.fill_thios_clicked)
+        self.pushButton_loadThios.clicked.connect(self.load_thios_clicked)
         #self.comboBox_meter.activated.connect(self.load_ports)
         #self.comboBox_pump.activated.connect(self.load_ports)
         # Connect dispense buttons
@@ -249,11 +251,21 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.std_pump.dispense(str(dispense_vol))
         logging.info('dispensed  '+str(dispense_vol) + ' uL of standard')
 
-    def fill_standard_clicked(self):
+    def load_standard_clicked(self):
         load_vol = self.spinBox_standard.value()
         print(load_vol)
         self.std_pump.fill(str(load_vol))
         logging.info('filled  '+str(load_vol) + ' uL of standard')
+
+    # completely empty
+    def empty_standard_clicked(self):
+        self.std_pump.mova(str(0))
+        logging.info('emptied standard')
+
+    # completely fill syringe
+    def fill_standard_clicked(self):
+        self.std_pump.mova(str(self.steps))
+        logging.info('filled standard')
 
 
     def dispense_thios_clicked(self):
@@ -262,12 +274,12 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.pump.dispense(str(dispense_vol))
         logging.info('dispensed  '+str(dispense_vol) + ' uL of thiosulfate')
 
-    def fill_thios_clicked(self):
+    def load_thios_clicked(self):
 
         load_vol = self.spinBox_thios.value()
         print(load_vol)
         self.pump.fill(str(load_vol))
-        logging.info('filled  '+str(load_vol) + ' uL of thiosulfate')
+        logging.info('loaded  '+str(load_vol) + ' uL of thiosulfate')
 
 
 
