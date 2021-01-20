@@ -161,9 +161,9 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 logging.info('MLYNX pump connected on ' + self.comboBox_pump.currentText())
             elif config['PUMP']['Controller'] == 'KLOEHN':
                 #sf = float(config['PUMP']['Steps'])/float(config['PUMP']['SyringeVol'])
-                vm = float(config['PUMP']['MaxVelocity'])
-                svol = float(config['PUMP']['SyringeVol'])
-                steps = float(config['PUMP']['Steps'])
+                vm = config['PUMP']['MaxVelocity']
+                svol = config['PUMP']['SyringeVol']
+                steps = config['PUMP']['Steps']
                 self.pump = sd.kloehn_pump(self.comboBox_pump.currentText(),steps=steps,syringe_vol=svol,VM=vm)
                 logging.info('KLOEHN pump connected on ' + self.comboBox_pump.currentText())
 
@@ -183,9 +183,9 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 logging.info('MLYNX pump connected on ' + self.comboBox_standard.currentText())
             elif config['STD_PUMP']['Controller'] == 'KLOEHN':
                 #sf = float(config['STD_PUMP']['Steps'])/float(config['STD_PUMP']['SyringeVol'])
-                vm = float(config['STD_PUMP']['MaxVelocity'])
-                svol = float(config['STD_PUMP']['SyringeVol'])
-                steps = float(config['STD_PUMP']['Steps'])
+                vm = config['STD_PUMP']['MaxVelocity']
+                svol = config['STD_PUMP']['SyringeVol']
+                steps = config['STD_PUMP']['Steps']
                 self.std_pump = sd.kloehn_pump(self.comboBox_standard.currentText(),steps=steps,syringe_vol=svol,VM=vm)
                 logging.info('KLOEHN pump connected on ' + self.comboBox_standard.currentText()+'with '+ str(svol) + ' uL syringe')
         except Exception as ex:
@@ -254,17 +254,17 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     def load_standard_clicked(self):
         load_vol = self.spinBox_standard.value()
         print(load_vol)
-        self.std_pump.fill(str(load_vol))
-        logging.info('filled  '+str(load_vol) + ' uL of standard')
+        self.std_pump.load(str(load_vol))
+        logging.info('loaded  '+str(load_vol) + ' uL of standard')
 
     # completely empty
     def empty_standard_clicked(self):
-        self.std_pump.mova(str(0))
+        self.std_pump.empty()
         logging.info('emptied standard')
 
     # completely fill syringe
     def fill_standard_clicked(self):
-        self.std_pump.mova(str(self.steps))
+        self.std_pump.fill()
         logging.info('filled standard')
 
 
@@ -278,7 +278,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
 
         load_vol = self.spinBox_thios.value()
         print(load_vol)
-        self.pump.fill(str(load_vol))
+        self.pump.load(str(load_vol))
         logging.info('loaded  '+str(load_vol) + ' uL of thiosulfate')
 
 

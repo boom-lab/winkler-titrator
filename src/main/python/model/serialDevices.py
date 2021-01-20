@@ -247,22 +247,24 @@ class kloehn_pump(serial.Serial):
     Be sure pump is powered and serial cable connected
     """
     TERMINATOR = '\r\n'
-    def __init__(self,port,steps=48000,syringe_vol=1000,VM=500,InAddr='/1o1R',OutAddr='/1o2R'):
+    def __init__(self,port,steps=48000,syringe_vol=1000,VM='500',InAddr='/1o1R',OutAddr='/1o2R'):
 
         eol = '\r\n'
         self.SF = float(steps)/float(syringe_vol)
-        self.VM = float(VM)
+        self.VM = VM
         self.syringe_vol = syringe_vol
         self.steps = steps
         self.InAddr = InAddr
         self.OutAddr = OutAddr
         super().__init__(port)
         #intitialize command required on power-up
-        self.write(('/W4R'+ eol).encode('utf-8'))
+        self.write(('/1W4R'+ eol).encode('utf-8'))
         #set max velocity (steps/sec)
-        bmsg = ('/V'+str(VM)+'R'+ eol).encode('utf-8')
+        bmsg = ('/1V'+str(VM)+'R'+ eol).encode('utf-8')
+        print(bmsg)
         self.write(bmsg)
-        print('connecting kloehn pump')
+        #logging.INFO('wrote ' +  str(bmsg))
+        print('connecting kloehn pump'+ ' VM msg is ' + str(bmsg))
         #logging.INFO('connecting kloehn pump')
         #bmsg = ('/1' + 'V' + self.VM + 'R' + eol).encode('utf-8')
 
@@ -295,7 +297,7 @@ class kloehn_pump(serial.Serial):
         posstr = str(l2[0])
         print(posstr)
         pos = int(posstr)
-        return (self.steps-pos)/self.SF
+        return (float(self.steps)-pos)/self.SF
 
 
     # funtion to pass any command to pump (not tested)
@@ -321,14 +323,10 @@ class kloehn_pump(serial.Serial):
     def movr(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
         val = float(uL)
-        print('moving ' + str(uL))
-        step = round(val*self.SF)
-        if step >= 0:
-            stepstr = str(step)
-            self.write(('/1D' + stepstr + 'R' + eol).encode('utf-8'))
+        if val >= 0:
+            self.dispense(uL)
         else:
-            stepstr = str(abs(step))
-            self.write(('/1P' + stepstr + 'R' + eol).encode('utf-8'))
+            self.load(uL)
 
 
     # move absolute amount
@@ -341,21 +339,37 @@ class kloehn_pump(serial.Serial):
         self.write(('/1A' + stepstr + 'R' + eol).encode('utf-8'))
 
     def dispense(self,uL,eol=TERMINATOR):
-        self.write((self.OutAddr + 'R' + eol).encode('utf-8'));
-        #time.sleep(0.5)
-        self.movr(uL)
+        stepstr = str(int(float(uL)*self.SF+0.5))
+        print('step: '+ stepstr)
+        self.write((self.InAddr + 'R' + eol).encode('utf-8'));
+        time.sleep(0.5)
+        self.write(('/1D' + stepstr + 'R' + eol).encode('utf-8'))
         time.sleep(self.wait_for_dispense(uL))
 
-    def fill(self,uL,eol=TERMINATOR):
+    def load(self,uL,eol=TERMINATOR):
+        stepstr = str(int(float(uL)*self.SF+0.5))
+        print('step: '+ stepstr)
         self.write((self.InAddr + 'R' + eol).encode('utf-8'));
-        #time.sleep(0.5)
-        self.movr('-'+uL)
+        time.sleep(0.5)
+        self.write(('/1P' + stepstr + 'R' + eol).encode('utf-8'))
         time.sleep(self.wait_for_dispense(uL))
+
+    def fill(self,eol=TERMINATOR):
+        print('fillling' + str(self.steps))
+        self.write((self.InAddr + 'R' + eol).encode('utf-8'));
+        time.sleep(1.0)
+        self.write(('/1A' + str(self.steps) + 'R' + eol).encode('utf-8'))
+        #time.sleep(self.wait_for_dispense(uL))
+
+    def empty(self,eol=TERMINATOR):
+        self.write((self.OutAddr + 'R' + eol).encode('utf-8'));
+        time.sleep(0.5)
+        self.write(('/1A0R' + eol).encode('utf-8'))
 
     def wait_for_dispense(self,uL):
         # maximum rate in uL sec-1
         uL = float(uL)
-        max_rate = self.VM/self.SF
+        max_rate = float(self.VM)/self.SF
         # wait for dispense to complete (add 0.2 secs for accel/decel)
         wait_time = abs(uL) / float(max_rate) + 0.2
         return wait_time

@@ -47,7 +47,7 @@ class titration():
         self.DEBUG = False
         # when True the meter makes a reading (e.g. in DI water) but dummy_read
         # is called and mock data returned
-        self.dummy_meter = False
+        self.dummy_meter = True
         self.O2 = np.array([])
         self.Vblank = 0
         self.reagO2 = 7.6e-8; # concentration of O2 dissolved in reagents
@@ -83,7 +83,7 @@ class titration():
                         (self.botvol-self.reagvol))
             return cO2
 
-    def titrate(self,guess,vmax=3000):
+    def titrate(self,guess,vmax=2000):
         """
         Start and execute titration
             1. Titrate 10%, 20%, 30%, 40% of first guess
@@ -98,7 +98,7 @@ class titration():
                 logging.warning('meter not connected')
             elif self.is_complete:
                 logging.warning('sample already titrated')
-        self.pump.setPos(0)
+        self.pump.fill()
         sleep(0.1)
         ini_vol = 0.1*guess
         # titrate to 40% and predict endpoint
@@ -149,7 +149,7 @@ class titration():
         self.is_complete = True
         #self.O2 = self.concentration()
         self.toJSON()
-        self.pump.setPos(0)
+        self.pump.fill()
 
 
     def dispense(self,vol):
