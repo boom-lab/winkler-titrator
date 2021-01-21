@@ -254,8 +254,9 @@ class kloehn_pump(serial.Serial):
         self.VM = VM
         self.syringe_vol = syringe_vol
         self.steps = steps
-        self.InPos = ('/o' + InAddr + 'R' + eol).encode('utf-8');
-        self.InOut = ('/o' + OutAddr + 'R' + eol).encode('utf-8');
+        self.InPos = ('/1o' + InAddr + 'R' + eol).encode('utf-8');
+        self.OutPos = ('/1o' + OutAddr + 'R' + eol).encode('utf-8');
+        print('Inlet Valve position command is' + self.InPos)
         super().__init__(port)
         #intitialize command required on power-up
         self.write(('/1W4R'+ eol).encode('utf-8'))
@@ -357,7 +358,8 @@ class kloehn_pump(serial.Serial):
         time.sleep(self.wait_for_dispense(uL))
 
     def fill(self,eol=TERMINATOR):
-        print('fillling' + str(self.steps))
+        print('filling' + str(self.steps))
+        print(self.Inpos)
         self.write(self.InPos);
         time.sleep(1.0)
         self.write(('/1A' + str(self.steps) + 'R' + eol).encode('utf-8'))
