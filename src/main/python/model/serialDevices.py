@@ -359,7 +359,6 @@ class kloehn_pump(serial.Serial):
 
     def fill(self,eol=TERMINATOR):
         print('filling' + str(self.steps))
-        print(self.Inpos)
         self.write(self.InPos);
         time.sleep(1.0)
         self.write(('/1A' + str(self.steps) + 'R' + eol).encode('utf-8'))
