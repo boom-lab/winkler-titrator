@@ -164,7 +164,9 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 vm = config['PUMP']['MaxVelocity']
                 svol = config['PUMP']['SyringeVol']
                 steps = config['PUMP']['Steps']
-                self.pump = sd.kloehn_pump(self.comboBox_pump.currentText(),steps=steps,syringe_vol=svol,VM=vm)
+                inaddr = config['PUMP']['InAddr']
+                outaddr = config['PUMP']['OutAddr']
+                self.pump = sd.kloehn_pump(self.comboBox_pump.currentText(),steps=steps,syringe_vol=svol,VM=vm,InAddr=inaddr,OutAddr=outaddr)
                 logging.info('KLOEHN pump connected on ' + self.comboBox_pump.currentText())
 
         except Exception as ex:
@@ -186,7 +188,9 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 vm = config['STD_PUMP']['MaxVelocity']
                 svol = config['STD_PUMP']['SyringeVol']
                 steps = config['STD_PUMP']['Steps']
-                self.std_pump = sd.kloehn_pump(self.comboBox_standard.currentText(),steps=steps,syringe_vol=svol,VM=vm)
+                inaddr = config['STD_PUMP']['InAddr']
+                outaddr = config['STD_PUMP']['OutAddr']
+                self.std_pump = sd.kloehn_pump(self.comboBox_standard.currentText(),steps=steps,syringe_vol=svol,VM=vm,InAddr=inaddr,OutAddr=outaddr)
                 logging.info('KLOEHN pump connected on ' + self.comboBox_standard.currentText()+'with '+ str(svol) + ' uL syringe')
         except Exception as ex:
             QMessageBox.warning(self,'Connect Warning',\

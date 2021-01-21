@@ -247,15 +247,15 @@ class kloehn_pump(serial.Serial):
     Be sure pump is powered and serial cable connected
     """
     TERMINATOR = '\r\n'
-    def __init__(self,port,steps=48000,syringe_vol=1000,VM='500',InAddr='/1o1R',OutAddr='/1o2R'):
+    def __init__(self,port,steps=48000,syringe_vol=1000,VM='500',InAddr='1',OutAddr='2'):
 
         eol = '\r\n'
         self.SF = float(steps)/float(syringe_vol)
         self.VM = VM
         self.syringe_vol = syringe_vol
         self.steps = steps
-        self.InAddr = InAddr
-        self.OutAddr = OutAddr
+        self.InPos = ('/o' + InAddr + 'R' + eol).encode('utf-8');
+        self.InOut = ('/o' + OutAddr + 'R' + eol).encode('utf-8');
         super().__init__(port)
         #intitialize command required on power-up
         self.write(('/1W4R'+ eol).encode('utf-8'))
@@ -281,8 +281,9 @@ class kloehn_pump(serial.Serial):
         # elseif string(bline).st
             # return False
     def setPos(self,pos=0,eol=TERMINATOR):
-        self.write((self.InAddr + 'R' + eol).encode('utf-8'))
+        self.write(self.InPos)
         time.sleep(1)
+        ### FIX THIS
         self.mova(self.syringe_vol)
 
     def getPos(self,eol=TERMINATOR):
@@ -318,6 +319,7 @@ class kloehn_pump(serial.Serial):
     def getValvePos(self,eol=TERMINATOR):
         self.reset_input_buffer()
         bmsg = ('?8' + eol).encode('utf-8')
+        return str(bmsg)
 
     # move relative amount
     def movr(self,uL,eol=TERMINATOR):
@@ -341,7 +343,7 @@ class kloehn_pump(serial.Serial):
     def dispense(self,uL,eol=TERMINATOR):
         stepstr = str(int(float(uL)*self.SF+0.5))
         print('step: '+ stepstr)
-        self.write((self.OutAddr + 'R' + eol).encode('utf-8'));
+        self.write(self.OutPos);
         time.sleep(0.5)
         self.write(('/1D' + stepstr + 'R' + eol).encode('utf-8'))
         time.sleep(self.wait_for_dispense(uL))
@@ -349,20 +351,20 @@ class kloehn_pump(serial.Serial):
     def load(self,uL,eol=TERMINATOR):
         stepstr = str(int(float(uL)*self.SF+0.5))
         print('step: '+ stepstr)
-        self.write((self.InAddr + 'R' + eol).encode('utf-8'));
+        self.write(self.InPos);
         time.sleep(0.5)
         self.write(('/1P' + stepstr + 'R' + eol).encode('utf-8'))
         time.sleep(self.wait_for_dispense(uL))
 
     def fill(self,eol=TERMINATOR):
         print('fillling' + str(self.steps))
-        self.write((self.InAddr + 'R' + eol).encode('utf-8'));
+        self.write(self.InPos);
         time.sleep(1.0)
         self.write(('/1A' + str(self.steps) + 'R' + eol).encode('utf-8'))
         #time.sleep(self.wait_for_dispense(uL))
 
     def empty(self,eol=TERMINATOR):
-        self.write((self.OutAddr + 'R' + eol).encode('utf-8'));
+        self.write(self.OutPos);
         time.sleep(0.5)
         self.write(('/1A0R' + eol).encode('utf-8'))
 
