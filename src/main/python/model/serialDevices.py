@@ -256,7 +256,7 @@ class kloehn_pump(serial.Serial):
         self.steps = steps
         self.InPos = ('/1o' + InAddr + 'R' + eol).encode('utf-8');
         self.OutPos = ('/1o' + OutAddr + 'R' + eol).encode('utf-8');
-        print('Inlet Valve position command is' + self.InPos)
+        print('Inlet Valve position command is' + str(self.InPos))
         super().__init__(port)
         #intitialize command required on power-up
         self.write(('/1W4R'+ eol).encode('utf-8'))
