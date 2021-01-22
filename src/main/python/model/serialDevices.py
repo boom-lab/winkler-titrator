@@ -285,7 +285,7 @@ class kloehn_pump(serial.Serial):
         self.write(self.InPos)
         time.sleep(1)
         ### FIX THIS
-        self.mova(self.syringe_vol)
+        #self.mova(self.syringe_vol)
 
     def getPos(self,eol=TERMINATOR):
         b =self.read(self.in_waiting)
