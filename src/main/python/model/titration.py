@@ -107,7 +107,7 @@ class titration():
             if self.DEBUG:
                 self.dispense_from_data(ini_vol)
             else:
-                self.dispense(ini_vol)
+                self.dispense_thios(ini_vol)
             self.v_end_est = np.append(self.v_end_est,0)
             self.latest_line()
         self.gran_fac()
@@ -123,7 +123,7 @@ class titration():
             if self.DEBUG:
                 self.dispense_from_data(tgt_vol)
             else:
-                self.dispense(tgt_vol)
+                self.dispense_thios(tgt_vol)
             fit = np.polyfit(self.gF[-4:],self.uL[-4:],1)
             logging.info('fit: ' + str(fit))
             self.v_end_est = np.append(self.v_end_est,fit[1])
@@ -152,7 +152,7 @@ class titration():
         self.pump.fill()
 
 
-    def dispense(self,vol):
+    def dispense_thios(self,vol):
         """
         dispense a given volume, then read meter and update fields
         """

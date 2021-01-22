@@ -349,7 +349,7 @@ class kloehn_pump(serial.Serial):
         self.write(self.OutPos);
         time.sleep(1)
         self.write(('/1D' + stepstr + 'R' + eol).encode('utf-8'))
-        time.sleep(self.wait_for_dispense(uL))
+        #time.sleep(self.wait_for_dispense(uL))
 
     def load(self,uL,eol=TERMINATOR):
         stepstr = str(int(float(uL)*self.SF+0.5))
@@ -359,14 +359,14 @@ class kloehn_pump(serial.Serial):
         self.write(self.InPos);
         time.sleep(0.5)
         self.write(('/1P' + stepstr + 'R' + eol).encode('utf-8'))
-        time.sleep(self.wait_for_dispense(uL))
+        #time.sleep(self.wait_for_dispense(uL))
 
     def fill(self,eol=TERMINATOR):
         print('filling' + str(self.steps))
         self.write(self.InPos);
         time.sleep(1.0)
         self.write(('/1A' + str(self.steps) + 'R' + eol).encode('utf-8'))
-        #time.sleep(self.wait_for_dispense(uL))
+        time.sleep(self.wait_for_dispense(uL))
 
     def empty(self,eol=TERMINATOR):
         self.write(self.OutPos);
