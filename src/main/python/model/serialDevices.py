@@ -366,7 +366,7 @@ class kloehn_pump(serial.Serial):
         self.write(self.InPos);
         time.sleep(1.0)
         self.write(('/1A' + str(self.steps) + 'R' + eol).encode('utf-8'))
-        time.sleep(self.wait_for_dispense(uL))
+        time.sleep(self.steps/self.VM)
 
     def empty(self,eol=TERMINATOR):
         self.write(self.OutPos);

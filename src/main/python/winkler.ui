@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1249</width>
-    <height>840</height>
+    <height>956</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -193,7 +193,7 @@ border-color: rgb(0, 116, 0);</string>
       <item>
        <widget class="QTabWidget" name="tabs">
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_Settings">
          <attribute name="title">
@@ -228,6 +228,9 @@ border-color: rgb(0, 116, 0);</string>
               <widget class="QLabel" name="label_5">
                <property name="text">
                 <string>Select COM port for meter</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
                </property>
               </widget>
              </item>
