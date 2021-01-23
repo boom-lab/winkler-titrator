@@ -47,7 +47,7 @@ class titration():
         self.DEBUG = False
         # when True the meter makes a reading (e.g. in DI water) but dummy_read
         # is called and mock data returned
-        self.dummy_meter = False
+        self.dummy_meter = True
         self.O2 = np.array([])
         self.Vblank = 0
         self.reagO2 = 7.6e-8; # concentration of O2 dissolved in reagents
@@ -141,7 +141,7 @@ class titration():
         self.endpoint = self.v_end
         to_endpoint_vol = self.endpoint - self.cumvol
         if to_endpoint_vol > 0:
-            self.pump.movr(str(to_endpoint_vol))
+            self.pump.dispense(str(to_endpoint_vol))
             logging.info(str(to_endpoint_vol) + ' uL dispensed to reach endpoint')
         logging.warning('endpoint reached: ' + str(self.v_end) + ' uL')
         self.gran_fac()
@@ -158,7 +158,7 @@ class titration():
         """
         dispense_time = self.pump.wait_for_dispense(vol)
         print(str(dispense_time) + 'secs')
-        self.pump.movr(str(vol))
+        self.pump.dispense(str(vol))
         logging.info('dispensing ' + str(vol) + ' uL')
         sleep(dispense_time)
         sleep(0.5)

@@ -143,7 +143,7 @@ class mforce_pump(serial.Serial):
             print('no response -- check connnection')
 
 
-    def movr(self,uL,eol=TERMINATOR):
+    def dispense(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
         # 1 ul = 23104 steps
         steps = int(float(uL))*self.MUNIT
@@ -222,7 +222,7 @@ class mlynx_pump(serial.Serial):
             print('no response -- check connnection')
 
 
-    def movr(self,uL,eol=TERMINATOR):
+    def dispense(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
         self.write(('movr ' + uL + eol).encode('utf-8'))
 
@@ -247,21 +247,22 @@ class kloehn_pump(serial.Serial):
     Be sure pump is powered and serial cable connected
     """
     TERMINATOR = '\r\n'
-    def __init__(self,port,steps=48000,syringe_vol=1000,VM='500',InAddr='1',OutAddr='2'):
+    def __init__(self,port,steps=48000,syringe_vol=1000,VM='500',InAddr='1',OutAddr='2',PumpAddr='/1'):
 
         eol = '\r\n'
         self.SF = float(steps)/float(syringe_vol)
         self.VM = VM
         self.syringe_vol = syringe_vol
         self.steps = steps
-        self.InPos = ('/1o' + InAddr + 'R' + eol).encode('utf-8');
-        self.OutPos = ('/1o' + OutAddr + 'R' + eol).encode('utf-8');
+        self.pump_addr = PumpAddr
+        self.InPos = (PumpAddr + 'o' + InAddr + 'R' + eol).encode('utf-8');
+        self.OutPos = (PumpAddr + 'o' + OutAddr + 'R' + eol).encode('utf-8');
         print('Inlet Valve position command is' + str(self.InPos))
         super().__init__(port)
         #intitialize command required on power-up
         self.write(('/1W4R'+ eol).encode('utf-8'))
         #set max velocity (steps/sec)
-        bmsg = ('/1V'+str(VM)+'R'+ eol).encode('utf-8')
+        bmsg = (PumpAddr + 'V'+str(VM)+'R'+ eol).encode('utf-8')
         print(bmsg)
         self.write(bmsg)
         #logging.INFO('wrote ' +  str(bmsg))
@@ -272,17 +273,19 @@ class kloehn_pump(serial.Serial):
 
 
     # redefine readline to work for \r line termination
-    # def isBusy(self,var,eol=TERMINATOR):
-        # self.reset_input_buffer()
-        # bmsg = ('/1' + eol).encode('utf-8')
-        # self.write(bmsg)
-        # bline = self.readline()
-        # if string(bline) = '@':
-            # return True
-        # elseif string(bline).st
-            # return False
+    def isBusy(self,var,eol=TERMINATOR):
+        self.reset_input_buffer()
+        bmsg = (self.pump_addr + eol).encode('utf-8')
+        self.write(bmsg)
+        time.sleep(0.1)
+        bline = self.readline()
+        if string(bline).ends_with = '@':
+            return True
+        elseif string(bline).st
+            return False
+
     def setPos(self,pos=0,eol=TERMINATOR):
-        self.write(self.InPos)
+        #self.write(self.InPos)
         time.sleep(1)
         ### FIX THIS
         #self.mova(self.syringe_vol)
@@ -290,7 +293,7 @@ class kloehn_pump(serial.Serial):
     def getPos(self,eol=TERMINATOR):
         b =self.read(self.in_waiting)
         while self.in_waiting < 10:
-            self.write('/1?\r'.encode('utf-8'))
+            self.write((PumpAddr + "\\" + eol).encode('utf-8'))
             time.sleep(0.1)
         b =self.read(self.in_waiting)
         print(b)
@@ -311,7 +314,7 @@ class kloehn_pump(serial.Serial):
         if self.in_waiting:
             bline = self.readline()
             print(bline)
-            return bline
+            return string(bline)
 
         else:
             print('no response -- check connnection')
@@ -320,17 +323,13 @@ class kloehn_pump(serial.Serial):
     def getValvePos(self,eol=TERMINATOR):
         self.reset_input_buffer()
         bmsg = ('?8' + eol).encode('utf-8')
-        return str(bmsg)
+        if self.in_waiting:
+            bline = self.readline()
+            print(bline)
+            return string(bline)
 
-    # move relative amount
-    def movr(self,uL,eol=TERMINATOR):
-        # dispense - relative pump movement
-        val = float(uL)
-        if val >= 0:
-            self.dispense(uL)
         else:
-            self.load(uL)
-
+            print('no response -- check connnection')
 
     # move absolute amount
     def mova(self,uL,eol=TERMINATOR):
@@ -348,8 +347,8 @@ class kloehn_pump(serial.Serial):
         time.sleep(0.5)
         self.write(self.OutPos);
         time.sleep(1)
-        self.write(('/1D' + stepstr + 'R' + eol).encode('utf-8'))
-        #time.sleep(self.wait_for_dispense(uL))
+        self.write((self.pump_addr +'D' + stepstr + 'R' + eol).encode('utf-8'))
+        time.sleep(self.wait_for_dispense(uL))
 
     def load(self,uL,eol=TERMINATOR):
         stepstr = str(int(float(uL)*self.SF+0.5))
@@ -358,20 +357,26 @@ class kloehn_pump(serial.Serial):
         time.sleep(0.5)
         self.write(self.InPos);
         time.sleep(0.5)
-        self.write(('/1P' + stepstr + 'R' + eol).encode('utf-8'))
-        #time.sleep(self.wait_for_dispense(uL))
+        self.write((self.pump_addr +'P' + stepstr + 'R' + eol).encode('utf-8'))
+        time.sleep(self.wait_for_dispense(uL))
 
     def fill(self,eol=TERMINATOR):
+        """
+        valve to inlet position and fill syringe completely
+        """
         print('filling' + str(self.steps))
         self.write(self.InPos);
         time.sleep(1.0)
-        self.write(('/1A' + str(self.steps) + 'R' + eol).encode('utf-8'))
+        self.write((self.pump_addr + 'A' + str(self.steps) + 'R' + eol).encode('utf-8'))
         time.sleep(float(self.steps)/float(self.VM))
 
     def empty(self,eol=TERMINATOR):
+        """
+        valve to outlet position and empty syringe completely
+        """
         self.write(self.OutPos);
         time.sleep(0.5)
-        self.write(('/1A0R' + eol).encode('utf-8'))
+        self.write((self.pump_addr + 'A0R' + eol).encode('utf-8'))
 
     def wait_for_dispense(self,uL):
         # maximum rate in uL sec-1
