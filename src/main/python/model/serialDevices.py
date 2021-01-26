@@ -260,12 +260,14 @@ class kloehn_pump(serial.Serial):
         print('Inlet Valve position command is' + str(self.InPos))
         super().__init__(port,timeout=10)
 
+        #intitialize command required on power-up
+        self.write(('/1~Y3R' + eol).encode('utf-8'))
+        time.sleep(0.1)
+        self.write(('/1Y4R'+ eol).encode('utf-8'))
+        time.sleep(self.wait_for_dispense(float(self.steps)/float(self.VM)+0.2))
         #set max velocity (steps/sec)
         bmsg = (PumpAddr + 'V'+str(VM)+'R'+ eol).encode('utf-8')
-        print(bmsg)
         self.write(bmsg)
-        #intitialize command required on power-up
-        self.write(('/1W4R'+ eol).encode('utf-8'))
         #logging.INFO('wrote ' +  str(bmsg))
         print('connecting kloehn pump'+ ' VM msg is ' + str(bmsg))
         #logging.INFO('connecting kloehn pump')
@@ -291,20 +293,6 @@ class kloehn_pump(serial.Serial):
         ### FIX THIS
         #self.mova(self.syringe_vol)
 
-#    def getPos(self,eol=TERMINATOR):
-#        b =self.read(self.in_waiting)
-#        while self.in_waiting < 10:
-#            self.write((self.pump_addr + "\\" + eol).encode('utf-8'))
-#            time.sleep(0.1)
-#        b =self.read(self.in_waiting)
-#        print(str(b))
-#        l = str(b).split("`")
-#        l2 = l[1].split("\\")
-#        posstr = str(l2[0])
-#        print(posstr)
-#        pos = int(posstr)
-#        return (float(self.steps)-pos)/self.SF
-
     def getPos(self,eol=TERMINATOR):
         self.read(self.in_waiting)
         self.write((self.pump_addr + '?' + eol).encode('utf-8'))
@@ -328,11 +316,14 @@ class kloehn_pump(serial.Serial):
 
     def getValvePos(self,eol=TERMINATOR):
         self.read(self.in_waiting)
-        self.write(self.pump_addr + '?8' + eol).encode('utf-8')
+        self.write((self.pump_addr + '?8' + eol).encode('utf-8'))
         time.sleep(0.1)
         b =self.read(self.in_waiting)
-        print('valve position:' + str(b))
-        return(str(b))
+        l = str(b).split("`")
+        l2 = l[1].split("\\")
+        posstr = str(l2[0])
+        print('valve position:' + posstr)
+        return(posstr)
 
 
     # move absolute amount
@@ -374,15 +365,22 @@ class kloehn_pump(serial.Serial):
         cvol = self.getPos()
         self.write((self.pump_addr + 'A' + str(self.steps) + 'R' + eol).encode('utf-8'))
         print('max velocity is: ' + self.VM)
-        time.sleep(float(cvol)*float(self.SF))/float(self.VM)
+        time.sleep(float(cvol)*float(self.SF)/float(self.VM))
 
     def empty(self,eol=TERMINATOR):
         """
         valve to outlet position and empty syringe completely
         """
+        self.read(self.in_waiting)
         self.write(self.OutPos);
         time.sleep(0.5)
+        self.read(self.in_waiting)
+        cvol = self.getPos()
+        self.read(self.in_waiting)
+        #self.write((self.pump_addr + 'A0R' + eol).encode('utf-8'))
+        time.sleep(0.1)
         self.write((self.pump_addr + 'A0R' + eol).encode('utf-8'))
+        time.sleep((float(self.steps)-float(cvol)*float(self.SF))/float(self.VM))
 
     def wait_for_dispense(self,uL):
         # maximum rate in uL sec-1

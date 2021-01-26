@@ -21,6 +21,7 @@ root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
 config = configparser.ConfigParser()
 config.read(os.path.join(root_dir,'wink.ini'))
 Mthios = config['PUMP']['Mthios']
+print('in address is :' + config['PUMP']['InAddr'])
 logging.basicConfig(filename=os.path.join(root_dir,'log'+strftime("%Y%m%d", \
     gmtime())),level='INFO',format='%(levelname)s %(asctime)s %(message)s')
 logging.info('Im logging!')
@@ -248,6 +249,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     def titration_done(self):
         QMessageBox.warning(self,'','titration complete: endpoint=' +  \
                 str(self.titr.endpoint),QMessageBox.Ok)
+        self.titr.pump.fill()
 
     def dispense_standard_clicked(self):
         dispense_vol = self.spinBox_standard.value()

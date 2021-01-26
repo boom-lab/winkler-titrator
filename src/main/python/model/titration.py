@@ -149,7 +149,7 @@ class titration():
         self.is_complete = True
         #self.O2 = self.concentration()
         self.toJSON()
-        self.pump.fill()
+        #self.pump.fill()
 
 
     def dispense_thios(self,vol):
@@ -160,13 +160,14 @@ class titration():
         print(str(dispense_time) + 'secs')
         self.pump.dispense(str(vol))
         logging.info('dispensing ' + str(vol) + ' uL')
-        sleep(dispense_time)
+        #sleep(dispense_time)
         sleep(0.5)
-        logging.info('cumulative vol: ' + str(self.cumvol) + ' uL')
         sleep(0.5)
         print('reading meter...')
-        mV,T = self.meter.meas()
         self.cumvol = self.pump.getPos()
+        mV,T = self.meter.meas()
+        logging.info('cumulative vol: ' + str(self.cumvol) + ' uL')
+        print('cumvol: ' + str(self.cumvol) + ' uL')
         print(str(mV)+ ' T: '+str(T))
         if self.dummy_meter:
             T = 20
