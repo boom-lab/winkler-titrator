@@ -47,7 +47,7 @@ class titration():
         self.DEBUG = False
         # when True the meter makes a reading (e.g. in DI water) but dummy_read
         # is called and mock data returned
-        self.dummy_meter = True
+        self.dummy_meter = False
         self.O2 = np.array([])
         self.Vblank = 0
         self.reagO2 = 7.6e-8; # concentration of O2 dissolved in reagents
@@ -106,6 +106,7 @@ class titration():
             print('starting x= ' + str(x))
             if self.DEBUG:
                 self.dispense_from_data(ini_vol)
+                print('warning simulated titration - debug mode is on')
             else:
                 self.dispense_thios(ini_vol)
             self.v_end_est = np.append(self.v_end_est,0)
@@ -122,6 +123,7 @@ class titration():
         while True:
             if self.DEBUG:
                 self.dispense_from_data(tgt_vol)
+                print('warning simulated titration - debug mode is on')
             else:
                 self.dispense_thios(tgt_vol)
             fit = np.polyfit(self.gF[-4:],self.uL[-4:],1)
@@ -172,6 +174,7 @@ class titration():
         if self.dummy_meter:
             T = 20
             mV = self.dummy_read(self.cumvol)
+            print('warning simulated titration - meter in sim mode')
         #else:
             #mV,T = self.meter.meas()
         self.mV = np.append(self.mV,mV)
