@@ -26,8 +26,8 @@ class meter(serial.Serial):
         self.Tpos = Tpos
         super().__init__(port,timeout=10)
 
-    def readline(self,eol=b'\n\r'): #need to change to \n\r for AXXX meters?
-    #def readline(self,eol='\r'):
+    #def readline(self,eol=b'\n\r'): #need to change to \n\r for AXXX meters?
+    def readline(self,eol='\r'):
         """
         read line of output -  meter uses '\r' terminator. replaces
         Serial.serial.readline() which only works with '\n'
@@ -67,6 +67,7 @@ class meter(serial.Serial):
         b = self.read(self.in_waiting)
         print(b)
         meas_list = b.decode().split(',')
+        print(meas_list)
         try:
             mV = float(meas_list[self.mVpos])
             T = float(meas_list[self.Tpos])
@@ -186,16 +187,17 @@ class mlynx_pump(serial.Serial):
     def getVar(self,var,eol=TERMINATOR):
         self.reset_input_buffer()
         bmsg = ('print ' + var.lower() + eol).encode('utf-8')
+        print(bmsg)
         self.write(bmsg)
-        time.sleep(0.2)
+        time.sleep(0.5)
         if self.in_waiting:
             bline = self.readline()
-            bline = self.readline()
+            print(bline)
             # if command is echoed, read next line
             if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
                 bline = self.readline()
                 print('second ' + bline)
-            val = float(bline)
+            val = float(bline[:-len(eol)])
             print(bline)
             return val
         else:
@@ -211,7 +213,7 @@ class mlynx_pump(serial.Serial):
         self.write(bmsg)
         time.sleep(0.2)
         if self.in_waiting:
-            bline = self.readline()
+            #bline = self.readline()
             bline = self.readline()
             # if command is echoed, read next line
             if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
@@ -221,6 +223,8 @@ class mlynx_pump(serial.Serial):
         else:
             print('no response -- check connnection')
 
+    def fill(self,eol=TERMINATOR):
+        print('milligat pump - no fill')
 
     def dispense(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
