@@ -21,7 +21,7 @@ root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
 config = configparser.ConfigParser()
 config.read(os.path.join(root_dir,'wink.ini'))
 Mthios = config['PUMP']['Mthios']
-print('in address is :' + config['PUMP']['InAddr'])
+# print('in address is :' + config['PUMP']['InAddr'])
 logging.basicConfig(filename=os.path.join(root_dir,'log'+strftime("%Y%m%d", \
     gmtime())),level='INFO',format='%(levelname)s %(asctime)s %(message)s')
 logging.info('Im logging!')
@@ -259,8 +259,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.ti_thr.finished.connect(self.titration_done)
 
     def stop_titration_clicked(self):
-        ti_thr = getattr(self, "ti_thr", None)
-        if ti_thr:
+        if hasattr(self, "ti_thr"):
             print('Complete Titration')
             self.ti_thr.finished.connect(self.titration_done)
         else:
