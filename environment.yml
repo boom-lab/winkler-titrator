@@ -5,10 +5,11 @@ channels:
 - defaults
 dependencies:
 - python=3.6
-- gsw
+- gsw=3.4.0
 - matplotlib
 - pyserial
 - xlrd
+- pip
 - pip:
   - pyqt5
   - fbs
