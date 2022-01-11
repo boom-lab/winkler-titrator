@@ -220,6 +220,16 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 self.comboBox_pump.addItem(p.device)
                 self.comboBox_standard.addItem(p.device)
 
+    def get_titration_type(self):
+        if self.pushButton_sample_type.down():
+            return 'sample'
+        elif self.pushButton_standard_type.down():
+            return 'standard'
+        elif self.pushButton_di_water_blank_type.down():
+            return 'di_blank'
+        elif self.pushButton_sea_water_blank_type.down():
+            return 'sw_blank'
+
     def titrate_clicked(self):
         guess = float(self.spinBox_guess.value())
         self.lcdNumber_endpoint.display(0)
@@ -228,14 +238,15 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         #print('initial guess is ' + str(guess))
         flaskid = self.comboBox_flasks.currentText()
         flaskvol = self.botdict[flaskid]
-        logging.info('flask ' + flaskid + ' with volume = ' + str(flaskvol))
+        titration_type = self.get_titration_type()
+        logging.info('flask ' + flaskid + '[' + titration_type + '] with volume = ' + str(flaskvol))
         #print('flask volume =' + str(flaskvol))
         if self.checkBox_rapid.isChecked():
             timode = 'rapid'
         else:
             timode = 'normal'
         #logging.info(str(timode))
-        self.titr = ti.titration(self.meter,self.pump,flaskid,flaskvol,0.2,\
+        self.titr = ti.titration(self.meter,self.pump,flaskid,flaskvol,titration_type,0.2,\
                             mode=timode)
         print('running titration')
         self.ti_thr = runTitration(self.titr,guess)

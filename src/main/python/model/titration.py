@@ -17,7 +17,7 @@ class titration():
     Class representing a Winkler titration of a single sample (or std)
     """
     root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
-    def __init__(self,meter,pump,botid,vbot,Mthios,datadir=os.path.join(root_dir,'data'),mode='normal'):
+    def __init__(self,meter,pump,botid,vbot,type,Mthios,datadir=os.path.join(root_dir,'data'),mode='normal'):
         """
         Initialize titration
         INPUTS:
@@ -33,6 +33,7 @@ class titration():
         self.meter = meter
         self.pump = pump
         self.botid = botid
+        self.type = type
         self.Mthios = Mthios
         self.cumvol = 0
         self.is_complete = False
@@ -60,7 +61,7 @@ class titration():
         if not os.path.exists(datadir):
             os.makedirs(datadir)
         with open(self.current_file,'w') as self.f:
-            self.f.write('time,uL,mV,gF,temp,v_end_est\n')
+            self.f.write('time,uL,mV,gF,temp,v_end_est,type\n')
         self.pump.setPos(0)
 
     def gran_fac(self):
