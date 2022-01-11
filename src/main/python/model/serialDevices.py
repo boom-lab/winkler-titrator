@@ -74,6 +74,7 @@ class meter(serial.Serial):
             return (mV,T)
         except:
             print('read failed')
+            return None
 
 
 

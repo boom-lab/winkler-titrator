@@ -168,7 +168,25 @@ class titration():
         sleep(0.5)
         print('reading meter...')
         self.cumvol = self.pump.getPos()
-        mV,T = self.meter.meas()
+
+        # Attempt to get a measurement from the meter
+        measurement_attempt = 0
+        max_measurement_attempts = 4
+        while measurement_attempt < max_measurement_attempts:
+            result = self.meter.meas()
+            if result is not None:
+                break
+            
+        # If no measurement retrieve give a message
+        if result is None:
+            failed_message = 'Failed to take any measurement within the ' + str(max_measurement_attempts) + ' attempts'
+            print(failed_message)
+            logging.info(failed_message)
+            return
+        
+        # Split measurement
+        mV,T = result
+
         logging.info('cumulative vol: ' + str(self.cumvol) + ' uL')
         print('cumvol: ' + str(self.cumvol) + ' uL')
         print(str(mV)+ ' T: '+str(T))
