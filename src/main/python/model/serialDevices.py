@@ -78,7 +78,8 @@ class meter(serial.Serial):
 
 
 
-
+class no_pump(serial.Serial):
+    print('No Pump Selected')
 
 class mforce_pump(serial.Serial):
     """
@@ -88,8 +89,6 @@ class mforce_pump(serial.Serial):
     since this is a 422 device, it requires an address which precedes each comman
     default is A
     """
-
-    print('hello')
     addr='A'
     MUNIT=2432
     TERMINATOR = '\r\n'

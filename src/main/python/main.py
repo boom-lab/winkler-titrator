@@ -179,7 +179,10 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
 
         # Connect pump for dispensing standard (KIO3)
         try:
-            if config['STD_PUMP']['Controller'] == 'MFORCE':
+            if self.comboBox_standard.currentText()=='None':
+                self.std_pump = None
+                logging.info('No standard pump available')
+            elif config['STD_PUMP']['Controller'] == 'MFORCE':
                 self.std_pump = sd.mforce_pump(self.comboBox_standard.currentText())
                 logging.info('MFORCE pump connected on ' + self.comboBox_standard.currentText())
             elif config['STD_PUMP']['Controller'] == 'MLYNX':
@@ -220,6 +223,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 self.comboBox_meter.addItem(p.device)
                 self.comboBox_pump.addItem(p.device)
                 self.comboBox_standard.addItem(p.device)
+        self.comboBox_standard.addItem('None')
 
     def get_titration_type(self):
         if self.pushButton_sample_type.isChecked():
