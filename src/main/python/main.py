@@ -88,6 +88,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.pushButton_reload.clicked.connect(self.load_ports)
         self.pushButton_flask.clicked.connect(self.flask_clicked)
         self.pushButton_titrate.clicked.connect(self.titrate_clicked)
+        self.pushButton_stop_titration.clicked.connect(self.stop_titration_clicked)
         self.pushButton_dispenseStandard.clicked.connect(self.dispense_standard_clicked)
         self.pushButton_loadStandard.clicked.connect(self.load_standard_clicked)
         self.pushButton_emptyStandard.clicked.connect(self.empty_standard_clicked)
@@ -256,6 +257,15 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         #self.plt_thr.sig_cumvol.connect(self.lcdNumber_dispensed.value)
         self.plt_thr.start()
         self.ti_thr.finished.connect(self.titration_done)
+
+    def stop_titration_clicked(self):
+        ti_thr = getattr(self, "ti_thr", None)
+        if ti_thr:
+            print('Complete Titration')
+            self.ti_thr.finished.connect(self.titration_done)
+        else:
+            print('No Titration in process')
+
 
     def titration_done(self):
         QMessageBox.warning(self,'','titration complete: endpoint=' +  \
