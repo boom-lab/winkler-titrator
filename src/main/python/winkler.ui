@@ -672,7 +672,7 @@ border-color: rgb(0, 116, 0);</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QPushButton" name="pushButton_di_water_blank_type">
                   <property name="toolTip">
                    <string extracomment="DI Water Blank"/>
                   </property>

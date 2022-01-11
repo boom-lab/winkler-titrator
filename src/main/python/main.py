@@ -221,13 +221,13 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 self.comboBox_standard.addItem(p.device)
 
     def get_titration_type(self):
-        if self.pushButton_sample_type.down():
+        if self.pushButton_sample_type.isChecked():
             return 'sample'
-        elif self.pushButton_standard_type.down():
+        elif self.pushButton_standard_type.isChecked():
             return 'standard'
-        elif self.pushButton_di_water_blank_type.down():
+        elif self.pushButton_di_water_blank_type.isChecked():
             return 'di_blank'
-        elif self.pushButton_sea_water_blank_type.down():
+        elif self.pushButton_sea_water_blank_type.isChecked():
             return 'sw_blank'
 
     def titrate_clicked(self):
