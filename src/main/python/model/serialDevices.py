@@ -177,6 +177,13 @@ class mforce_pump(serial.Serial):
         print('wait time ' + str(wait_time))
         return wait_time
 
+
+    def fill(self,eol=TERMINATOR):
+        """
+        dummy call to mimic a command to a kloehn but doesn't do anything
+        """
+        print('milligat pump - no fill')
+
 class mlynx_pump(serial.Serial):
     """
     Serial device object for milligat LF pump with microlynx controller
