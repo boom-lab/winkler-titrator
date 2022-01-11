@@ -8,7 +8,7 @@ dependencies:
 - gsw=3.4.0
 - matplotlib
 - pyserial
-- xlrd
+- xlrd=1.2.0
 - pip
 - pip:
   - pyqt5
