@@ -267,7 +267,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
             logging.info('Stop Titration and save to JSON')
 
             # cleanup and save when done early
-            self.titr.endpoint = self.v_end
+            self.titr.endpoint = self.titr.v_end
             to_endpoint_vol = self.titr.endpoint - self.titr.cumvol
             if to_endpoint_vol > 0:
                 self.titr.pump.dispense(str(to_endpoint_vol))
