@@ -12,7 +12,7 @@ import configparser
 import logging
 import os
 
-root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
+root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator-hakai')
 config = configparser.ConfigParser()
 config.read(os.path.join(root_dir,'wink.ini'))
 
