@@ -267,7 +267,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
             logging.info('Stop Titration and save to JSON')
             self.titr.toJSON()
         else:
-            logging.info('Clicked "Stop Titration" but titration in process')
+            logging.info('Clicked "Stop Titration" but no titration is in progress')
 
     def titration_done(self):
         QMessageBox.warning(self,'','titration complete: endpoint=' +  \
