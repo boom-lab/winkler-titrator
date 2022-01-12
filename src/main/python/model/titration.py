@@ -176,6 +176,8 @@ class titration():
             result = self.meter.meas()
             if result is not None:
                 break
+            else:
+                measurement_attempt += 1 
             
         # If no measurement retrieve give a message
         if result is None:
