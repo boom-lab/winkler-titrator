@@ -263,12 +263,11 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.ti_thr.finished.connect(self.titration_done)
 
     def stop_titration_clicked(self):
-        if hasattr(self, "ti_thr"):
-            print('Complete Titration')
-            self.ti_thr.finished.connect(self.titration_done)
+        if hasattr(self, "titr"):
+            logging.info('Stop Titration and save to JSON')
+            self.titr.toJSON()
         else:
-            print('No Titration in process')
-
+            logging.info('Clicked "Stop Titration" but titration in process')
 
     def titration_done(self):
         QMessageBox.warning(self,'','titration complete: endpoint=' +  \

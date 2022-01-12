@@ -267,7 +267,7 @@ class titration():
         titr = {}
         attributes = ('botid','Mthios','vbot','Vblank','init_time','v_end',\
                       'end_time','endpoint','mode')
-        npatts = ('mV','uL','T','v_end_est','endpoint')
+        npatts = ('mV','uL','T','v_end_est','endpoint','type')
         for att in attributes:
             titr[att] = getattr(self,att)
         for npatt in npatts:
@@ -289,7 +289,7 @@ class titration():
     def latest_line(self):
         line_list = (strftime("%Y%m%d%H%M%S", gmtime()),str(self.uL[-1]), \
                 str(self.mV[-1]),str(self.gF[-1]),str(self.T[-1]),\
-                str(self.v_end_est[-1]))
+                str(self.v_end_est[-1]),self.type[-1])
         line = ','.join(line_list)+'\n'
         with open(self.current_file,'a') as f:
             f.write(line)
