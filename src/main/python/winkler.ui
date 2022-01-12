@@ -202,7 +202,7 @@ border-color: rgb(0, 116, 0);</string>
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -384,6 +384,16 @@ border-color: rgb(0, 116, 0);</string>
                 </widget>
                </item>
               </layout>
+             </item>
+             <item>
+              <widget class="QFrame" name="frame">
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+              </widget>
              </item>
              <item>
               <spacer name="horizontalSpacer_5">
