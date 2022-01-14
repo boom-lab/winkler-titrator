@@ -287,6 +287,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     def stop_titration_clicked(self):
         if  hasattr(self, 'titr'):
             self.titr.run_titration = False
+            logging.info('Titration manually stopped in progress')
         else:
             logging.info('Clicked "Stop Titration" but no titration is in progress')
 
