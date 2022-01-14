@@ -312,7 +312,8 @@ class titration():
         mV_est = np.interp(vol,uLg,mVg)
         return(mV_est)
 
-def gran(uL,mV,T,vbot=125):
+#def gran(uL,mV,T,vbot=125):
+def gran(uL,mV,T,vbot):
     # compute gran factor
     R = 8.314462175    #Ideal gas constant
     F = 9.6485339924e4 #Faraday Constant Coulumbs mol-1
@@ -325,7 +326,8 @@ def gran(uL,mV,T,vbot=125):
     granVals = (vbotL + vL) * np.exp(EV / a)
     return granVals
 
-def gran2mV(uL,gF,T,vbot=125):
+#def gran2mV(uL,gF,T,vbot=125):
+def gran2mV(uL,gF,T,vbot):
     # invert gran factor to get equivalent mV reading
     R = 8.314462175    #Ideal gas constant
     F = 9.6485339924e4 #Faraday Constant Coulumbs mol-1
