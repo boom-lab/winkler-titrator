@@ -77,10 +77,6 @@ class meter(serial.Serial):
             return None
 
 
-
-class no_pump(serial.Serial):
-    print('No Pump Selected')
-
 class mforce_pump(serial.Serial):
     """
     original controller uLynx

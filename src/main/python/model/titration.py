@@ -63,6 +63,7 @@ class titration():
         with open(self.current_file,'w') as self.f:
             self.f.write('time,uL,mV,gF,temp,v_end_est,type\n')
         self.pump.setPos(0)
+        self.run_titration = False
 
     def gran_fac(self):
         """
@@ -121,7 +122,10 @@ class titration():
         logging.info('1st estimated endpoint: '+  str(fit[1]) + ' uL' )
         tgt_vol = self.target(self.v_end,self.mode)
         logging.info('target: ' + str(tgt_vol))
-        while True:
+        
+        self.run_titration = True
+        while self.run_titration:
+            print(f"run_titration? {self.run_titration}")
             if self.DEBUG:
                 self.dispense_from_data(tgt_vol)
                 print('warning simulated titration - debug mode is on')

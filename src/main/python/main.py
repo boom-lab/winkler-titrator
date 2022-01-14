@@ -263,21 +263,8 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.ti_thr.finished.connect(self.titration_done)
 
     def stop_titration_clicked(self):
-        if hasattr(self, "titr"):
-            logging.info('Stop Titration and save to JSON')
-
-            # cleanup and save when done early
-            self.titr.endpoint = self.titr.v_end
-            to_endpoint_vol = self.titr.endpoint - self.titr.cumvol
-            if to_endpoint_vol > 0:
-                self.titr.pump.dispense(str(to_endpoint_vol))
-                logging.info(str(to_endpoint_vol) + ' uL dispensed to reach endpoint')
-            logging.warning('endpoint reached: ' + str(self.titr.v_end) + ' uL')
-            self.titr.gran_fac()
-            self.titr.end_time = strftime("%Y%m%d%H%M%S", gmtime())
-            self.titr.is_complete = False
-
-            self.titr.toJSON()
+        if  hasattr(self, 'titr'):
+            self.titr.run_titration = False
         else:
             logging.info('Clicked "Stop Titration" but no titration is in progress')
 
