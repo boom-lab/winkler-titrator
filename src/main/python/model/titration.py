@@ -151,6 +151,7 @@ class titration():
             logging.info('target is: ' + str(tgt_vol) + ', uL is ' + str(self.cumvol)\
                   + 'cumvol is: ' + str(self.cumvol))
             if not tgt_vol:
+                self.is_complete = True
                 break
         # cleanup and save when done
         self.endpoint = self.v_end
@@ -161,7 +162,6 @@ class titration():
         logging.warning('endpoint reached: ' + str(self.v_end) + ' uL')
         self.gran_fac()
         self.end_time = strftime("%Y%m%d%H%M%S", gmtime())
-        self.is_complete = True
         #self.O2 = self.concentration()
         self.toJSON()
         #self.pump.fill()
