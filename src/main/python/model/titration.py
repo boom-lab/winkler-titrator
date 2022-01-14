@@ -17,7 +17,7 @@ class titration():
     Class representing a Winkler titration of a single sample (or std)
     """
     root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator-hakai')
-    def __init__(self,meter,pump,botid,vbot,type,Mthios,kio3_temp,datadir=os.path.join(root_dir,'data'),mode='normal'):
+    def __init__(self,meter,pump,botid,vbot,type,Mthios,thio_t,datadir=os.path.join(root_dir,'data'),mode='normal'):
         """
         Initialize titration
         INPUTS:
@@ -42,7 +42,7 @@ class titration():
         self.T = np.array([])
         self.v_end_est = np.array([])
         self.v_end = 0
-        self.kio3_temp = kio3_temp
+        self.thio_t = thio_t
         #self.pump.setPos(0)
         self.vbot = vbot
         # when True there are no actual pumping or meter reads
@@ -62,7 +62,7 @@ class titration():
         if not os.path.exists(datadir):
             os.makedirs(datadir)
         with open(self.current_file,'w') as self.f:
-            self.f.write('time,uL,mV,gF,temp,v_end_est,type,kio3_temp\n')
+            self.f.write('time,uL,mV,gF,temp,v_end_est,type,thio_t\n')
         self.pump.setPos(0)
         self.run_titration = False
 
@@ -282,7 +282,7 @@ class titration():
         titr = {}
         attributes = ('botid','Mthios','vbot','Vblank','init_time','v_end',\
                       'end_time','endpoint','mode')
-        npatts = ('mV','uL','T','v_end_est','endpoint','type','kio3_temp')
+        npatts = ('mV','uL','T','v_end_est','endpoint','type','thio_t')
         for att in attributes:
             titr[att] = getattr(self,att)
         for npatt in npatts:
@@ -308,7 +308,7 @@ class titration():
     def latest_line(self):
         line_list = (strftime("%Y%m%d%H%M%S", gmtime()),str(self.uL[-1]), \
                 str(self.mV[-1]),str(self.gF[-1]),str(self.T[-1]),\
-                str(self.v_end_est[-1]),self.type,str(self.kio3_temp))
+                str(self.v_end_est[-1]),self.type,str(self.thio_t))
         line = ','.join(line_list)+'\n'
         with open(self.current_file,'a') as f:
             f.write(line)
