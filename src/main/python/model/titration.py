@@ -286,7 +286,6 @@ class titration():
         for att in attributes:
             titr[att] = getattr(self,att)
         for npatt in npatts:
-            print(f"{npatt} = {getattr(self,npatt)}")
             value = getattr(self,npatt)
             if type(value) in [str,float,int]:
                 titr[npatt] = getattr(self,npatt)
