@@ -522,26 +522,15 @@ border-color: rgb(0, 116, 0);</string>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_8">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetDefaultConstraint</enum>
+                </property>
                 <property name="topMargin">
                  <number>10</number>
                 </property>
                 <property name="bottomMargin">
                  <number>10</number>
                 </property>
-                <item>
-                 <widget class="QCheckBox" name="checkBox_gran">
-                  <property name="font">
-                   <font>
-                    <pointsize>10</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Gran View</string>
-                  </property>
-                 </widget>
-                </item>
                 <item>
                  <widget class="QCheckBox" name="checkBox_rapid">
                   <property name="font">
@@ -574,6 +563,20 @@ border-color: rgb(0, 116, 0);</string>
                  </widget>
                 </item>
                 <item>
+                 <widget class="QCheckBox" name="checkBox_gran">
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Gran View</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QLabel" name="label_4">
                   <property name="font">
                    <font>
@@ -597,6 +600,12 @@ border-color: rgb(0, 116, 0);</string>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                  <property name="buttonSymbols">
+                   <enum>QAbstractSpinBox::UpDownArrows</enum>
+                  </property>
                   <property name="maximum">
                    <number>2000</number>
                   </property>
@@ -605,6 +614,41 @@ border-color: rgb(0, 116, 0);</string>
                   </property>
                   <property name="value">
                    <number>500</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_13">
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>KIO3 Temperature (°C)</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_kio3_temp">
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                  <property name="buttonSymbols">
+                   <enum>QAbstractSpinBox::UpDownArrows</enum>
+                  </property>
+                  <property name="value">
+                   <double>21.000000000000000</double>
                   </property>
                  </widget>
                 </item>
@@ -757,7 +801,7 @@ border-color: rgb(0, 116, 0);</string>
                    <string notr="true"/>
                   </property>
                   <property name="text">
-                   <string>SW Blank</string>
+                   <string>Sea Water Blank</string>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -773,7 +817,7 @@ border-color: rgb(0, 116, 0);</string>
                    <string extracomment="DI Water Blank"/>
                   </property>
                   <property name="text">
-                   <string>DI Blank</string>
+                   <string>DI Water Blank</string>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -786,11 +830,17 @@ border-color: rgb(0, 116, 0);</string>
                </layout>
               </item>
               <item>
-               <layout class="QVBoxLayout" name="verticalLayout_11">
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
                 <property name="leftMargin">
                  <number>10</number>
                 </property>
+                <property name="topMargin">
+                 <number>10</number>
+                </property>
                 <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <property name="bottomMargin">
                  <number>10</number>
                 </property>
                 <item>
@@ -838,49 +888,49 @@ Titration</string>
                   </property>
                  </widget>
                 </item>
-               </layout>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pushButton_stop_titration">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>1</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>160</width>
-                  <height>50</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>200</width>
-                  <height>200</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>13</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="toolTip">
-                 <string>Stop Titration and save results</string>
-                </property>
-                <property name="autoFillBackground">
-                 <bool>false</bool>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgb(255, 43, 39);</string>
-                </property>
-                <property name="text">
-                 <string>STOP
+                <item>
+                 <widget class="QPushButton" name="pushButton_stop_titration">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>1</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>160</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>200</width>
+                    <height>200</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>13</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>Stop Titration and save results</string>
+                  </property>
+                  <property name="autoFillBackground">
+                   <bool>false</bool>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color: rgb(255, 43, 39);</string>
+                  </property>
+                  <property name="text">
+                   <string>STOP
 Titration</string>
-                </property>
-               </widget>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
              </layout>
             </item>

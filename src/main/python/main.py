@@ -263,14 +263,16 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         flaskid = self.comboBox_flasks.currentText()
         flaskvol = self.botdict[flaskid]
         titration_type = self.get_titration_type()
-        logging.info('flask ' + flaskid + '[' + titration_type + '] with volume = ' + str(flaskvol))
+        kio3_temp = self.doubleSpinBox_kio3_temp.value()
+        logging.info('KIO3 temperature = ' + str(kio3_temp) + ' degC' )
+        logging.info('flask ' + flaskid + '[' + titration_type + '] with volume = ' + str(flaskvol) )
         #print('flask volume =' + str(flaskvol))
         if self.checkBox_rapid.isChecked():
             timode = 'rapid'
         else:
             timode = 'normal'
         #logging.info(str(timode))
-        self.titr = ti.titration(self.meter,self.pump,flaskid,flaskvol,titration_type,0.2,\
+        self.titr = ti.titration(self.meter,self.pump,flaskid,flaskvol,titration_type,0.2,kio3_temp,\
                             mode=timode)
         print('running titration')
         self.ti_thr = runTitration(self.titr,guess)
