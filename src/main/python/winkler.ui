@@ -635,7 +635,7 @@ border-color: rgb(0, 116, 0);</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_kio3_temp">
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_thio_t">
                   <property name="font">
                    <font>
                     <pointsize>10</pointsize>
