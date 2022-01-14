@@ -112,6 +112,11 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
 
         self.load_ports()
 
+        # Load flask calibration if available in configuration
+        if 'FLASKS_CALIBRATION' in config and 'Path' in config['FLASKS_CALIBRATION']:
+            print('Load flasks calibration from configuration')
+            self.load_flask_calibration(config['FLASKS_CALIBRATION']['Path'])
+
 
     def plot_data(self):
 
@@ -207,11 +212,14 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     def flask_clicked(self):
         filename = QFileDialog.getOpenFileName(None,'Test Dialog')
         logging.info('bottle file '+filename[0]+ ' loaded')
-        self.botdict = iomod.import_flasks(filename[0])
+        self.load_flask_calibration(filename[0])
+        return filename
+
+    def load_flask_calibration(self,filename):
+        self.botdict = iomod.import_flasks(filename)
         botid = sorted(self.botdict.keys())
         for bot in botid:
             self.comboBox_flasks.addItem(bot)
-        return filename
 
     def load_ports(self):
         self.comboBox_meter.clear()
