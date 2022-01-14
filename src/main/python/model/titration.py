@@ -286,7 +286,12 @@ class titration():
         for att in attributes:
             titr[att] = getattr(self,att)
         for npatt in npatts:
-            titr[npatt] = getattr(self,npatt).tolist()
+            print(f"{npatt} = {getattr(self,npatt)}")
+            value = getattr(self,npatt)
+            if type(value) in [str,float,int]:
+                titr[npatt] = getattr(self,npatt)
+            else:
+                titr[npatt] = getattr(self,npatt).tolist()
         j = json.dumps(titr, default=lambda o: o.__dict__,
             sort_keys=True, indent=4)
         with open(os.path.join(self.datadir,'titration_'+\
@@ -305,7 +310,6 @@ class titration():
         line_list = (strftime("%Y%m%d%H%M%S", gmtime()),str(self.uL[-1]), \
                 str(self.mV[-1]),str(self.gF[-1]),str(self.T[-1]),\
                 str(self.v_end_est[-1]),self.type,str(self.kio3_temp))
-        print(line_list)
         line = ','.join(line_list)+'\n'
         with open(self.current_file,'a') as f:
             f.write(line)
