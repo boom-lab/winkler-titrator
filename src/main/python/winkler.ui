@@ -631,7 +631,7 @@ border-color: rgb(0, 116, 0);</string>
                   <property name="sizeHint" stdset="0">
                    <size>
                     <width>20</width>
-                    <height>60</height>
+                    <height>40</height>
                    </size>
                   </property>
                  </spacer>
@@ -639,7 +639,7 @@ border-color: rgb(0, 116, 0);</string>
                 <item>
                  <widget class="QLabel" name="label_4">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -698,7 +698,7 @@ border-color: rgb(0, 116, 0);</string>
                 <item>
                  <widget class="QLabel" name="label_13">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -706,7 +706,7 @@ border-color: rgb(0, 116, 0);</string>
                   <property name="maximumSize">
                    <size>
                     <width>16777215</width>
-                    <height>30</height>
+                    <height>40</height>
                    </size>
                   </property>
                   <property name="font">
@@ -726,7 +726,7 @@ Temperature (°C)</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_kio3_temp">
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_thio_t">
                   <property name="font">
                    <font>
                     <pointsize>10</pointsize>
