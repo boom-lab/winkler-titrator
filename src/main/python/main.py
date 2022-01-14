@@ -224,6 +224,17 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 self.comboBox_pump.addItem(p.device)
                 self.comboBox_standard.addItem(p.device)
         self.comboBox_standard.addItem('None')
+        print(config['METER']['Port'] in ports)
+        
+        # If default connection listed in configuration
+        if 'Port' in config['METER']:
+            self.comboBox_meter.setCurrentText(config['METER']['Port'])
+        if 'Port' in config['PUMP']:
+            self.comboBox_pump.setCurrentText(config['PUMP']['Port'])
+        if 'Port' in config['STD_PUMP']:
+            self.comboBox_standard.setCurrentText(config['STD_PUMP']['Port'])
+        
+
 
     def get_titration_type(self):
         if self.pushButton_sample_type.isChecked():
