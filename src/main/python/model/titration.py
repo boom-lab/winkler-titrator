@@ -104,6 +104,10 @@ class titration():
         self.pump.fill()
         sleep(0.1)
         ini_vol = 0.1*guess
+
+        # Start titration
+        self.run_titration = True
+
         # titrate to 40% and predict endpoint
         for x in range(4):
             print('starting x= ' + str(x))
@@ -114,6 +118,11 @@ class titration():
                 self.dispense_thios(ini_vol)
             self.v_end_est = np.append(self.v_end_est,0)
             self.latest_line()
+
+            # If the stop button got hit step out of the for loop
+            if not self.run_titration:
+                break
+            
         self.gran_fac()
 
         fit = np.polyfit(self.gF[-4:],self.uL[-4:],1)
@@ -124,7 +133,6 @@ class titration():
         tgt_vol = self.target(self.v_end,self.mode)
         logging.info('target: ' + str(tgt_vol))
         
-        self.run_titration = True
         while self.run_titration:
             print(f"run_titration? {self.run_titration}")
             if self.DEBUG:
