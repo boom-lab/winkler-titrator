@@ -295,7 +295,7 @@ class titration():
     def latest_line(self):
         line_list = (strftime("%Y%m%d%H%M%S", gmtime()),str(self.uL[-1]), \
                 str(self.mV[-1]),str(self.gF[-1]),str(self.T[-1]),\
-                str(self.v_end_est[-1]),self.type[-1])
+                str(self.v_end_est[-1]),self.type)
         line = ','.join(line_list)+'\n'
         with open(self.current_file,'a') as f:
             f.write(line)
