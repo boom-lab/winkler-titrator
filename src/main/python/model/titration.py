@@ -134,7 +134,6 @@ class titration():
         logging.info('target: ' + str(tgt_vol))
         
         while self.run_titration:
-            print(f"run_titration? {self.run_titration}")
             if self.DEBUG:
                 self.dispense_from_data(tgt_vol)
                 print('warning simulated titration - debug mode is on')
@@ -281,16 +280,12 @@ class titration():
     def toJSON(self):
         titr = {}
         attributes = ('botid','Mthios','vbot','Vblank','init_time','v_end',\
-                      'end_time','endpoint','mode')
-        npatts = ('mV','uL','T','v_end_est','endpoint','type','thio_t')
+                      'end_time','endpoint','mode','type','thio_t','is_complete')
+        npatts = ('mV','uL','T','v_end_est','endpoint')
         for att in attributes:
             titr[att] = getattr(self,att)
         for npatt in npatts:
-            value = getattr(self,npatt)
-            if type(value) in [str,float,int]:
-                titr[npatt] = getattr(self,npatt)
-            else:
-                titr[npatt] = getattr(self,npatt).tolist()
+            titr[npatt] = getattr(self,npatt).tolist()
         j = json.dumps(titr, default=lambda o: o.__dict__,
             sort_keys=True, indent=4)
         with open(os.path.join(self.datadir,'titration_'+\
