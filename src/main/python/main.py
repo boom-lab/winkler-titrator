@@ -226,22 +226,23 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.comboBox_pump.clear()
         self.comboBox_standard.clear()
         ports = serial.tools.list_ports.comports()
+        device_list = []
         for p in ports:
             if True:#if 'usb' in p.device or 'COM' in p.device:
                 self.comboBox_meter.addItem(p.device)
                 self.comboBox_pump.addItem(p.device)
                 self.comboBox_standard.addItem(p.device)
+                device_list.append(p.device)
         self.comboBox_standard.addItem('None')
         print(config['METER']['Port'] in ports)
         
         # If default connection listed in configuration
-        if 'Port' in config['METER']:
+        if 'Port' in config['METER'] and config['METER']['Port'] in device_list:
             self.comboBox_meter.setCurrentText(config['METER']['Port'])
-        if 'Port' in config['PUMP']:
+        if 'Port' in config['PUMP'] and config['PUMP']['Port'] in device_list:
             self.comboBox_pump.setCurrentText(config['PUMP']['Port'])
-        if 'Port' in config['STD_PUMP']:
+        if 'Port' in config['STD_PUMP'] and config['PUMP']['Port'] in device_list or config['PUMP']['Port']=='None':
             self.comboBox_standard.setCurrentText(config['STD_PUMP']['Port'])
-        
 
 
     def get_titration_type(self):
