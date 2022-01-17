@@ -5,7 +5,7 @@ import sys
 import os
 import logging
 from time import strftime,gmtime
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,QMessageBox, QInputDialog,QLineEdit
 from PyQt5.QtCore import QThread,pyqtSignal
 import serial.tools.list_ports
 import winkler
@@ -292,8 +292,12 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
             logging.info('Clicked "Stop Titration" but no titration is in progress')
 
     def titration_done(self):
-        QMessageBox.warning(self,'','titration complete: endpoint=' +  \
-                str(self.titr.endpoint),QMessageBox.Ok)
+        # QMessageBox.warning(self,'','titration complete: endpoint=' +  \
+        #         str(self.titr.endpoint),QMessageBox.Ok)
+        comment, ok =  QInputDialog.getText(self,'Titration completed', 'Titration completed: endpoint=' +  \
+                str(self.titr.endpoint) +'uL\nAdd a comment here:')
+        self.titr.comment = comment
+        self.titr.toJSON()
         self.titr.pump.fill()
 
     def dispense_standard_clicked(self):
@@ -357,6 +361,12 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
 #    def dispense_custom(self):
 #        vol = self.lcdNumber_customvol.value
 #        self.dispense_vol(vol)
+    def show_titration_result(self):
+        comment, ok =  QInputDialog.getText(self, "Get text","Your name:", QLineEdit.Normal, "")
+        if ok:
+            return comment
+        else:
+            return None
 
 
 def getPorts():
