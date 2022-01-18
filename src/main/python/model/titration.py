@@ -12,6 +12,8 @@ from time import strftime,gmtime,sleep
 import json
 import logging
 
+from PyQt5.QtWidgets import QInputDialog, QLineEdit
+
 class titration():
     """
     Class representing a Winkler titration of a single sample (or std)
@@ -65,6 +67,7 @@ class titration():
             self.f.write('time,uL,mV,gF,temp,v_end_est,type,thio_t\n')
         self.pump.setPos(0)
         self.run_titration = False
+        self.comment = None
 
     def gran_fac(self):
         """
@@ -163,8 +166,15 @@ class titration():
         self.gran_fac()
         self.end_time = strftime("%Y%m%d%H%M%S", gmtime())
         #self.O2 = self.concentration()
-        self.toJSON()
+        # self.toJSON()
         #self.pump.fill()
+
+    # def show_titration_result(self):
+    #     comment, ok =  QInputDialog.getText(self, "Get text","Your name:", QLineEdit.Normal, "")
+    #     if ok:
+    #         return comment
+    #     else:
+    #         return None
 
 
     def dispense_thios(self,vol):
@@ -280,7 +290,7 @@ class titration():
     def toJSON(self):
         titr = {}
         attributes = ('botid','Mthios','vbot','Vblank','init_time','v_end',\
-                      'end_time','endpoint','mode','type','thio_t','is_complete')
+                      'end_time','endpoint','mode','type','thio_t','is_complete','comment')
         npatts = ('mV','uL','T','v_end_est','endpoint')
         for att in attributes:
             titr[att] = getattr(self,att)
