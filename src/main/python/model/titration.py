@@ -287,8 +287,11 @@ class titration():
             elif vol_to_end <= -30:
                 return False
 
-    def toJSON(self):
-        titr = {}
+    def toJSON(self,extra_attributes:dict = None):
+        if extra_attributes:
+            titr = extra_attributes
+        else:
+            titr = {}
         attributes = ('botid','Mthios','vbot','Vblank','init_time','v_end',\
                       'end_time','endpoint','mode','type','thio_t','is_complete','comment')
         npatts = ('mV','uL','T','v_end_est','endpoint')
