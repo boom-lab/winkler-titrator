@@ -175,9 +175,6 @@ class mforce_pump(serial.Serial):
 
 
     def fill(self,eol=TERMINATOR):
-        """
-        dummy call to mimic a command to a kloehn but doesn't do anything
-        """
         print('milligat pump - no fill')
 
 class mlynx_pump(serial.Serial):

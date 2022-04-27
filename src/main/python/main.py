@@ -21,7 +21,9 @@ root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator-hakai')
 config = configparser.ConfigParser()
 config.read(os.path.join(root_dir,'wink.ini'))
 Mthios = config['PUMP']['Mthios']
-# print('in address is :' + config['PUMP']['InAddr'])
+
+#print('in address is :' + config['PUMP']['InAddr'])
+
 logging.basicConfig(filename=os.path.join(root_dir,'log'+strftime("%Y%m%d", \
     gmtime())),level='INFO',format='%(levelname)s %(asctime)s %(message)s')
 logging.info('Im logging!')
