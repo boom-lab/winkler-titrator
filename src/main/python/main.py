@@ -248,7 +248,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
 
     def get_metadata_log(self):
         return {
-            "kio3_temp": self.doubleSpinBox_kio3_temp.value
+            "kio3_temp": self.doubleSpinBox_kio3_temp
         }
 
     def get_titration_type(self):
