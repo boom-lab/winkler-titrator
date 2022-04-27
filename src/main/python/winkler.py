@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'src/main/python/winkler.ui'
+# Form implementation generated from reading ui file '.\src\main\python\winkler.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -322,9 +322,9 @@ class Ui_MainWindow(object):
         self.label_15.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft)
         self.label_15.setObjectName("label_15")
         self.verticalLayout_8.addWidget(self.label_15)
-        self.lineEdit_standard_id = QtWidgets.QLineEdit(self.tab_Sample)
-        self.lineEdit_standard_id.setObjectName("lineEdit_standard_id")
-        self.verticalLayout_8.addWidget(self.lineEdit_standard_id)
+        self.lineEdit_id = QtWidgets.QLineEdit(self.tab_Sample)
+        self.lineEdit_id.setObjectName("lineEdit_id")
+        self.verticalLayout_8.addWidget(self.lineEdit_id)
         self.label_13 = QtWidgets.QLabel(self.tab_Sample)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -617,7 +617,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1419, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1419, 21))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -658,7 +658,7 @@ class Ui_MainWindow(object):
         self.checkBox_zoom.setText(_translate("MainWindow", "Zoom View"))
         self.checkBox_rapid.setText(_translate("MainWindow", "Rapid Mode"))
         self.checkBox_gran.setText(_translate("MainWindow", "Gran View"))
-        self.label_15.setText(_translate("MainWindow", "Standard ID"))
+        self.label_15.setText(_translate("MainWindow", "ID"))
         self.label_13.setText(_translate("MainWindow", "Thiosulfate\n"
 "Temperature (degC)"))
         self.label_14.setText(_translate("MainWindow", "KIO3\n"
@@ -691,3 +691,13 @@ class Ui_MainWindow(object):
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuLoad.setTitle(_translate("MainWindow", "Load"))
 from mplwidget import MplWidget
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())

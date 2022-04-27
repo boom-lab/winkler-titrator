@@ -709,7 +709,7 @@ border-color: rgb(0, 116, 0);</string>
                    </font>
                   </property>
                   <property name="text">
-                   <string>Standard ID</string>
+                   <string>ID</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
@@ -717,7 +717,7 @@ border-color: rgb(0, 116, 0);</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="lineEdit_standard_id"/>
+                 <widget class="QLineEdit" name="lineEdit_id"/>
                 </item>
                 <item>
                  <widget class="QLabel" name="label_13">
@@ -1367,7 +1367,7 @@ Thiosulfate</string>
      <x>0</x>
      <y>0</y>
      <width>1419</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
