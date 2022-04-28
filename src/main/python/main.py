@@ -302,6 +302,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         # QMessageBox.warning(self,'','titration complete: endpoint=' +  \
         #         str(self.titr.endpoint),QMessageBox.Ok)
         extra_metadata = self.get_metadata_log()
+        print('\a')
         comment, ok =  QInputDialog.getText(self,'Titration completed', 'Titration completed: endpoint=' +  \
                 str(self.titr.endpoint) +'uL\nAdd a comment here:')
         self.titr.comment = comment
