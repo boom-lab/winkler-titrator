@@ -44,10 +44,10 @@ class titration():
         #self.pump.setPos(0)
         self.vbot = vbot
         # when True there are no actual pumping or meter reads
-        self.DEBUG = False
+        self.pump.DEBUG = False
         # when True the meter makes a reading (e.g. in DI water) but dummy_read
         # is called and mock data returned
-        self.dummy_meter = False
+        self.meter.DEBUG = False
         self.O2 = np.array([])
         self.Vblank = 0
         self.reagO2 = 7.6e-8; # concentration of O2 dissolved in reagents
@@ -91,20 +91,20 @@ class titration():
             3. use 'target' to determine subsequent dispenses and iterate
             4. cleanup and save result
         """
-        if not self.DEBUG:
+        if not self.pump.DEBUG:
             if not self.pump.is_open:
                 logging.INFO('pump not connected')
             elif not self.meter.is_open:
                 logging.warning('meter not connected')
             elif self.is_complete:
                 logging.warning('sample already titrated')
-        self.pump.fill()
+            self.pump.fill()
         sleep(0.1)
         ini_vol = 0.1*guess
         # titrate to 40% and predict endpoint
         for x in range(4):
             print('starting x= ' + str(x))
-            if self.DEBUG:
+            if self.pump.DEBUG:
                 self.dispense_from_data(ini_vol)
                 print('warning simulated titration - debug mode is on')
             else:
@@ -121,7 +121,7 @@ class titration():
         tgt_vol = self.target(self.v_end,self.mode)
         logging.info('target: ' + str(tgt_vol))
         while True:
-            if self.DEBUG:
+            if self.pump.DEBUG:
                 self.dispense_from_data(tgt_vol)
                 print('warning simulated titration - debug mode is on')
             else:
@@ -171,7 +171,7 @@ class titration():
         logging.info('cumulative vol: ' + str(self.cumvol) + ' uL')
         print('cumvol: ' + str(self.cumvol) + ' uL')
         print(str(mV)+ ' T: '+str(T))
-        if self.dummy_meter:
+        if self.meter.DEBUG:
             T = 20
             mV = self.dummy_read(self.cumvol)
             print('warning simulated titration - meter in sim mode')

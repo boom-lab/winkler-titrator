@@ -146,7 +146,12 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         logging.info('pump set to ' + config['PUMP']['Controller'])
         logging.info('meter set to ' + config['METER']['Series'])
         try:
-            self.meter = sd.meter(self.comboBox_meter.currentText(),int(config['METER']['mVpos']),int(config['METER']['Tpos']))
+            print(config['METER']['Series'].lower())
+            if config['METER']['Series'].lower() == 'atlas':
+                print('connecting atlas')
+                self.meter = sd.meter(self.comboBox_meter.currentText())
+            else:
+                self.meter = sd.meter(self.comboBox_meter.currentText(),int(config['METER']['mVpos']),int(config['METER']['Tpos']))
             logging.info('meter connected on ' + self.comboBox_meter.currentText())
         except Exception as ex:
             logging.warning(ex)
