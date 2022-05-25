@@ -93,10 +93,6 @@ class mforce_pump(serial.Serial):
     MUNIT=2432
     TERMINATOR = '\r\n'
 
-    def setVar(self,var,val,eol=TERMINATOR):
-        valstr = str(val)
-        self.write(self.addr + (var + '=' + valstr + eol).encode('utf-8'))
-
     def getVar(self,var,eol=TERMINATOR):
         self.reset_input_buffer()
         #bmsg = ('PR ' + var.lower() + eol).encode('utf-8')
@@ -143,6 +139,8 @@ class mforce_pump(serial.Serial):
         else:
             print('no response -- check connnection')
 
+    def fill(self,eol=TERMINATOR):
+        print('milligat pump - no fill')
 
     def dispense(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
