@@ -83,8 +83,8 @@ class meter(serial.Serial):
             except:
                 print('read failed')
         # single read implemented here - no checks for stability
-        elif self.type == "atlas":  
-            print("I'm an Atlas meter") 
+        elif self.type == "atlas":
+            print("I'm an Atlas meter")
             self.write(b'R\r')
             time.sleep(0.2)
             b = self.readline()
@@ -94,7 +94,7 @@ class meter(serial.Serial):
                 return (mV,T)
             except:
                 print('read failed')
-            
+
 
 
 class mforce_pump(serial.Serial):
@@ -316,6 +316,10 @@ class kloehn_pump(serial.Serial):
         #self.mova(self.syringe_vol)
 
     def getPos(self,eol=TERMINATOR):
+        """
+        returns syringe volume already dispensed (uL)
+        (0 when full, syring_vol when empty)
+        """
         self.read(self.in_waiting)
         self.write((self.pump_addr + '?' + eol).encode('utf-8'))
         time.sleep(0.1)
@@ -384,7 +388,11 @@ class kloehn_pump(serial.Serial):
         print('filling' + str(self.steps))
         self.write(self.InPos);
         time.sleep(1.0)
-        cvol = self.getPos()
+        try:
+            cvol = self.getPos()
+        except:
+            # assume empty if position read fails
+            cvol = self.syringe_vol
         self.write((self.pump_addr + 'A' + str(self.steps) + 'R' + eol).encode('utf-8'))
         print('max velocity is: ' + self.VM)
         time.sleep(float(cvol)*float(self.SF)/float(self.VM))
@@ -397,14 +405,22 @@ class kloehn_pump(serial.Serial):
         self.write(self.OutPos);
         time.sleep(0.5)
         self.read(self.in_waiting)
-        cvol = self.getPos()
+        try:
+            cvol = self.getPos()
+        except:
+            # assume full if position read fails
+            cvol = 0
         self.read(self.in_waiting)
         #self.write((self.pump_addr + 'A0R' + eol).encode('utf-8'))
         time.sleep(0.1)
+        # move to full empty position
         self.write((self.pump_addr + 'A0R' + eol).encode('utf-8'))
         time.sleep((float(self.steps)-float(cvol)*float(self.SF))/float(self.VM))
 
     def wait_for_dispense(self,uL):
+        """
+        calculates how long it will take for syringe to dispense a given volume
+        """
         # maximum rate in uL sec-1
         uL = float(uL)
         max_rate = float(self.VM)/self.SF
