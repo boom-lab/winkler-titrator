@@ -1,0 +1,39 @@
+[PUMP]
+# Controller should be 'MLYNX', 'MFORCE' or 'KLOEHN'
+Controller = KLOEHN
+Steps = 48000
+SyringeVol = 1000
+Mthios = 0.200
+MaxVelocity = 2000
+InAddr = 1
+OutAddr = 3
+PumpAddr = /1
+
+#[PUMP]
+#Controller = MFORCE
+#Mthios = 0.200
+
+[STD_PUMP]
+# Controller should be 'MLYNX', 'MFORCE' or 'KLOEHN'
+Controller = KLOEHN
+Steps = 48000
+SyringeVol = 10000
+MaxVelocity = 2000
+InAddr = 1
+OutAddr = 2
+PumpAddr = /1
+
+#[METER]
+#Series=ORION
+#mVpos=5
+#Tpos=7
+
+## settings for newer A series meters
+#[METER]
+#Series=A221
+#mVpos = 8
+#Tpos = 10
+
+# settings for Atlas Scientific EZO Orp
+[METER]
+Series=atlas
