@@ -281,7 +281,7 @@ class kloehn_pump(serial.Serial):
         super().__init__(port,timeout=10)
 
         #intitialize command required on power-up
-        self.write(('/1~Y3R' + eol).encode('utf-8'))
+        self.write(('/1~Y' + OutAddr + 'R' + eol).encode('utf-8'))
         time.sleep(0.1)
         self.write(('/1Y4R'+ eol).encode('utf-8'))
         time.sleep(self.wait_for_dispense(float(self.steps)/float(self.VM)+0.2))
