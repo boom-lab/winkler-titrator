@@ -17,7 +17,9 @@ class titration():
     Class representing a Winkler titration of a single sample (or std)
     """
     root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
-    def __init__(self,meter,pump,botid,vbot,Mthios,datadir=os.path.join(root_dir,'data'),mode='normal'):
+
+    def __init__(self,meter,pump,botid,vbot,type,Mthios,thio_t,datadir=os.path.join(root_dir,'data'),mode='normal'):
+
         """
         Initialize titration
         INPUTS:
