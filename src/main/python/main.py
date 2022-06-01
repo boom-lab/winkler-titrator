@@ -236,15 +236,18 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
                 self.comboBox_standard.addItem(p.device)
                 device_list.append(p.device)
         self.comboBox_standard.addItem('None')
-        print(config['METER']['Port'] in ports)
+        #print(config['METER']['Port'] in ports)
         
         # If default connection listed in configuration
-        if 'Port' in config['METER'] and config['METER']['Port'] in device_list:
-            self.comboBox_meter.setCurrentText(config['METER']['Port'])
-        if 'Port' in config['PUMP'] and config['PUMP']['Port'] in device_list:
-            self.comboBox_pump.setCurrentText(config['PUMP']['Port'])
-        if 'Port' in config['STD_PUMP'] and config['PUMP']['Port'] in device_list or config['PUMP']['Port']=='None':
-            self.comboBox_standard.setCurrentText(config['STD_PUMP']['Port'])
+        if 'Port' in config['METER']:
+            if config['METER']['Port'] in device_list:
+                self.comboBox_meter.setCurrentText(config['METER']['Port'])
+        if 'Port' in config['PUMP']:
+            if config['PUMP']['Port'] in device_list:
+                self.comboBox_pump.setCurrentText(config['PUMP']['Port'])
+        if 'Port' in config['STD_PUMP']:
+            if config['PUMP']['Port'] in device_list or config['PUMP']['Port']=='None':
+                self.comboBox_standard.setCurrentText(config['STD_PUMP']['Port'])
 
     def get_metadata_log(self):
         return {
