@@ -21,10 +21,17 @@ class meter(serial.Serial):
     Serial device object for Thermo Orion Meter
     Be sure meter probe and serial cables are connected
     """
-    def __init__(self,port,mVpos,Tpos):
+    def __init__(self,port,mVpos=5,Tpos=7,type='thermo'):
         self.mVpos = mVpos
         self.Tpos = Tpos
+        self.type = type
         super().__init__(port,timeout=10)
+        if type=='atlas':
+            self.write(b'*OK,0\r')
+            self.write(b'C,0\r')
+            time.sleep(0.2)
+            b = self.read(self.in_waiting)
+            print(b.decode())
 
     #def readline(self,eol=b'\n\r'): #need to change to \n\r for AXXX meters?
     def readline(self,eol='\r'):
@@ -33,7 +40,7 @@ class meter(serial.Serial):
         Serial.serial.readline() which only works with '\n'
         returns bytes
         """
-        #eol = b'\r'
+        eol = bytes(eol)
         leneol = len(eol)
         line = bytearray()
         while True:
@@ -52,29 +59,42 @@ class meter(serial.Serial):
         makes single meter measurement for mV and T
         """
         time.sleep(0.2)
-        self.write(b'\r')
-        self.read(self.in_waiting)
-        #self.reset_output_buffer()
-        #self.reset_input_buffer()
-        time.sleep(0.5)
-        nin = self.write(b'GETMEAS\r')
-        time.sleep(0.3)
-        nw = self.in_waiting
-        while nw <= 40:
-            time.sleep(1)
+        if self.type == "thermo":
+            self.write(b'\r')
+            self.read(self.in_waiting)
+            #self.reset_output_buffer()
+            #self.reset_input_buffer()
+            time.sleep(0.5)
+            nin = self.write(b'GETMEAS\r')
+            time.sleep(0.3)
             nw = self.in_waiting
-        time.sleep(0.5)
-        b = self.read(self.in_waiting)
-        print(b)
-        meas_list = b.decode().split(',')
-        print(meas_list)
-        try:
-            mV = float(meas_list[self.mVpos])
-            T = float(meas_list[self.Tpos])
-            return (mV,T)
-        except:
-            print('read failed')
-            return None
+            while nw <= 40:
+                time.sleep(1)
+                nw = self.in_waiting
+            time.sleep(0.5)
+            b = self.read(self.in_waiting)
+            print(b)
+            meas_list = b.decode().split(',')
+            print(meas_list)
+            try:
+                mV = float(meas_list[self.mVpos])
+                T = float(meas_list[self.Tpos])
+                return (mV,T)
+            except:
+                print('read failed')
+        # single read implemented here - no checks for stability
+        elif self.type == "atlas":
+            print("I'm an Atlas meter")
+            self.write(b'R\r')
+            time.sleep(0.2)
+            b = self.readline()
+            try:
+                mV = float(b)
+                T = -9
+                return (mV,T)
+            except:
+                print('read failed')
+
 
 
 class mforce_pump(serial.Serial):
@@ -88,10 +108,6 @@ class mforce_pump(serial.Serial):
     addr='A'
     MUNIT=2432
     TERMINATOR = '\r\n'
-
-    def setVar(self,var,val,eol=TERMINATOR):
-        valstr = str(val)
-        self.write(self.addr + (var + '=' + valstr + eol).encode('utf-8'))
 
     def getVar(self,var,eol=TERMINATOR):
         self.reset_input_buffer()
@@ -139,6 +155,8 @@ class mforce_pump(serial.Serial):
         else:
             print('no response -- check connnection')
 
+    def fill(self,eol=TERMINATOR):
+        print('milligat pump - no fill')
 
     def dispense(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
@@ -158,7 +176,7 @@ class mforce_pump(serial.Serial):
         # dispense - set rate
         steps = int(float(uL))*self.MUNIT
         print('VM ' + str(steps))
-        self.write((s.self.addr + 'VM ' + str(steps) + eol).encode('utf-8'))
+        self.write((self.addr + 'VM ' + str(steps) + eol).encode('utf-8'))
 
     def wait_for_dispense(self,uL,eol=TERMINATOR):
         #uLynx
@@ -265,7 +283,7 @@ class kloehn_pump(serial.Serial):
         super().__init__(port,timeout=10)
 
         #intitialize command required on power-up
-        self.write(('/1~Y3R' + eol).encode('utf-8'))
+        self.write(('/1~Y' + OutAddr + 'R' + eol).encode('utf-8'))
         time.sleep(0.1)
         self.write(('/1Y4R'+ eol).encode('utf-8'))
         time.sleep(self.wait_for_dispense(float(self.steps)/float(self.VM)+0.2))
@@ -298,6 +316,10 @@ class kloehn_pump(serial.Serial):
         #self.mova(self.syringe_vol)
 
     def getPos(self,eol=TERMINATOR):
+        """
+        returns syringe volume already dispensed (uL)
+        (0 when full, syring_vol when empty)
+        """
         self.read(self.in_waiting)
         self.write((self.pump_addr + '?' + eol).encode('utf-8'))
         time.sleep(0.1)
@@ -366,7 +388,11 @@ class kloehn_pump(serial.Serial):
         print('filling' + str(self.steps))
         self.write(self.InPos);
         time.sleep(1.0)
-        cvol = self.getPos()
+        try:
+            cvol = self.getPos()
+        except:
+            # assume empty if position read fails
+            cvol = self.syringe_vol
         self.write((self.pump_addr + 'A' + str(self.steps) + 'R' + eol).encode('utf-8'))
         print('max velocity is: ' + self.VM)
         time.sleep(float(cvol)*float(self.SF)/float(self.VM))
@@ -379,14 +405,22 @@ class kloehn_pump(serial.Serial):
         self.write(self.OutPos);
         time.sleep(0.5)
         self.read(self.in_waiting)
-        cvol = self.getPos()
+        try:
+            cvol = self.getPos()
+        except:
+            # assume full if position read fails
+            cvol = 0
         self.read(self.in_waiting)
         #self.write((self.pump_addr + 'A0R' + eol).encode('utf-8'))
         time.sleep(0.1)
+        # move to full empty position
         self.write((self.pump_addr + 'A0R' + eol).encode('utf-8'))
         time.sleep((float(self.steps)-float(cvol)*float(self.SF))/float(self.VM))
 
     def wait_for_dispense(self,uL):
+        """
+        calculates how long it will take for syringe to dispense a given volume
+        """
         # maximum rate in uL sec-1
         uL = float(uL)
         max_rate = float(self.VM)/self.SF
