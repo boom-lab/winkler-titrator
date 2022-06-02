@@ -5,7 +5,7 @@ import sys
 import os
 import logging
 from time import strftime,gmtime
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,QMessageBox, QInputDialog,QLineEdit
 from PyQt5.QtCore import QThread,pyqtSignal
 import serial.tools.list_ports
 import winkler
@@ -21,7 +21,9 @@ root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
 config = configparser.ConfigParser()
 config.read(os.path.join(root_dir,'wink.ini'))
 Mthios = config['PUMP']['Mthios']
+
 #print('in address is :' + config['PUMP']['InAddr'])
+
 logging.basicConfig(filename=os.path.join(root_dir,'log'+strftime("%Y%m%d", \
     gmtime())),level='INFO',format='%(levelname)s %(asctime)s %(message)s')
 logging.info('Im logging!')
@@ -88,6 +90,7 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.pushButton_reload.clicked.connect(self.load_ports)
         self.pushButton_flask.clicked.connect(self.flask_clicked)
         self.pushButton_titrate.clicked.connect(self.titrate_clicked)
+        self.pushButton_stop_titration.clicked.connect(self.stop_titration_clicked)
         self.pushButton_dispenseStandard.clicked.connect(self.dispense_standard_clicked)
         self.pushButton_loadStandard.clicked.connect(self.load_standard_clicked)
         self.pushButton_emptyStandard.clicked.connect(self.empty_standard_clicked)
@@ -110,6 +113,11 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         #self.verticalSlider_standard.valueChanged.connect(self.lcdNumber_standard.display)
 
         self.load_ports()
+
+        # Load flask calibration if available in configuration
+        if 'FLASKS_CALIBRATION' in config and 'Path' in config['FLASKS_CALIBRATION']:
+            print('Load flasks calibration from configuration')
+            self.load_flask_calibration(config['FLASKS_CALIBRATION']['Path'])
 
 
     def plot_data(self):
@@ -183,7 +191,10 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
 
         # Connect pump for dispensing standard (KIO3)
         try:
-            if config['STD_PUMP']['Controller'] == 'MFORCE':
+            if self.comboBox_standard.currentText()=='None':
+                self.std_pump = None
+                logging.info('No standard pump available')
+            elif config['STD_PUMP']['Controller'] == 'MFORCE':
                 self.std_pump = sd.mforce_pump(self.comboBox_standard.currentText())
                 logging.info('MFORCE pump connected on ' + self.comboBox_standard.currentText())
             elif config['STD_PUMP']['Controller'] == 'MLYNX':
@@ -208,22 +219,56 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
     def flask_clicked(self):
         filename = QFileDialog.getOpenFileName(None,'Test Dialog')
         logging.info('bottle file '+filename[0]+ ' loaded')
-        self.botdict = iomod.import_flasks(filename[0])
+        self.load_flask_calibration(filename[0])
+        return filename
+
+    def load_flask_calibration(self,filename):
+        self.botdict = iomod.import_flasks(filename)
         botid = sorted(self.botdict.keys())
         for bot in botid:
             self.comboBox_flasks.addItem(bot)
-        return filename
 
     def load_ports(self):
         self.comboBox_meter.clear()
         self.comboBox_pump.clear()
         self.comboBox_standard.clear()
         ports = serial.tools.list_ports.comports()
+        device_list = []
         for p in ports:
             if True:#if 'usb' in p.device or 'COM' in p.device:
                 self.comboBox_meter.addItem(p.device)
                 self.comboBox_pump.addItem(p.device)
                 self.comboBox_standard.addItem(p.device)
+                device_list.append(p.device)
+        self.comboBox_standard.addItem('None')
+        #print(config['METER']['Port'] in ports)
+
+        # If default connection listed in configuration
+        if 'Port' in config['METER']:
+            if config['METER']['Port'] in device_list:
+                self.comboBox_meter.setCurrentText(config['METER']['Port'])
+        if 'Port' in config['PUMP']:
+            if config['PUMP']['Port'] in device_list:
+                self.comboBox_pump.setCurrentText(config['PUMP']['Port'])
+        if 'Port' in config['STD_PUMP']:
+            if config['PUMP']['Port'] in device_list or config['PUMP']['Port']=='None':
+                self.comboBox_standard.setCurrentText(config['STD_PUMP']['Port'])
+
+    def get_metadata_log(self):
+        return {
+            "kio3_temp": self.doubleSpinBox_kio3_temp.value(),
+            "id": self.lineEdit_id.text()
+        }
+
+    def get_titration_type(self):
+        if self.pushButton_sample_type.isChecked():
+            return 'sample'
+        elif self.pushButton_standard_type.isChecked():
+            return 'standard'
+        elif self.pushButton_di_water_blank_type.isChecked():
+            return 'di_blank'
+        elif self.pushButton_sea_water_blank_type.isChecked():
+            return 'sw_blank'
 
     def titrate_clicked(self):
         guess = float(self.spinBox_guess.value())
@@ -233,14 +278,17 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         #print('initial guess is ' + str(guess))
         flaskid = self.comboBox_flasks.currentText()
         flaskvol = self.botdict[flaskid]
-        logging.info('flask ' + flaskid + ' with volume = ' + str(flaskvol))
+        titration_type = self.get_titration_type()
+        thio_t = self.doubleSpinBox_thio_t.value()
+        logging.info('Thiosulfate temperature = ' + str(thio_t) + ' degC' )
+        logging.info('flask ' + flaskid + '[' + titration_type + '] with volume = ' + str(flaskvol) )
         #print('flask volume =' + str(flaskvol))
         if self.checkBox_rapid.isChecked():
             timode = 'rapid'
         else:
             timode = 'normal'
         #logging.info(str(timode))
-        self.titr = ti.titration(self.meter,self.pump,flaskid,flaskvol,0.2,\
+        self.titr = ti.titration(self.meter,self.pump,flaskid,flaskvol,titration_type,0.2,thio_t,\
                             mode=timode)
         print('running titration')
         self.ti_thr = runTitration(self.titr,guess)
@@ -251,9 +299,22 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         self.plt_thr.start()
         self.ti_thr.finished.connect(self.titration_done)
 
+    def stop_titration_clicked(self):
+        if  hasattr(self, 'titr'):
+            self.titr.run_titration = False
+            logging.info('Titration manually stopped in progress')
+        else:
+            logging.info('Clicked "Stop Titration" but no titration is in progress')
+
     def titration_done(self):
-        QMessageBox.warning(self,'','titration complete: endpoint=' +  \
-                str(self.titr.endpoint),QMessageBox.Ok)
+        # QMessageBox.warning(self,'','titration complete: endpoint=' +  \
+        #         str(self.titr.endpoint),QMessageBox.Ok)
+        extra_metadata = self.get_metadata_log()
+        print('\a')
+        comment, ok =  QInputDialog.getText(self,'Titration completed', 'Titration completed: endpoint=' +  \
+                str(self.titr.endpoint) +'uL\nAdd a comment here:')
+        self.titr.comment = comment
+        self.titr.toJSON(extra_metadata)
         self.titr.pump.fill()
 
     def dispense_standard_clicked(self):
@@ -317,6 +378,12 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
 #    def dispense_custom(self):
 #        vol = self.lcdNumber_customvol.value
 #        self.dispense_vol(vol)
+    def show_titration_result(self):
+        comment, ok =  QInputDialog.getText(self, "Get text","Your name:", QLineEdit.Normal, "")
+        if ok:
+            return comment
+        else:
+            return None
 
 
 def getPorts():

@@ -105,8 +105,6 @@ class mforce_pump(serial.Serial):
     since this is a 422 device, it requires an address which precedes each comman
     default is A
     """
-
-    print('hello')
     addr='A'
     MUNIT=2432
     TERMINATOR = '\r\n'
@@ -192,6 +190,10 @@ class mforce_pump(serial.Serial):
         wait_time = steps / max_rate + 0.2
         print('wait time ' + str(wait_time))
         return wait_time
+
+
+    def fill(self,eol=TERMINATOR):
+        print('milligat pump - no fill')
 
 class mlynx_pump(serial.Serial):
     """
