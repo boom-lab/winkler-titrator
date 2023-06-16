@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/116846502.svg)](https://zenodo.org/badge/latestdoi/116846502)
+
 # winkler-titrator
 software to control WHOI Nicholson Lab Winkler titrator
 
