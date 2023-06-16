@@ -12,12 +12,16 @@ from time import strftime,gmtime,sleep
 import json
 import logging
 
+from PyQt5.QtWidgets import QInputDialog, QLineEdit
+
 class titration():
     """
     Class representing a Winkler titration of a single sample (or std)
     """
     root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
-    def __init__(self,meter,pump,botid,vbot,Mthios,datadir=os.path.join(root_dir,'data'),mode='normal'):
+
+    def __init__(self,meter,pump,botid,vbot,type,Mthios,thio_t,datadir=os.path.join(root_dir,'data'),mode='normal'):
+
         """
         Initialize titration
         INPUTS:
@@ -33,6 +37,7 @@ class titration():
         self.meter = meter
         self.pump = pump
         self.botid = botid
+        self.type = type
         self.Mthios = Mthios
         self.cumvol = 0
         self.is_complete = False
@@ -41,6 +46,7 @@ class titration():
         self.T = np.array([])
         self.v_end_est = np.array([])
         self.v_end = 0
+        self.thio_t = thio_t
         #self.pump.setPos(0)
         self.vbot = vbot
         # when True there are no actual pumping or meter reads
@@ -60,8 +66,10 @@ class titration():
         if not os.path.exists(datadir):
             os.makedirs(datadir)
         with open(self.current_file,'w') as self.f:
-            self.f.write('time,uL,mV,gF,temp,v_end_est\n')
+            self.f.write('time,uL,mV,gF,temp,v_end_est,type,thio_t\n')
         self.pump.setPos(0)
+        self.run_titration = False
+        self.comment = None
 
     def gran_fac(self):
         """
@@ -101,6 +109,10 @@ class titration():
             self.pump.fill()
         sleep(0.1)
         ini_vol = 0.1*guess
+
+        # Start titration
+        self.run_titration = True
+
         # titrate to 40% and predict endpoint
         for x in range(4):
             print('starting x= ' + str(x))
@@ -111,6 +123,11 @@ class titration():
                 self.dispense_thios(ini_vol)
             self.v_end_est = np.append(self.v_end_est,0)
             self.latest_line()
+
+            # If the stop button got hit step out of the for loop
+            if not self.run_titration:
+                break
+
         self.gran_fac()
 
         fit = np.polyfit(self.gF[-4:],self.uL[-4:],1)
@@ -120,7 +137,8 @@ class titration():
         logging.info('1st estimated endpoint: '+  str(fit[1]) + ' uL' )
         tgt_vol = self.target(self.v_end,self.mode)
         logging.info('target: ' + str(tgt_vol))
-        while True:
+
+        while self.run_titration:
             if self.pump.DEBUG:
                 self.dispense_from_data(tgt_vol)
                 print('warning simulated titration - debug mode is on')
@@ -138,6 +156,7 @@ class titration():
             logging.info('target is: ' + str(tgt_vol) + ', uL is ' + str(self.cumvol)\
                   + 'cumvol is: ' + str(self.cumvol))
             if not tgt_vol:
+                self.is_complete = True
                 break
         # cleanup and save when done
         self.endpoint = self.v_end
@@ -148,10 +167,16 @@ class titration():
         logging.warning('endpoint reached: ' + str(self.v_end) + ' uL')
         self.gran_fac()
         self.end_time = strftime("%Y%m%d%H%M%S", gmtime())
-        self.is_complete = True
         #self.O2 = self.concentration()
-        self.toJSON()
+        # self.toJSON()
         #self.pump.fill()
+
+    # def show_titration_result(self):
+    #     comment, ok =  QInputDialog.getText(self, "Get text","Your name:", QLineEdit.Normal, "")
+    #     if ok:
+    #         return comment
+    #     else:
+    #         return None
 
 
     def dispense_thios(self,vol):
@@ -167,7 +192,27 @@ class titration():
         sleep(0.5)
         print('reading meter...')
         self.cumvol = self.pump.getPos()
-        mV,T = self.meter.meas()
+
+        # Attempt to get a measurement from the meter
+        measurement_attempt = 0
+        max_measurement_attempts = 4
+        while measurement_attempt < max_measurement_attempts:
+            result = self.meter.meas()
+            if result is not None:
+                break
+            else:
+                measurement_attempt += 1
+
+        # If no measurement retrieve give a message
+        if result is None:
+            failed_message = 'Failed to take any measurement within the ' + str(max_measurement_attempts) + ' attempts'
+            print(failed_message)
+            logging.info(failed_message)
+            return
+
+        # Split measurement
+        mV,T = result
+
         logging.info('cumulative vol: ' + str(self.cumvol) + ' uL')
         print('cumvol: ' + str(self.cumvol) + ' uL')
         print(str(mV)+ ' T: '+str(T))
@@ -244,10 +289,11 @@ class titration():
             elif vol_to_end <= -30:
                 return False
 
-    def toJSON(self):
-        titr = {}
+    def toJSON(self,titr:dict = None):
+        if titr==None:
+            titr = {}
         attributes = ('botid','Mthios','vbot','Vblank','init_time','v_end',\
-                      'end_time','endpoint','mode')
+                      'end_time','endpoint','mode','type','thio_t','is_complete','comment')
         npatts = ('mV','uL','T','v_end_est','endpoint')
         for att in attributes:
             titr[att] = getattr(self,att)
@@ -270,7 +316,7 @@ class titration():
     def latest_line(self):
         line_list = (strftime("%Y%m%d%H%M%S", gmtime()),str(self.uL[-1]), \
                 str(self.mV[-1]),str(self.gF[-1]),str(self.T[-1]),\
-                str(self.v_end_est[-1]))
+                str(self.v_end_est[-1]),self.type,str(self.thio_t))
         line = ','.join(line_list)+'\n'
         with open(self.current_file,'a') as f:
             f.write(line)
@@ -291,7 +337,8 @@ class titration():
         mV_est = np.interp(vol,uLg,mVg)
         return(mV_est)
 
-def gran(uL,mV,T,vbot=125):
+#def gran(uL,mV,T,vbot=125):
+def gran(uL,mV,T,vbot):
     # compute gran factor
     R = 8.314462175    #Ideal gas constant
     F = 9.6485339924e4 #Faraday Constant Coulumbs mol-1
@@ -304,7 +351,8 @@ def gran(uL,mV,T,vbot=125):
     granVals = (vbotL + vL) * np.exp(EV / a)
     return granVals
 
-def gran2mV(uL,gF,T,vbot=125):
+#def gran2mV(uL,gF,T,vbot=125):
+def gran2mV(uL,gF,T,vbot):
     # invert gran factor to get equivalent mV reading
     R = 8.314462175    #Ideal gas constant
     F = 9.6485339924e4 #Faraday Constant Coulumbs mol-1
