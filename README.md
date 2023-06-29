@@ -34,4 +34,4 @@ active winkler-fbs #git shell in WINDOWS
 ```bash
 fbs run
 ```
-Once setup, only steps 5. and 6. are needed to start the software
+Once setup, only steps 5. and 6. are needed to start the software.
