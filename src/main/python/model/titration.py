@@ -12,7 +12,7 @@ from time import strftime,gmtime,sleep
 import json
 import logging
 
-from PyQt5.QtWidgets import QInputDialog, QLineEdit
+from PyQt6.QtWidgets import QInputDialog, QLineEdit
 
 class titration():
     """
@@ -28,6 +28,7 @@ class titration():
          meter: meter object from serialDevices.py
          pump:  pump object from serialDevices.py
          botid: string id for iodine titration flask
+         vbot: volume of flask in mL
          M_thios: Molarity of thiosulfate titrant
          datadir: directory path for saving output
          mode:    'normal' or 'rapid' (rapid stops before endpoint and
@@ -47,8 +48,7 @@ class titration():
         self.v_end_est = np.array([])
         self.v_end = 0
         self.thio_t = thio_t
-        #self.pump.setPos(0)
-        self.vbot = vbot
+        self.vbot = float(vbot)
         # when True there are no actual pumping or meter reads
         self.pump.DEBUG = False
         # when True the meter makes a reading (e.g. in DI water) but dummy_read
@@ -88,7 +88,7 @@ class titration():
             nO2 = (self.endpoint-self.Vblank)*self.Mthios / (4e6)
             cO2 = 1e12 * (nO2-self.reagO2) / ((1000 + \
                          dens.sigma0(self.S,self.Ts)) * \
-                        (self.botvol-self.reagvol))
+                        (self.vbot-self.reagvol))
             return cO2
 
     def titrate(self,guess,vmax=2000):
@@ -337,13 +337,12 @@ class titration():
         mV_est = np.interp(vol,uLg,mVg)
         return(mV_est)
 
-#def gran(uL,mV,T,vbot=125):
 def gran(uL,mV,T,vbot):
     # compute gran factor
     R = 8.314462175    #Ideal gas constant
     F = 9.6485339924e4 #Faraday Constant Coulumbs mol-1
     TK0 = 273.15
-    vbotL = 1e-3 * float(vbot)
+    vbotL = 1e-3 * vbot  # vbot is already a float volume
     vL = 1e-6 * uL
     EV = 1e-3 * mV
     TK = T + TK0

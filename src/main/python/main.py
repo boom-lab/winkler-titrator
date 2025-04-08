@@ -1,12 +1,12 @@
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
-from PyQt5.QtWidgets import QMainWindow
-
 import sys
 import os
 import logging
-from time import strftime,gmtime
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,QMessageBox, QInputDialog,QLineEdit
-from PyQt5.QtCore import QThread,pyqtSignal
+from time import strftime, gmtime
+from PyQt6.QtWidgets import (
+    QMainWindow, QApplication, QFileDialog, QMessageBox,
+    QInputDialog, QLineEdit
+)
+from PyQt6.QtCore import QThread, pyqtSignal
 import serial.tools.list_ports
 import winkler
 from model import serialDevices as sd
@@ -15,75 +15,57 @@ from model import titration as ti
 import numpy as np
 import configparser
 
-
-#Mthios = float(config.Mthios)
-root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
+# Setup configuration
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..','..'))
 config = configparser.ConfigParser()
-config.read(os.path.join(root_dir,'wink.ini'))
+config.read(os.path.join(root_dir, 'wink.ini'))
 Mthios = config['PUMP']['Mthios']
 
-#print('in address is :' + config['PUMP']['InAddr'])
+# Setup logging
+logging.basicConfig(
+    filename=os.path.join(root_dir, 'log' + strftime("%Y%m%d", gmtime())),
+    level='INFO',
+    format='%(levelname)s %(asctime)s %(message)s'
+)
+logging.info('Starting application')
+logging.info(f"Pump controller: {config['PUMP']['Controller']}")
 
-logging.basicConfig(filename=os.path.join(root_dir,'log'+strftime("%Y%m%d", \
-    gmtime())),level='INFO',format='%(levelname)s %(asctime)s %(message)s')
-logging.info('Im logging!')
-logging.info(config['PUMP']['Controller'])
-
-class runTitration(QThread):
-
+class RunTitration(QThread):
+    """Thread for running titration without blocking GUI"""
     sig_done = pyqtSignal(bool)
 
     def __init__(self, titration, guess):
-        """
-        Make a new thread instance to run a titation without locking gui
-        """
-        QThread.__init__(self)
+        super().__init__()
         self.current_titration = titration
-        self.guess = np.float(guess)
-
-
-    def __del__(self):
-        self.wait()
+        self.guess = float(guess)
 
     def run(self):
-        """
-        start a titration (triggered by click of pushButton_titrate)
-        """
+        """Start a titration (triggered by click of pushButton_titrate)"""
         self.current_titration.titrate(self.guess)
         self.sig_done.emit(True)
 
-class chartUpdater(QThread):
-
+class ChartUpdater(QThread):
+    """Thread for updating chart in real-time"""
     sig_chart = pyqtSignal()
     sig_cumvol = pyqtSignal(int)
 
     def __init__(self, fpath):
-        """
-        loads latest titration data from file and send to plot
-        """
-        QThread.__init__(self)
+        super().__init__()
         self.filename = fpath
-        self.filesize = os.path.getsize(self.filename)
-        self.sig_chart.connect
-        self.sig_cumvol.connect
-
-
-    def __del__(self):
-        self.wait()
+        self.filesize = 0
+        if os.path.exists(self.filename):
+            self.filesize = os.path.getsize(self.filename)
 
     def run(self):
-        """
-        start a titration (triggered by click of pushButton_titrate)
-        """
+        """Update chart when file changes"""
         while True:
-            if os.path.getsize(self.filename) > self.filesize:
+            if os.path.exists(self.filename) and os.path.getsize(self.filename) > self.filesize:
                 self.filesize = os.path.getsize(self.filename)
                 self.sig_chart.emit()
 
-
-class AppWindow(QMainWindow,winkler.Ui_MainWindow):
+class AppWindow(QMainWindow, winkler.Ui_MainWindow):
     def __init__(self):
-        super(self.__class__, self).__init__()
+        super().__init__()
         self.setupUi(self)
         #self.ui.widget_MPL.addWidget(self.canvas)
         self.pushButton_connect.clicked.connect(self.connect)
@@ -100,15 +82,16 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
         #self.comboBox_meter.activated.connect(self.load_ports)
         #self.comboBox_pump.activated.connect(self.load_ports)
         # Connect dispense buttons
-        self.pushButton_1uL.clicked.connect(self.dispense_1uL)
-        self.pushButton_10uL.clicked.connect(self.dispense_10uL)
-        self.pushButton_100uL.clicked.connect(self.dispense_100uL)
-        self.pushButton_1000uL.clicked.connect(self.dispense_1000uL)
-        self.pushButton_5000uL.clicked.connect(self.dispense_5000uL)
+        self.pushButton_1uL.clicked.connect(lambda: self.dispense_vol(1))
+        self.pushButton_10uL.clicked.connect(lambda: self.dispense_vol(10))
+        self.pushButton_100uL.clicked.connect(lambda: self.dispense_vol(100))
+        self.pushButton_1000uL.clicked.connect(lambda: self.dispense_vol(1000))
+        self.pushButton_5000uL.clicked.connect(lambda: self.dispense_vol(5000))
         #self.pushButton_customvol.clicked.connect(self.dispense_custom)
 
         self.checkBox_gran.stateChanged.connect(self.plot_data)
         self.checkBox_zoom.stateChanged.connect(self.plot_data)
+        self.checkBox_rapid.stateChanged.connect(self.update_titration_mode)
 
         #self.verticalSlider_standard.valueChanged.connect(self.lcdNumber_standard.display)
 
@@ -119,271 +102,333 @@ class AppWindow(QMainWindow,winkler.Ui_MainWindow):
             print('Load flasks calibration from configuration')
             self.load_flask_calibration(config['FLASKS_CALIBRATION']['Path'])
 
+    def update_titration_mode(self):
+        """Update the titration mode based on the rapid mode checkbox"""
+        if hasattr(self, 'titr'):
+            self.titr.mode = 'rapid' if self.checkBox_rapid.isChecked() else 'normal'
 
     def plot_data(self):
-
+        """Update plot with current titration data"""
         self.widget_MPL.canvas.ax.cla()
         self.widget_MPL.canvas.ax.grid()
-        self.widget_MPL.canvas.ax.set_xlabel('uL')
+        self.widget_MPL.canvas.ax.set_xlabel('µL')
 
-        if hasattr(self,'titr'):
+        if hasattr(self, 'titr'):
+            # Get the data arrays
+            uL = self.titr.uL
+            mV = self.titr.mV
+            gF = self.titr.gF if hasattr(self.titr, 'gF') else None
+            
+            # Ensure we have data to plot
+            if len(uL) == 0 or len(mV) == 0:
+                self.widget_MPL.canvas.draw()
+                return
+                
+            # Get the zoom range if zoom is enabled
             if self.checkBox_zoom.isChecked():
-                d = np.where(np.abs(self.titr.uL-self.titr.v_end) < 30)
+                d = np.where(np.abs(uL - self.titr.v_end) < 30)[0]
+                if len(d) == 0:  # If no points in zoom range, use all points
+                    d = np.arange(len(uL))
             else:
-                d = range(len(self.titr.uL))
-            if self.checkBox_gran.isChecked():
-                y = self.titr.gF
+                d = np.arange(len(uL))
+            
+            # Plot the data
+            if self.checkBox_gran.isChecked() and gF is not None:
+                y = gF
                 self.widget_MPL.canvas.ax.set_ylabel('gran factor')
             else:
-                y = self.titr.mV
+                y = mV
                 self.widget_MPL.canvas.ax.set_ylabel('mV')
 
-            self.widget_MPL.canvas.ax.plot(self.titr.uL[d],y[d],'.-')
-            self.widget_MPL.canvas.ax.plot(self.titr.uL[-1],y[-1],'ro')
+            # Ensure indices are within bounds
+            d = d[d < len(uL)]
+            d = d[d < len(y)]
+            
+            if len(d) > 0:
+                self.widget_MPL.canvas.ax.plot(uL[d], y[d], '.-')
+                self.widget_MPL.canvas.ax.plot(uL[-1], y[-1], 'ro')
+            
             self.widget_MPL.canvas.draw()
             self.lcdNumber_dispensed.display(self.titr.cumvol)
             self.lcdNumber_endpoint.display(self.titr.v_end)
 
 
     def connect(self):
-        #if not (hasattr(self,'pump') and hasattr(self,'meter')):
-        #    self.load_ports()
         #print(self.comboBox_meter.currentText())
         #print(self.comboBox_pump.currentText())
         logging.info('connecting serial devices')
         logging.info('pump set to ' + config['PUMP']['Controller'])
-        logging.info('meter set to ' + config['METER']['Series'])
+        logging.info(f"Meter set to {config['METER']['Series']}")
         try:
             print(config['METER']['Series'].lower())
             if config['METER']['Series'].lower() == 'atlas':
                 print('connecting atlas')
                 self.meter = sd.meter(self.comboBox_meter.currentText())
             else:
-                self.meter = sd.meter(self.comboBox_meter.currentText(),int(config['METER']['mVpos']),int(config['METER']['Tpos']))
-            logging.info('meter connected on ' + self.comboBox_meter.currentText())
+                self.meter = sd.meter(
+                    self.comboBox_meter.currentText(),
+                    int(config['METER']['mVpos']),
+                    int(config['METER']['Tpos'])
+                )
+            logging.info(f"Meter connected on {self.comboBox_meter.currentText()}")
         except Exception as ex:
             logging.warning(ex)
-            QMessageBox.warning(self,'Connect Warning',\
-                                'Meter connection failed',QMessageBox.Ok)
+            QMessageBox.warning(
+                self,
+                'Connect Warning',
+                'Meter connection failed',
+                QMessageBox.StandardButton.Ok
+            )
+
+        # Connect main pump
         try:
-            print ('connecting ' + config['PUMP']['Controller'] + ' series pump')
-            if config['PUMP']['Controller'] == 'MFORCE':
+            pump_controller = config['PUMP']['Controller']
+            if pump_controller == 'MFORCE':
                 self.pump = sd.mforce_pump(self.comboBox_pump.currentText())
-                logging.info('MFORCE pump connected on ' + self.comboBox_pump.currentText())
-            elif config['PUMP']['Controller'] == 'MLYNX':
+            elif pump_controller == 'MLYNX':
                 self.pump = sd.mlynx_pump(self.comboBox_pump.currentText())
-                logging.info('MLYNX pump connected on ' + self.comboBox_pump.currentText())
-            elif config['PUMP']['Controller'] == 'KLOEHN':
-                vm = config['PUMP']['MaxVelocity']
-                svol = config['PUMP']['SyringeVol']
-                steps = config['PUMP']['Steps']
-                inaddr = config['PUMP']['InAddr']
-                outaddr = config['PUMP']['OutAddr']
-                pumpaddr = config['PUMP']['PumpAddr']
-                self.pump = sd.kloehn_pump(self.comboBox_pump.currentText(),steps=steps,syringe_vol=svol,VM=vm,InAddr=inaddr,OutAddr=outaddr,PumpAddr=pumpaddr)
-                logging.info('KLOEHN pump connected on ' + self.comboBox_pump.currentText())
-
+            elif pump_controller == 'KLOEHN':
+                self.pump = sd.kloehn_pump(
+                    self.comboBox_pump.currentText(),
+                    steps=config['PUMP']['Steps'],
+                    syringe_vol=config['PUMP']['SyringeVol'],
+                    VM=config['PUMP']['MaxVelocity'],
+                    InAddr=config['PUMP']['InAddr'],
+                    OutAddr=config['PUMP']['OutAddr'],
+                    PumpAddr=config['PUMP']['PumpAddr']
+                )
+            logging.info(f"{pump_controller} pump connected on {self.comboBox_pump.currentText()}")
         except Exception as ex:
-            QMessageBox.warning(self,'Connect Warning',\
-                                'Pump connection failed',QMessageBox.Ok)
-            logging.warning('Pump connection failed')
-            logging.warning(ex)
+            logging.warning(f"Pump connection failed: {ex}")
+            QMessageBox.warning(
+                self,
+                'Connect Warning',
+                'Pump connection failed',
+                QMessageBox.StandardButton.Ok
+            )
 
-        # Connect pump for dispensing standard (KIO3)
+        # Connect standard pump
         try:
-            if self.comboBox_standard.currentText()=='None':
+            if self.comboBox_standard.currentText() == 'None':
                 self.std_pump = None
                 logging.info('No standard pump available')
-            elif config['STD_PUMP']['Controller'] == 'MFORCE':
-                self.std_pump = sd.mforce_pump(self.comboBox_standard.currentText())
-                logging.info('MFORCE pump connected on ' + self.comboBox_standard.currentText())
-            elif config['STD_PUMP']['Controller'] == 'MLYNX':
-                self.std_pump = sd.mlynx_pump(self.comboBox_standard.currentText())
-                logging.info('MLYNX pump connected on ' + self.comboBox_standard.currentText())
-            elif config['STD_PUMP']['Controller'] == 'KLOEHN':
-                vm = config['STD_PUMP']['MaxVelocity']
-                svol = config['STD_PUMP']['SyringeVol']
-                steps = config['STD_PUMP']['Steps']
-                inaddr = config['STD_PUMP']['InAddr']
-                outaddr = config['STD_PUMP']['OutAddr']
-                pumpaddr = config['STD_PUMP']['PumpAddr']
-                self.std_pump = sd.kloehn_pump(self.comboBox_standard.currentText(),steps=steps,syringe_vol=svol,VM=vm,InAddr=inaddr,OutAddr=outaddr,PumpAddr=pumpaddr)
-                logging.info('KLOEHN pump connected on ' + self.comboBox_standard.currentText()+'with '+ str(svol) + ' uL syringe')
+            else:
+                std_controller = config['STD_PUMP']['Controller']
+                if std_controller == 'MFORCE':
+                    self.std_pump = sd.mforce_pump(self.comboBox_standard.currentText())
+                elif std_controller == 'MLYNX':
+                    self.std_pump = sd.mlynx_pump(self.comboBox_standard.currentText())
+                logging.info(f"Standard pump ({std_controller}) connected on {self.comboBox_standard.currentText()}")
         except Exception as ex:
-            QMessageBox.warning(self,'Connect Warning',\
-                            'Standard Pump connection failed',QMessageBox.Ok)
-            logging.warning('Standard Pump connection failed')
-            logging.warning(ex)
+            logging.warning(f"Standard pump connection failed: {ex}")
+            self.std_pump = None
 
 
     def flask_clicked(self):
-        filename = QFileDialog.getOpenFileName(None,'Test Dialog')
-        logging.info('bottle file '+filename[0]+ ' loaded')
-        self.load_flask_calibration(filename[0])
-        return filename
+        """Handle flask calibration file selection"""
+        logging.debug('Flask button clicked')
+        filename, _ = QFileDialog.getOpenFileName(
+            self,
+            'Open Flask Calibration File',
+            str(root_dir),
+            'CSV files (*.csv)'
+        )
+        if filename:
+            logging.debug(f'Selected file: {filename}')
+            self.load_flask_calibration(filename)
+        else:
+            logging.debug('No file selected')
 
-    def load_flask_calibration(self,filename):
-        self.botdict = iomod.import_flasks(filename)
-        botid = sorted(self.botdict.keys())
-        for bot in botid:
-            self.comboBox_flasks.addItem(bot)
+    def load_flask_calibration(self, filename):
+        """Load flask calibration data"""
+        logging.debug(f'Attempting to load flask calibration from {filename}')
+        try:
+            self.flask_calibration = iomod.import_flasks(filename)
+            if not self.flask_calibration:
+                raise ValueError("No calibration data found")
+            logging.info(f"Loaded flask calibration from {filename}")
+            
+            # Update flask selection combo box
+            self.comboBox_flasks.clear()
+            self.comboBox_flasks.addItems(sorted(self.flask_calibration.keys()))
+            logging.debug(f'Added {len(self.flask_calibration)} flasks to combo box')
+            
+        except Exception as ex:
+            logging.error(f"Error loading flask calibration: {ex}")
+            QMessageBox.warning(
+                self,
+                'Flask Calibration Error',
+                str(ex),
+                QMessageBox.StandardButton.Ok
+            )
 
     def load_ports(self):
+        """Load available serial ports"""
+        ports = [port.device for port in serial.tools.list_ports.comports()]
         self.comboBox_meter.clear()
         self.comboBox_pump.clear()
         self.comboBox_standard.clear()
-        ports = serial.tools.list_ports.comports()
-        device_list = []
-        for p in ports:
-            if True:#if 'usb' in p.device or 'COM' in p.device:
-                self.comboBox_meter.addItem(p.device)
-                self.comboBox_pump.addItem(p.device)
-                self.comboBox_standard.addItem(p.device)
-                device_list.append(p.device)
-        self.comboBox_standard.addItem('None')
-        #print(config['METER']['Port'] in ports)
+        self.comboBox_meter.addItems(ports)
+        self.comboBox_pump.addItems(ports)
+        self.comboBox_standard.addItems(['None'] + ports)
 
         # If default connection listed in configuration
         if 'Port' in config['METER']:
-            if config['METER']['Port'] in device_list:
+            if config['METER']['Port'] in ports:
                 self.comboBox_meter.setCurrentText(config['METER']['Port'])
         if 'Port' in config['PUMP']:
-            if config['PUMP']['Port'] in device_list:
+            if config['PUMP']['Port'] in ports:
                 self.comboBox_pump.setCurrentText(config['PUMP']['Port'])
         if 'Port' in config['STD_PUMP']:
-            if config['PUMP']['Port'] in device_list or config['PUMP']['Port']=='None':
+            if config['PUMP']['Port'] in ports or config['PUMP']['Port']=='None':
                 self.comboBox_standard.setCurrentText(config['STD_PUMP']['Port'])
 
-    def get_metadata_log(self):
-        return {
-            "kio3_temp": self.doubleSpinBox_kio3_temp.value(),
-            "id": self.lineEdit_id.text()
-        }
+    # def get_metadata_log(self):
+    #     """Get metadata for logging"""
+    #     metadata = {
+    #         'bottle': self.lineEdit_id.text() if hasattr(self, 'lineEdit_id') else '',
+    #         'station': self.lineEdit_station.text() if hasattr(self, 'lineEdit_station') else '',
+    #         'cast': self.lineEdit_cast.text() if hasattr(self, 'lineEdit_cast') else '',
+    #         'niskin': self.lineEdit_niskin.text() if hasattr(self, 'lineEdit_niskin') else '',
+    #         'lat': self.lineEdit_lat.text() if hasattr(self, 'lineEdit_lat') else '',
+    #         'lon': self.lineEdit_lon.text() if hasattr(self, 'lineEdit_lon') else '',
+    #         'depth': self.lineEdit_depth.text() if hasattr(self, 'lineEdit_depth') else ''
+    #     }
+    #     return metadata
 
     def get_titration_type(self):
-        if self.pushButton_sample_type.isChecked():
-            return 'sample'
+        """Get the type of titration to perform"""
+        if self.pushButton_sea_water_blank_type.isChecked():
+            return 'blank'
         elif self.pushButton_standard_type.isChecked():
             return 'standard'
-        elif self.pushButton_di_water_blank_type.isChecked():
-            return 'di_blank'
-        elif self.pushButton_sea_water_blank_type.isChecked():
-            return 'sw_blank'
+        return 'sample'
 
     def titrate_clicked(self):
-        guess = float(self.spinBox_guess.value())
-        self.lcdNumber_endpoint.display(0)
-        self.lcdNumber_dispensed.display(0)
-        logging.info('titration started with initial guess '+ str(guess))
-        #print('initial guess is ' + str(guess))
-        flaskid = self.comboBox_flasks.currentText()
-        flaskvol = self.botdict[flaskid]
-        titration_type = self.get_titration_type()
-        thio_t = self.doubleSpinBox_thio_t.value()
-        logging.info('Thiosulfate temperature = ' + str(thio_t) + ' degC' )
-        logging.info('flask ' + flaskid + '[' + titration_type + '] with volume = ' + str(flaskvol) )
-        #print('flask volume =' + str(flaskvol))
-        if self.checkBox_rapid.isChecked():
-            timode = 'rapid'
-        else:
-            timode = 'normal'
-        #logging.info(str(timode))
-        self.titr = ti.titration(self.meter,self.pump,flaskid,flaskvol,titration_type,0.2,thio_t,\
-                            mode=timode)
-        print('running titration')
-        self.ti_thr = runTitration(self.titr,guess)
-        self.ti_thr.start()
-        self.plt_thr = chartUpdater(self.titr.current_file)
-        self.plt_thr.sig_chart.connect(self.plot_data)
-        #self.plt_thr.sig_cumvol.connect(self.lcdNumber_dispensed.value)
-        self.plt_thr.start()
-        self.ti_thr.finished.connect(self.titration_done)
+        """Start a titration"""
+        try:
+            titration_type = self.get_titration_type()
+            
+            # Get the bottle ID and look up its volume
+            botid = self.comboBox_flasks.currentText()
+            if not hasattr(self, 'flask_calibration'):
+                raise ValueError("No flask calibration loaded")
+            if botid not in self.flask_calibration:
+                raise ValueError(f"Bottle ID {botid} not found in calibration data")
+            vbot = self.flask_calibration[botid]
+            
+            # Determine titration mode
+            mode = 'rapid' if self.checkBox_rapid.isChecked() else 'normal'
+            
+            self.titr = ti.titration(
+                self.meter,
+                self.pump,
+                botid,  # botid - keep as string
+                vbot,   # vbot - already a float from calibration
+                titration_type,  # type
+                float(config['PUMP']['Mthios']),  # Mthios
+                float(self.doubleSpinBox_thio_t.value()),  # thio_t
+                mode=mode  # Use the mode from checkbox
+            )
+            
+            # Set debug state from checkbox
+            self.titr.pump.DEBUG = self.checkBox_pumpDebug.isChecked()
+            
+            self.tthread = RunTitration(self.titr, float(self.spinBox_guess.value()))
+            self.tthread.sig_done.connect(self.titration_done)
+            self.tthread.start()
+            
+            self.plt_thr = ChartUpdater(self.titr.current_file)
+            self.plt_thr.sig_chart.connect(self.plot_data)
+            self.plt_thr.start()
+            
+        except Exception as ex:
+            logging.error(f"Titration failed: {ex}")
+            QMessageBox.warning(
+                self,
+                'Titration Error',
+                str(ex),
+                QMessageBox.StandardButton.Ok
+            )
 
     def stop_titration_clicked(self):
-        if  hasattr(self, 'titr'):
-            self.titr.run_titration = False
-            logging.info('Titration manually stopped in progress')
-        else:
-            logging.info('Clicked "Stop Titration" but no titration is in progress')
+        """Stop the current titration"""
+        if hasattr(self, 'titr'):
+            self.titr.stop()
+            logging.info('Titration stopped by user')
 
     def titration_done(self):
-        # QMessageBox.warning(self,'','titration complete: endpoint=' +  \
-        #         str(self.titr.endpoint),QMessageBox.Ok)
-        extra_metadata = self.get_metadata_log()
-        print('\a')
-        comment, ok =  QInputDialog.getText(self,'Titration completed', 'Titration completed: endpoint=' +  \
-                str(self.titr.endpoint) +'uL\nAdd a comment here:')
-        self.titr.comment = comment
-        self.titr.toJSON(extra_metadata)
-        self.titr.pump.fill()
+        """Handle completion of titration"""
+        self.plot_data()
+        self.show_titration_result()
+
+    def show_titration_result(self):
+        """Display titration results"""
+        if hasattr(self, 'titr'):
+            result = (
+                f"Titration complete\n"
+                f"Endpoint: {self.titr.v_end:.2f} µL\n"
+                #f"O2: {self.titr.O2:.2f} µmol/kg"
+            )
+            QMessageBox.information(
+                self,
+                'Titration Result',
+                result,
+                QMessageBox.StandardButton.Ok
+            )
+
+    def dispense_vol(self, vol):
+        """Dispense a specific volume"""
+        if self.pump:
+            try:
+                self.pump.dispense(vol)
+                logging.info(f"Dispensed {vol} µL")
+            except Exception as ex:
+                logging.error(f"Error dispensing volume: {ex}")
+                QMessageBox.warning(
+                    self,
+                    'Dispense Error',
+                    str(ex),
+                    QMessageBox.StandardButton.Ok
+                )
 
     def dispense_standard_clicked(self):
-        dispense_vol = self.spinBox_standard.value()
-        print(dispense_vol)
-        self.std_pump.dispense(str(dispense_vol))
-        logging.info('dispensed  '+str(dispense_vol) + ' uL of standard')
+        """Dispense standard solution"""
+        if self.std_pump:
+            vol = float(self.lineEdit_standardVol.text())
+            self.std_pump.dispense(vol)
+            logging.info(f"Dispensed {vol} µL of standard")
 
     def load_standard_clicked(self):
-        load_vol = self.spinBox_standard.value()
-        print(load_vol)
-        self.std_pump.load(str(load_vol))
-        logging.info('loaded  '+str(load_vol) + ' uL of standard')
+        """Load standard solution"""
+        if self.std_pump:
+            self.std_pump.load()
+            logging.info('Loading standard solution')
 
-    # completely empty
     def empty_standard_clicked(self):
-        self.std_pump.empty()
-        logging.info('emptied standard')
+        """Empty standard solution"""
+        if self.std_pump:
+            self.std_pump.empty()
+            logging.info('Emptying standard solution')
 
-    # completely fill syringe
     def fill_standard_clicked(self):
-        self.std_pump.fill()
-        logging.info('filled standard')
-
+        """Fill standard solution"""
+        if self.std_pump:
+            self.std_pump.fill()
+            logging.info('Filling standard solution')
 
     def dispense_thios_clicked(self):
-        dispense_vol = self.spinBox_thios.value()
-        print(dispense_vol)
-        self.pump.dispense(str(dispense_vol))
-        logging.info('dispensed  '+str(dispense_vol) + ' uL of thiosulfate')
+        """Dispense thiosulfate solution"""
+        if self.pump:
+            vol = float(self.lineEdit_thiosVol.text())
+            self.pump.dispense(vol)
+            logging.info(f"Dispensed {vol} µL of thiosulfate")
 
     def load_thios_clicked(self):
-
-        load_vol = self.spinBox_thios.value()
-        print(load_vol)
-        self.pump.load(str(load_vol))
-        logging.info('loaded  '+str(load_vol) + ' uL of thiosulfate')
-
-
-
-
-    def dispense_vol(self,vol):
-        try:
-            #print('dispensing ' + str(vol) + ' uL')
-            self.pump.dispense(str(vol))
-            logging.info('dispensed  '+str(vol) + ' uL')
-        except Exception as ex:
-            print(ex)
-            QMessageBox.warning(self,'','dispense ' + str(vol) + ' failed', \
-                                QMessageBox.Ok)
-    def dispense_1uL(self):
-        self.dispense_vol(1)
-    def dispense_10uL(self):
-        self.dispense_vol(10)
-    def dispense_100uL(self):
-        self.dispense_vol(100)
-    def dispense_1000uL(self):
-        self.dispense_vol(1000)
-    def dispense_5000uL(self):
-        self.dispense_vol(5000)
-#    def dispense_custom(self):
-#        vol = self.lcdNumber_customvol.value
-#        self.dispense_vol(vol)
-    def show_titration_result(self):
-        comment, ok =  QInputDialog.getText(self, "Get text","Your name:", QLineEdit.Normal, "")
-        if ok:
-            return comment
-        else:
-            return None
+        """Load thiosulfate solution"""
+        if self.pump:
+            self.pump.load()
+            logging.info('Loading thiosulfate solution')
 
 
 def getPorts():
@@ -394,10 +439,7 @@ def getPorts():
         return ports
 
 if __name__ == '__main__':
-    appctxt = ApplicationContext()       # 1. Instantiate ApplicationContext
     app = QApplication(sys.argv)
-    MainWindow = QMainWindow()
-    prog = AppWindow()
-    prog.show()
-    exit_code = appctxt.app.exec_()      # 2. Invoke appctxt.app.exec_()
-    sys.exit(exit_code)
+    window = AppWindow()
+    window.show()
+    sys.exit(app.exec())

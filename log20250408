@@ -1,0 +1,879 @@
+INFO 2025-04-08 17:17:59,262 Starting application
+INFO 2025-04-08 17:17:59,262 Pump controller: MFORCE
+INFO 2025-04-08 17:18:09,562 Connecting serial devices
+INFO 2025-04-08 17:18:09,562 Pump set to MFORCE
+INFO 2025-04-08 17:18:09,562 Meter set to A221
+INFO 2025-04-08 17:18:09,563 Meter connected on /dev/cu.debug-console
+INFO 2025-04-08 17:18:09,563 MFORCE pump connected on /dev/cu.debug-console
+INFO 2025-04-08 17:18:09,563 No standard pump available
+INFO 2025-04-08 17:18:19,843 Loaded flask calibration from /Users/dnicholson/Documents/GitHub/winkler-titrator/src/main/python/model/winklerbottlecal.csv
+INFO 2025-04-08 17:18:27,665 dispense from data 50.0 uL
+INFO 2025-04-08 17:18:28,676 dispense from data 50.0 uL
+INFO 2025-04-08 17:18:29,686 dispense from data 50.0 uL
+INFO 2025-04-08 17:18:30,693 dispense from data 50.0 uL
+INFO 2025-04-08 17:18:31,705 1st estimated endpoint: 801.0253915205853 uL
+INFO 2025-04-08 17:18:31,705 target: 150
+INFO 2025-04-08 17:18:31,705 dispense from data 150 uL
+INFO 2025-04-08 17:18:32,706 fit: [-6.27844581e-10  7.35229313e+02]
+INFO 2025-04-08 17:18:32,709 estimated endpoint: 735.2293133370282 uL
+INFO 2025-04-08 17:18:32,712 target is: 150, uL is 350.0cumvol is: 350.0
+INFO 2025-04-08 17:18:32,712 dispense from data 150 uL
+INFO 2025-04-08 17:18:33,718 fit: [-6.66055350e-10  7.66258911e+02]
+INFO 2025-04-08 17:18:33,723 estimated endpoint: 766.2589106896082 uL
+INFO 2025-04-08 17:18:33,723 target is: 50, uL is 500.0cumvol is: 500.0
+INFO 2025-04-08 17:18:33,724 dispense from data 50 uL
+INFO 2025-04-08 17:18:34,729 fit: [-6.89711744e-10  7.81453742e+02]
+INFO 2025-04-08 17:18:34,735 estimated endpoint: 781.4537423126103 uL
+INFO 2025-04-08 17:18:34,735 target is: 50, uL is 550.0cumvol is: 550.0
+INFO 2025-04-08 17:18:34,735 dispense from data 50 uL
+INFO 2025-04-08 17:18:35,740 fit: [-7.34055596e-10  8.00782620e+02]
+INFO 2025-04-08 17:18:35,746 estimated endpoint: 800.7826196624959 uL
+INFO 2025-04-08 17:18:35,746 target is: 50, uL is 600.0cumvol is: 600.0
+INFO 2025-04-08 17:18:35,746 dispense from data 50 uL
+INFO 2025-04-08 17:18:36,752 fit: [-7.73509159e-10  8.14001593e+02]
+INFO 2025-04-08 17:18:36,758 estimated endpoint: 814.0015931549805 uL
+INFO 2025-04-08 17:18:36,758 target is: 50, uL is 650.0cumvol is: 650.0
+INFO 2025-04-08 17:18:36,758 dispense from data 50 uL
+INFO 2025-04-08 17:18:37,760 fit: [-7.81576124e-10  8.16579257e+02]
+INFO 2025-04-08 17:18:37,766 estimated endpoint: 816.5792567927825 uL
+INFO 2025-04-08 17:18:37,766 target is: 50, uL is 700.0cumvol is: 700.0
+INFO 2025-04-08 17:18:37,766 dispense from data 50 uL
+INFO 2025-04-08 17:18:38,772 fit: [-8.21453907e-10  8.25254895e+02]
+INFO 2025-04-08 17:18:38,778 estimated endpoint: 825.254895133382 uL
+INFO 2025-04-08 17:18:38,778 target is: 20, uL is 750.0cumvol is: 750.0
+INFO 2025-04-08 17:18:38,778 dispense from data 20 uL
+INFO 2025-04-08 17:18:39,783 fit: [-8.43533104e-10  8.28354303e+02]
+INFO 2025-04-08 17:18:39,790 estimated endpoint: 828.3543027037327 uL
+INFO 2025-04-08 17:18:39,790 target is: 20, uL is 770.0cumvol is: 770.0
+INFO 2025-04-08 17:18:39,790 dispense from data 20 uL
+INFO 2025-04-08 17:18:40,795 fit: [-8.78044645e-10  8.31820319e+02]
+INFO 2025-04-08 17:18:40,798 estimated endpoint: 831.8203194818676 uL
+INFO 2025-04-08 17:18:40,802 target is: 20, uL is 790.0cumvol is: 790.0
+INFO 2025-04-08 17:18:40,802 dispense from data 20 uL
+INFO 2025-04-08 17:18:41,808 fit: [-8.85234156e-10  8.32349980e+02]
+INFO 2025-04-08 17:18:41,814 estimated endpoint: 832.3499799883449 uL
+INFO 2025-04-08 17:18:41,814 target is: 10, uL is 810.0cumvol is: 810.0
+INFO 2025-04-08 17:18:41,814 dispense from data 10 uL
+INFO 2025-04-08 17:18:42,820 fit: [-8.93947062e-10  8.32512382e+02]
+INFO 2025-04-08 17:18:42,822 estimated endpoint: 832.5123818431738 uL
+INFO 2025-04-08 17:18:42,827 target is: 5, uL is 820.0cumvol is: 820.0
+INFO 2025-04-08 17:18:42,827 dispense from data 5 uL
+INFO 2025-04-08 17:18:43,832 fit: [-8.58238945e-10  8.31479787e+02]
+INFO 2025-04-08 17:18:43,835 estimated endpoint: 831.4797870632237 uL
+INFO 2025-04-08 17:18:43,835 target is: 3, uL is 825.0cumvol is: 825.0
+INFO 2025-04-08 17:18:43,839 dispense from data 3 uL
+INFO 2025-04-08 17:18:44,844 fit: [-8.23774802e-10  8.30989030e+02]
+INFO 2025-04-08 17:18:44,851 estimated endpoint: 830.9890301101109 uL
+INFO 2025-04-08 17:18:44,851 target is: 1, uL is 828.0cumvol is: 828.0
+INFO 2025-04-08 17:18:44,851 dispense from data 1 uL
+INFO 2025-04-08 17:18:45,857 fit: [-7.80904222e-10  8.30638827e+02]
+INFO 2025-04-08 17:18:45,863 estimated endpoint: 830.6388270000048 uL
+INFO 2025-04-08 17:18:45,863 target is: 1, uL is 829.0cumvol is: 829.0
+INFO 2025-04-08 17:18:45,863 dispense from data 1 uL
+INFO 2025-04-08 17:18:46,869 fit: [-8.05735451e-10  8.30775814e+02]
+INFO 2025-04-08 17:18:46,875 estimated endpoint: 830.7758139164183 uL
+INFO 2025-04-08 17:18:46,875 target is: 0.5, uL is 830.0cumvol is: 830.0
+INFO 2025-04-08 17:18:46,875 dispense from data 0.5 uL
+INFO 2025-04-08 17:18:47,881 fit: [-8.73179335e-10  8.30998540e+02]
+INFO 2025-04-08 17:18:47,887 estimated endpoint: 830.9985400474275 uL
+INFO 2025-04-08 17:18:47,888 target is: 0.5, uL is 830.5cumvol is: 830.5
+INFO 2025-04-08 17:18:47,888 dispense from data 0.5 uL
+INFO 2025-04-08 17:18:48,893 fit: [-1.39496419e-09  8.31681329e+02]
+INFO 2025-04-08 17:18:48,899 estimated endpoint: 831.6813291952301 uL
+INFO 2025-04-08 17:18:48,900 target is: 0.5, uL is 831.0cumvol is: 831.0
+INFO 2025-04-08 17:18:48,900 dispense from data 0.5 uL
+INFO 2025-04-08 17:18:49,905 fit: [-2.30446681e-09  8.32442096e+02]
+INFO 2025-04-08 17:18:49,906 estimated endpoint: 832.4420961590419 uL
+INFO 2025-04-08 17:18:49,906 target is: 0.5, uL is 831.5cumvol is: 831.5
+INFO 2025-04-08 17:18:49,906 dispense from data 0.5 uL
+INFO 2025-04-08 17:18:50,911 fit: [-3.10346582e-09  8.32942096e+02]
+INFO 2025-04-08 17:18:50,918 estimated endpoint: 832.9420961580089 uL
+INFO 2025-04-08 17:18:50,918 target is: 0.5, uL is 832.0cumvol is: 832.0
+INFO 2025-04-08 17:18:50,918 dispense from data 0.5 uL
+INFO 2025-04-08 17:18:51,923 fit: [-4.17949179e-09  8.33442096e+02]
+INFO 2025-04-08 17:18:51,930 estimated endpoint: 833.442096156977 uL
+INFO 2025-04-08 17:18:51,930 target is: 0.5, uL is 832.5cumvol is: 832.5
+INFO 2025-04-08 17:18:51,930 dispense from data 0.5 uL
+INFO 2025-04-08 17:18:52,936 fit: [-5.62859480e-09  8.33942096e+02]
+INFO 2025-04-08 17:18:52,942 estimated endpoint: 833.9420961559443 uL
+INFO 2025-04-08 17:18:52,942 target is: 1, uL is 833.0cumvol is: 833.0
+INFO 2025-04-08 17:18:52,942 dispense from data 1 uL
+INFO 2025-04-08 17:18:53,948 fit: [-8.62971644e-09  8.34726281e+02]
+INFO 2025-04-08 17:18:53,950 estimated endpoint: 834.7262810259409 uL
+INFO 2025-04-08 17:18:53,954 target is: 1, uL is 834.0cumvol is: 834.0
+INFO 2025-04-08 17:18:53,955 dispense from data 1 uL
+INFO 2025-04-08 17:18:54,958 fit: [-1.28653930e-08  8.35500657e+02]
+INFO 2025-04-08 17:18:54,964 estimated endpoint: 835.5006565365478 uL
+INFO 2025-04-08 17:18:54,964 target is: 1, uL is 835.0cumvol is: 835.0
+INFO 2025-04-08 17:18:54,964 dispense from data 1 uL
+INFO 2025-04-08 17:18:55,970 fit: [-1.87719599e-08  8.36229033e+02]
+INFO 2025-04-08 17:18:55,970 estimated endpoint: 836.2290325872402 uL
+INFO 2025-04-08 17:18:55,983 target is: 1, uL is 836.0cumvol is: 836.0
+INFO 2025-04-08 17:18:55,984 dispense from data 1 uL
+INFO 2025-04-08 17:18:56,990 fit: [-3.40457289e-08  8.37229033e+02]
+INFO 2025-04-08 17:18:56,996 estimated endpoint: 837.2290325852209 uL
+INFO 2025-04-08 17:18:56,996 target is: 5, uL is 837.0cumvol is: 837.0
+INFO 2025-04-08 17:18:56,996 dispense from data 5 uL
+INFO 2025-04-08 17:18:58,002 fit: [-1.22613904e-07  8.40937080e+02]
+INFO 2025-04-08 17:18:58,008 estimated endpoint: 840.9370804317952 uL
+INFO 2025-04-08 17:18:58,008 target is: 5, uL is 842.0cumvol is: 842.0
+INFO 2025-04-08 17:18:58,008 dispense from data 5 uL
+INFO 2025-04-08 17:18:59,014 fit: [-4.06094081e-07  8.46957893e+02]
+INFO 2025-04-08 17:18:59,016 estimated endpoint: 846.9578930568795 uL
+INFO 2025-04-08 17:18:59,017 target is: 5, uL is 847.0cumvol is: 847.0
+INFO 2025-04-08 17:18:59,017 dispense from data 5 uL
+INFO 2025-04-08 17:19:00,026 fit: [-1.19785852e-06  8.56124314e+02]
+INFO 2025-04-08 17:19:00,033 estimated endpoint: 856.1243142303372 uL
+INFO 2025-04-08 17:19:00,033 target is: 10, uL is 852.0cumvol is: 852.0
+INFO 2025-04-08 17:19:00,033 dispense from data 10 uL
+INFO 2025-04-08 17:19:01,033 fit: [-3.94471422e-06  8.77163125e+02]
+INFO 2025-04-08 17:19:01,040 estimated endpoint: 877.163124537095 uL
+INFO 2025-04-08 17:19:01,040 target is: False, uL is 862.0cumvol is: 862.0
+WARNING 2025-04-08 17:19:01,040 endpoint reached: 831.4797870632237 uL
+INFO 2025-04-08 17:20:01,120 Starting application
+INFO 2025-04-08 17:20:01,120 Pump controller: MFORCE
+INFO 2025-04-08 17:20:04,497 Connecting serial devices
+INFO 2025-04-08 17:20:04,497 Pump set to MFORCE
+INFO 2025-04-08 17:20:04,497 Meter set to A221
+INFO 2025-04-08 17:20:04,498 Meter connected on /dev/cu.debug-console
+INFO 2025-04-08 17:20:04,498 MFORCE pump connected on /dev/cu.debug-console
+INFO 2025-04-08 17:20:04,498 No standard pump available
+INFO 2025-04-08 17:20:09,881 Loaded flask calibration from /Users/dnicholson/Documents/GitHub/winkler-titrator/src/main/python/model/winklerbottlecal.csv
+INFO 2025-04-08 17:20:14,294 dispense from data 50.0 uL
+INFO 2025-04-08 17:20:15,306 dispense from data 50.0 uL
+INFO 2025-04-08 17:20:16,313 dispense from data 50.0 uL
+INFO 2025-04-08 17:20:17,328 dispense from data 50.0 uL
+INFO 2025-04-08 17:20:18,340 1st estimated endpoint: 813.0154793947679 uL
+INFO 2025-04-08 17:20:18,340 target: 150
+INFO 2025-04-08 17:20:18,340 dispense from data 150 uL
+INFO 2025-04-08 17:20:19,344 fit: [-1.26518483e-09  7.42010953e+02]
+INFO 2025-04-08 17:20:19,350 estimated endpoint: 742.0109526589288 uL
+INFO 2025-04-08 17:20:19,350 target is: 150, uL is 350.0cumvol is: 350.0
+INFO 2025-04-08 17:20:19,350 dispense from data 150 uL
+INFO 2025-04-08 17:20:20,355 fit: [-1.33654765e-09  7.71158678e+02]
+INFO 2025-04-08 17:20:20,361 estimated endpoint: 771.1586784123384 uL
+INFO 2025-04-08 17:20:20,361 target is: 50, uL is 500.0cumvol is: 500.0
+INFO 2025-04-08 17:20:20,361 dispense from data 50 uL
+INFO 2025-04-08 17:20:21,362 fit: [-1.38081441e-09  7.85518929e+02]
+INFO 2025-04-08 17:20:21,365 estimated endpoint: 785.5189290816786 uL
+INFO 2025-04-08 17:20:21,368 target is: 50, uL is 550.0cumvol is: 550.0
+INFO 2025-04-08 17:20:21,368 dispense from data 50 uL
+INFO 2025-04-08 17:20:22,374 fit: [-1.46267168e-09  8.03535380e+02]
+INFO 2025-04-08 17:20:22,379 estimated endpoint: 803.535380222552 uL
+INFO 2025-04-08 17:20:22,379 target is: 50, uL is 600.0cumvol is: 600.0
+INFO 2025-04-08 17:20:22,379 dispense from data 50 uL
+INFO 2025-04-08 17:20:23,385 fit: [-1.53278657e-09  8.15441854e+02]
+INFO 2025-04-08 17:20:23,385 estimated endpoint: 815.4418537957332 uL
+INFO 2025-04-08 17:20:23,385 target is: 50, uL is 650.0cumvol is: 650.0
+INFO 2025-04-08 17:20:23,385 dispense from data 50 uL
+INFO 2025-04-08 17:20:24,396 fit: [-1.54482341e-09  8.17480521e+02]
+INFO 2025-04-08 17:20:24,399 estimated endpoint: 817.480520872694 uL
+INFO 2025-04-08 17:20:24,403 target is: 50, uL is 700.0cumvol is: 700.0
+INFO 2025-04-08 17:20:24,403 dispense from data 50 uL
+INFO 2025-04-08 17:20:25,409 fit: [-1.61974649e-09  8.25780329e+02]
+INFO 2025-04-08 17:20:25,409 estimated endpoint: 825.7803287748332 uL
+INFO 2025-04-08 17:20:25,409 target is: 20, uL is 750.0cumvol is: 750.0
+INFO 2025-04-08 17:20:25,409 dispense from data 20 uL
+INFO 2025-04-08 17:20:26,420 fit: [-1.66029865e-09  8.28670131e+02]
+INFO 2025-04-08 17:20:26,427 estimated endpoint: 828.6701313786904 uL
+INFO 2025-04-08 17:20:26,427 target is: 20, uL is 770.0cumvol is: 770.0
+INFO 2025-04-08 17:20:26,427 dispense from data 20 uL
+INFO 2025-04-08 17:20:27,433 fit: [-1.72531936e-09  8.31996724e+02]
+INFO 2025-04-08 17:20:27,440 estimated endpoint: 831.9967242250807 uL
+INFO 2025-04-08 17:20:27,440 target is: 20, uL is 790.0cumvol is: 790.0
+INFO 2025-04-08 17:20:27,440 dispense from data 20 uL
+INFO 2025-04-08 17:20:28,445 fit: [-1.73609894e-09  8.32409315e+02]
+INFO 2025-04-08 17:20:28,452 estimated endpoint: 832.4093145793291 uL
+INFO 2025-04-08 17:20:28,452 target is: 10, uL is 810.0cumvol is: 810.0
+INFO 2025-04-08 17:20:28,452 dispense from data 10 uL
+INFO 2025-04-08 17:20:29,458 fit: [-1.75177205e-09  8.32538870e+02]
+INFO 2025-04-08 17:20:29,464 estimated endpoint: 832.5388703888432 uL
+INFO 2025-04-08 17:20:29,464 target is: 5, uL is 820.0cumvol is: 820.0
+INFO 2025-04-08 17:20:29,464 dispense from data 5 uL
+INFO 2025-04-08 17:20:30,470 fit: [-1.68071208e-09  8.31490124e+02]
+INFO 2025-04-08 17:20:30,476 estimated endpoint: 831.4901244813378 uL
+INFO 2025-04-08 17:20:30,476 target is: 3, uL is 825.0cumvol is: 825.0
+INFO 2025-04-08 17:20:30,476 dispense from data 3 uL
+INFO 2025-04-08 17:20:31,482 fit: [-1.61222062e-09  8.30991596e+02]
+INFO 2025-04-08 17:20:31,484 estimated endpoint: 830.9915961540952 uL
+INFO 2025-04-08 17:20:31,484 target is: 1, uL is 828.0cumvol is: 828.0
+INFO 2025-04-08 17:20:31,484 dispense from data 1 uL
+INFO 2025-04-08 17:20:32,494 fit: [-1.52785638e-09  8.30639487e+02]
+INFO 2025-04-08 17:20:32,501 estimated endpoint: 830.6394868587641 uL
+INFO 2025-04-08 17:20:32,501 target is: 1, uL is 829.0cumvol is: 829.0
+INFO 2025-04-08 17:20:32,501 dispense from data 1 uL
+INFO 2025-04-08 17:20:33,506 fit: [-1.57620331e-09  8.30776016e+02]
+INFO 2025-04-08 17:20:33,512 estimated endpoint: 830.776016273726 uL
+INFO 2025-04-08 17:20:33,512 target is: 0.5, uL is 830.0cumvol is: 830.0
+INFO 2025-04-08 17:20:33,512 dispense from data 0.5 uL
+INFO 2025-04-08 17:20:34,518 fit: [-1.70799556e-09  8.30998610e+02]
+INFO 2025-04-08 17:20:34,520 estimated endpoint: 830.9986098817006 uL
+INFO 2025-04-08 17:20:34,520 target is: 0.5, uL is 830.5cumvol is: 830.5
+INFO 2025-04-08 17:20:34,520 dispense from data 0.5 uL
+INFO 2025-04-08 17:20:35,530 fit: [-2.72858039e-09  8.31681400e+02]
+INFO 2025-04-08 17:20:35,536 estimated endpoint: 831.6814003328359 uL
+INFO 2025-04-08 17:20:35,536 target is: 0.5, uL is 831.0cumvol is: 831.0
+INFO 2025-04-08 17:20:35,536 dispense from data 0.5 uL
+INFO 2025-04-08 17:20:36,542 fit: [-4.50748309e-09  8.32442169e+02]
+INFO 2025-04-08 17:20:36,545 estimated endpoint: 832.4421688503367 uL
+INFO 2025-04-08 17:20:36,545 target is: 0.5, uL is 831.5cumvol is: 831.5
+INFO 2025-04-08 17:20:36,545 dispense from data 0.5 uL
+INFO 2025-04-08 17:20:37,554 fit: [-6.07022765e-09  8.32942169e+02]
+INFO 2025-04-08 17:20:37,561 estimated endpoint: 832.9421688463872 uL
+INFO 2025-04-08 17:20:37,561 target is: 0.5, uL is 832.0cumvol is: 832.0
+INFO 2025-04-08 17:20:37,561 dispense from data 0.5 uL
+INFO 2025-04-08 17:20:38,567 fit: [-8.17477581e-09  8.33442169e+02]
+INFO 2025-04-08 17:20:38,569 estimated endpoint: 833.4421688424376 uL
+INFO 2025-04-08 17:20:38,569 target is: 0.5, uL is 832.5cumvol is: 832.5
+INFO 2025-04-08 17:20:38,569 dispense from data 0.5 uL
+INFO 2025-04-08 17:20:39,574 fit: [-1.10089709e-08  8.33942169e+02]
+INFO 2025-04-08 17:20:39,577 estimated endpoint: 833.9421688384888 uL
+INFO 2025-04-08 17:20:39,577 target is: 1, uL is 833.0cumvol is: 833.0
+INFO 2025-04-08 17:20:39,577 dispense from data 1 uL
+INFO 2025-04-08 17:20:40,587 fit: [-1.68785810e-08  8.34726354e+02]
+INFO 2025-04-08 17:20:40,589 estimated endpoint: 834.7263543088203 uL
+INFO 2025-04-08 17:20:40,589 target is: 1, uL is 834.0cumvol is: 834.0
+INFO 2025-04-08 17:20:40,589 dispense from data 1 uL
+INFO 2025-04-08 17:20:41,599 fit: [-2.51625923e-08  8.35500728e+02]
+INFO 2025-04-08 17:20:41,605 estimated endpoint: 835.5007275728101 uL
+INFO 2025-04-08 17:20:41,605 target is: 1, uL is 835.0cumvol is: 835.0
+INFO 2025-04-08 17:20:41,605 dispense from data 1 uL
+INFO 2025-04-08 17:20:42,611 fit: [-3.67143462e-08  8.36229104e+02]
+INFO 2025-04-08 17:20:42,611 estimated endpoint: 836.2291036722747 uL
+INFO 2025-04-08 17:20:42,611 target is: 1, uL is 836.0cumvol is: 836.0
+INFO 2025-04-08 17:20:42,611 dispense from data 1 uL
+INFO 2025-04-08 17:20:43,622 fit: [-6.65851755e-08  8.37229104e+02]
+INFO 2025-04-08 17:20:43,622 estimated endpoint: 837.2291036645512 uL
+INFO 2025-04-08 17:20:43,622 target is: 5, uL is 837.0cumvol is: 837.0
+INFO 2025-04-08 17:20:43,622 dispense from data 5 uL
+INFO 2025-04-08 17:20:44,634 fit: [-2.39797878e-07  8.40937267e+02]
+INFO 2025-04-08 17:20:44,634 estimated endpoint: 840.9372674048794 uL
+INFO 2025-04-08 17:20:44,637 target is: 5, uL is 842.0cumvol is: 842.0
+INFO 2025-04-08 17:20:44,637 dispense from data 5 uL
+INFO 2025-04-08 17:20:45,649 fit: [-7.94212888e-07  8.46958678e+02]
+INFO 2025-04-08 17:20:45,655 estimated endpoint: 846.9586781986915 uL
+INFO 2025-04-08 17:20:45,655 target is: 5, uL is 847.0cumvol is: 847.0
+INFO 2025-04-08 17:20:45,655 dispense from data 5 uL
+INFO 2025-04-08 17:20:46,661 fit: [-2.34291323e-06  8.56127972e+02]
+INFO 2025-04-08 17:20:46,661 estimated endpoint: 856.1279717129562 uL
+INFO 2025-04-08 17:20:46,661 target is: 10, uL is 852.0cumvol is: 852.0
+INFO 2025-04-08 17:20:46,661 dispense from data 10 uL
+INFO 2025-04-08 17:20:47,672 fit: [-7.71659846e-06  8.77179732e+02]
+INFO 2025-04-08 17:20:47,675 estimated endpoint: 877.1797323145595 uL
+INFO 2025-04-08 17:20:47,678 target is: False, uL is 862.0cumvol is: 862.0
+WARNING 2025-04-08 17:20:47,678 endpoint reached: 831.4901244813378 uL
+INFO 2025-04-08 17:23:00,878 Starting application
+INFO 2025-04-08 17:23:00,878 Pump controller: MFORCE
+INFO 2025-04-08 17:23:06,038 Connecting serial devices
+INFO 2025-04-08 17:23:06,038 Pump set to MFORCE
+INFO 2025-04-08 17:23:06,038 Meter set to A221
+INFO 2025-04-08 17:23:06,038 Meter connected on /dev/cu.debug-console
+INFO 2025-04-08 17:23:06,039 MFORCE pump connected on /dev/cu.debug-console
+INFO 2025-04-08 17:23:06,039 No standard pump available
+INFO 2025-04-08 17:23:11,922 Loaded flask calibration from /Users/dnicholson/Documents/GitHub/winkler-titrator/src/main/python/model/winklerbottlecal.csv
+INFO 2025-04-08 17:23:17,420 dispense from data 50.0 uL
+INFO 2025-04-08 17:23:18,424 dispense from data 50.0 uL
+INFO 2025-04-08 17:23:19,442 dispense from data 50.0 uL
+INFO 2025-04-08 17:23:20,452 dispense from data 50.0 uL
+INFO 2025-04-08 17:23:21,464 1st estimated endpoint: 813.0154793947679 uL
+INFO 2025-04-08 17:23:21,464 target: 150
+INFO 2025-04-08 17:23:21,464 dispense from data 150 uL
+INFO 2025-04-08 17:23:22,470 fit: [-1.26518483e-09  7.42010953e+02]
+INFO 2025-04-08 17:23:22,476 estimated endpoint: 742.0109526589288 uL
+INFO 2025-04-08 17:23:22,476 target is: 150, uL is 350.0cumvol is: 350.0
+INFO 2025-04-08 17:23:22,476 dispense from data 150 uL
+INFO 2025-04-08 17:23:23,481 fit: [-1.33654765e-09  7.71158678e+02]
+INFO 2025-04-08 17:23:23,484 estimated endpoint: 771.1586784123384 uL
+INFO 2025-04-08 17:23:23,493 target is: 50, uL is 500.0cumvol is: 500.0
+INFO 2025-04-08 17:23:23,499 dispense from data 50 uL
+INFO 2025-04-08 17:23:24,504 fit: [-1.38081441e-09  7.85518929e+02]
+INFO 2025-04-08 17:23:24,506 estimated endpoint: 785.5189290816786 uL
+INFO 2025-04-08 17:23:24,509 target is: 50, uL is 550.0cumvol is: 550.0
+INFO 2025-04-08 17:23:24,510 dispense from data 50 uL
+INFO 2025-04-08 17:23:25,515 fit: [-1.46267168e-09  8.03535380e+02]
+INFO 2025-04-08 17:23:25,517 estimated endpoint: 803.535380222552 uL
+INFO 2025-04-08 17:23:25,520 target is: 50, uL is 600.0cumvol is: 600.0
+INFO 2025-04-08 17:23:25,521 dispense from data 50 uL
+INFO 2025-04-08 17:23:26,526 fit: [-1.53278657e-09  8.15441854e+02]
+INFO 2025-04-08 17:23:26,528 estimated endpoint: 815.4418537957332 uL
+INFO 2025-04-08 17:23:26,532 target is: 50, uL is 650.0cumvol is: 650.0
+INFO 2025-04-08 17:23:26,532 dispense from data 50 uL
+INFO 2025-04-08 17:23:27,533 fit: [-1.54482341e-09  8.17480521e+02]
+INFO 2025-04-08 17:23:27,539 estimated endpoint: 817.480520872694 uL
+INFO 2025-04-08 17:23:27,539 target is: 50, uL is 700.0cumvol is: 700.0
+INFO 2025-04-08 17:23:27,539 dispense from data 50 uL
+INFO 2025-04-08 17:23:28,545 fit: [-1.61974649e-09  8.25780329e+02]
+INFO 2025-04-08 17:23:28,551 estimated endpoint: 825.7803287748332 uL
+INFO 2025-04-08 17:23:28,551 target is: 20, uL is 750.0cumvol is: 750.0
+INFO 2025-04-08 17:23:28,551 dispense from data 20 uL
+INFO 2025-04-08 17:23:29,557 fit: [-1.66029865e-09  8.28670131e+02]
+INFO 2025-04-08 17:23:29,557 estimated endpoint: 828.6701313786904 uL
+INFO 2025-04-08 17:23:29,559 target is: 20, uL is 770.0cumvol is: 770.0
+INFO 2025-04-08 17:23:29,563 dispense from data 20 uL
+INFO 2025-04-08 17:23:30,569 fit: [-1.72531936e-09  8.31996724e+02]
+INFO 2025-04-08 17:23:30,576 estimated endpoint: 831.9967242250807 uL
+INFO 2025-04-08 17:23:30,576 target is: 20, uL is 790.0cumvol is: 790.0
+INFO 2025-04-08 17:23:30,576 dispense from data 20 uL
+INFO 2025-04-08 17:23:31,581 fit: [-1.73609894e-09  8.32409315e+02]
+INFO 2025-04-08 17:23:31,581 estimated endpoint: 832.4093145793291 uL
+INFO 2025-04-08 17:23:31,581 target is: 10, uL is 810.0cumvol is: 810.0
+INFO 2025-04-08 17:23:31,581 dispense from data 10 uL
+INFO 2025-04-08 17:23:32,593 fit: [-1.75177205e-09  8.32538870e+02]
+INFO 2025-04-08 17:23:32,593 estimated endpoint: 832.5388703888432 uL
+INFO 2025-04-08 17:23:32,596 target is: 5, uL is 820.0cumvol is: 820.0
+INFO 2025-04-08 17:23:32,596 dispense from data 5 uL
+INFO 2025-04-08 17:23:33,605 fit: [-1.68071208e-09  8.31490124e+02]
+INFO 2025-04-08 17:23:33,611 estimated endpoint: 831.4901244813378 uL
+INFO 2025-04-08 17:23:33,611 target is: 3, uL is 825.0cumvol is: 825.0
+INFO 2025-04-08 17:23:33,611 dispense from data 3 uL
+INFO 2025-04-08 17:23:34,617 fit: [-1.61222062e-09  8.30991596e+02]
+INFO 2025-04-08 17:23:34,624 estimated endpoint: 830.9915961540952 uL
+INFO 2025-04-08 17:23:34,624 target is: 1, uL is 828.0cumvol is: 828.0
+INFO 2025-04-08 17:23:34,624 dispense from data 1 uL
+INFO 2025-04-08 17:23:35,629 fit: [-1.52785638e-09  8.30639487e+02]
+INFO 2025-04-08 17:23:35,632 estimated endpoint: 830.6394868587641 uL
+INFO 2025-04-08 17:23:35,636 target is: 1, uL is 829.0cumvol is: 829.0
+INFO 2025-04-08 17:23:35,636 dispense from data 1 uL
+INFO 2025-04-08 17:23:36,641 fit: [-1.57620331e-09  8.30776016e+02]
+INFO 2025-04-08 17:23:36,647 estimated endpoint: 830.776016273726 uL
+INFO 2025-04-08 17:23:36,647 target is: 0.5, uL is 830.0cumvol is: 830.0
+INFO 2025-04-08 17:23:36,647 dispense from data 0.5 uL
+INFO 2025-04-08 17:23:37,652 fit: [-1.70799556e-09  8.30998610e+02]
+INFO 2025-04-08 17:23:37,659 estimated endpoint: 830.9986098817006 uL
+INFO 2025-04-08 17:23:37,659 target is: 0.5, uL is 830.5cumvol is: 830.5
+INFO 2025-04-08 17:23:37,659 dispense from data 0.5 uL
+INFO 2025-04-08 17:23:38,665 fit: [-2.72858039e-09  8.31681400e+02]
+INFO 2025-04-08 17:23:38,672 estimated endpoint: 831.6814003328359 uL
+INFO 2025-04-08 17:23:38,672 target is: 0.5, uL is 831.0cumvol is: 831.0
+INFO 2025-04-08 17:23:38,672 dispense from data 0.5 uL
+INFO 2025-04-08 17:23:39,676 fit: [-4.50748309e-09  8.32442169e+02]
+INFO 2025-04-08 17:23:39,683 estimated endpoint: 832.4421688503367 uL
+INFO 2025-04-08 17:23:39,683 target is: 0.5, uL is 831.5cumvol is: 831.5
+INFO 2025-04-08 17:23:39,683 dispense from data 0.5 uL
+INFO 2025-04-08 17:23:40,688 fit: [-6.07022765e-09  8.32942169e+02]
+INFO 2025-04-08 17:23:40,695 estimated endpoint: 832.9421688463872 uL
+INFO 2025-04-08 17:23:40,696 target is: 0.5, uL is 832.0cumvol is: 832.0
+INFO 2025-04-08 17:23:40,696 dispense from data 0.5 uL
+INFO 2025-04-08 17:23:41,701 fit: [-8.17477581e-09  8.33442169e+02]
+INFO 2025-04-08 17:23:41,708 estimated endpoint: 833.4421688424376 uL
+INFO 2025-04-08 17:23:41,708 target is: 0.5, uL is 832.5cumvol is: 832.5
+INFO 2025-04-08 17:23:41,708 dispense from data 0.5 uL
+INFO 2025-04-08 17:23:42,712 fit: [-1.10089709e-08  8.33942169e+02]
+INFO 2025-04-08 17:23:42,719 estimated endpoint: 833.9421688384888 uL
+INFO 2025-04-08 17:23:42,719 target is: 1, uL is 833.0cumvol is: 833.0
+INFO 2025-04-08 17:23:42,719 dispense from data 1 uL
+INFO 2025-04-08 17:23:43,724 fit: [-1.68785810e-08  8.34726354e+02]
+INFO 2025-04-08 17:23:43,727 estimated endpoint: 834.7263543088203 uL
+INFO 2025-04-08 17:23:43,731 target is: 1, uL is 834.0cumvol is: 834.0
+INFO 2025-04-08 17:23:43,731 dispense from data 1 uL
+INFO 2025-04-08 17:23:44,737 fit: [-2.51625923e-08  8.35500728e+02]
+INFO 2025-04-08 17:23:44,744 estimated endpoint: 835.5007275728101 uL
+INFO 2025-04-08 17:23:44,744 target is: 1, uL is 835.0cumvol is: 835.0
+INFO 2025-04-08 17:23:44,744 dispense from data 1 uL
+INFO 2025-04-08 17:23:45,749 fit: [-3.67143462e-08  8.36229104e+02]
+INFO 2025-04-08 17:23:45,756 estimated endpoint: 836.2291036722747 uL
+INFO 2025-04-08 17:23:45,756 target is: 1, uL is 836.0cumvol is: 836.0
+INFO 2025-04-08 17:23:45,756 dispense from data 1 uL
+INFO 2025-04-08 17:23:46,762 fit: [-6.65851755e-08  8.37229104e+02]
+INFO 2025-04-08 17:23:46,764 estimated endpoint: 837.2291036645512 uL
+INFO 2025-04-08 17:23:46,764 target is: 5, uL is 837.0cumvol is: 837.0
+INFO 2025-04-08 17:23:46,764 dispense from data 5 uL
+INFO 2025-04-08 17:23:47,766 fit: [-2.39797878e-07  8.40937267e+02]
+INFO 2025-04-08 17:23:47,767 estimated endpoint: 840.9372674048794 uL
+INFO 2025-04-08 17:23:47,767 target is: 5, uL is 842.0cumvol is: 842.0
+INFO 2025-04-08 17:23:47,767 dispense from data 5 uL
+INFO 2025-04-08 17:23:48,778 fit: [-7.94212888e-07  8.46958678e+02]
+INFO 2025-04-08 17:23:48,781 estimated endpoint: 846.9586781986915 uL
+INFO 2025-04-08 17:23:48,781 target is: 5, uL is 847.0cumvol is: 847.0
+INFO 2025-04-08 17:23:48,781 dispense from data 5 uL
+INFO 2025-04-08 17:23:49,788 fit: [-2.34291323e-06  8.56127972e+02]
+INFO 2025-04-08 17:23:49,790 estimated endpoint: 856.1279717129562 uL
+INFO 2025-04-08 17:23:49,790 target is: 10, uL is 852.0cumvol is: 852.0
+INFO 2025-04-08 17:23:49,790 dispense from data 10 uL
+INFO 2025-04-08 17:23:50,795 fit: [-7.71659846e-06  8.77179732e+02]
+INFO 2025-04-08 17:23:50,802 estimated endpoint: 877.1797323145595 uL
+INFO 2025-04-08 17:23:50,802 target is: False, uL is 862.0cumvol is: 862.0
+WARNING 2025-04-08 17:23:50,802 endpoint reached: 831.4901244813378 uL
+INFO 2025-04-08 17:25:37,768 Starting application
+INFO 2025-04-08 17:25:37,769 Pump controller: MFORCE
+INFO 2025-04-08 17:25:41,491 Connecting serial devices
+INFO 2025-04-08 17:25:41,492 Pump set to MFORCE
+INFO 2025-04-08 17:25:41,492 Meter set to A221
+INFO 2025-04-08 17:25:41,493 Meter connected on /dev/cu.debug-console
+INFO 2025-04-08 17:25:41,493 MFORCE pump connected on /dev/cu.debug-console
+INFO 2025-04-08 17:25:41,493 No standard pump available
+INFO 2025-04-08 17:25:52,141 Loaded flask calibration from /Users/dnicholson/Documents/GitHub/winkler-titrator/src/main/python/model/winklerbottlecal.csv
+INFO 2025-04-08 17:25:54,221 dispense from data 50.0 uL
+INFO 2025-04-08 17:25:55,228 dispense from data 50.0 uL
+INFO 2025-04-08 17:25:56,239 dispense from data 50.0 uL
+INFO 2025-04-08 17:25:57,250 dispense from data 50.0 uL
+INFO 2025-04-08 17:25:58,256 1st estimated endpoint: 813.0154793947679 uL
+INFO 2025-04-08 17:25:58,256 target: 150
+INFO 2025-04-08 17:25:58,256 dispense from data 150 uL
+INFO 2025-04-08 17:25:59,261 fit: [-1.26518483e-09  7.42010953e+02]
+INFO 2025-04-08 17:25:59,264 estimated endpoint: 742.0109526589288 uL
+INFO 2025-04-08 17:25:59,264 target is: 150, uL is 350.0cumvol is: 350.0
+INFO 2025-04-08 17:25:59,264 dispense from data 150 uL
+INFO 2025-04-08 17:26:00,273 fit: [-1.33654765e-09  7.71158678e+02]
+INFO 2025-04-08 17:26:00,279 estimated endpoint: 771.1586784123384 uL
+INFO 2025-04-08 17:26:00,279 target is: 50, uL is 500.0cumvol is: 500.0
+INFO 2025-04-08 17:26:00,279 dispense from data 50 uL
+INFO 2025-04-08 17:26:01,285 fit: [-1.38081441e-09  7.85518929e+02]
+INFO 2025-04-08 17:26:01,291 estimated endpoint: 785.5189290816786 uL
+INFO 2025-04-08 17:26:01,291 target is: 50, uL is 550.0cumvol is: 550.0
+INFO 2025-04-08 17:26:01,291 dispense from data 50 uL
+INFO 2025-04-08 17:26:02,294 fit: [-1.46267168e-09  8.03535380e+02]
+INFO 2025-04-08 17:26:02,300 estimated endpoint: 803.535380222552 uL
+INFO 2025-04-08 17:26:02,300 target is: 50, uL is 600.0cumvol is: 600.0
+INFO 2025-04-08 17:26:02,300 dispense from data 50 uL
+INFO 2025-04-08 17:26:03,306 fit: [-1.53278657e-09  8.15441854e+02]
+INFO 2025-04-08 17:26:03,306 estimated endpoint: 815.4418537957332 uL
+INFO 2025-04-08 17:26:03,306 target is: 50, uL is 650.0cumvol is: 650.0
+INFO 2025-04-08 17:26:03,306 dispense from data 50 uL
+INFO 2025-04-08 17:26:04,317 fit: [-1.54482341e-09  8.17480521e+02]
+INFO 2025-04-08 17:26:04,324 estimated endpoint: 817.480520872694 uL
+INFO 2025-04-08 17:26:04,324 target is: 50, uL is 700.0cumvol is: 700.0
+INFO 2025-04-08 17:26:04,324 dispense from data 50 uL
+INFO 2025-04-08 17:26:05,329 fit: [-1.61974649e-09  8.25780329e+02]
+INFO 2025-04-08 17:26:05,332 estimated endpoint: 825.7803287748332 uL
+INFO 2025-04-08 17:26:05,336 target is: 20, uL is 750.0cumvol is: 750.0
+INFO 2025-04-08 17:26:05,336 dispense from data 20 uL
+INFO 2025-04-08 17:26:06,341 fit: [-1.66029865e-09  8.28670131e+02]
+INFO 2025-04-08 17:26:06,348 estimated endpoint: 828.6701313786904 uL
+INFO 2025-04-08 17:26:06,348 target is: 20, uL is 770.0cumvol is: 770.0
+INFO 2025-04-08 17:26:06,348 dispense from data 20 uL
+INFO 2025-04-08 17:26:07,348 fit: [-1.72531936e-09  8.31996724e+02]
+INFO 2025-04-08 17:26:07,355 estimated endpoint: 831.9967242250807 uL
+INFO 2025-04-08 17:26:07,355 target is: 20, uL is 790.0cumvol is: 790.0
+INFO 2025-04-08 17:26:07,355 dispense from data 20 uL
+INFO 2025-04-08 17:26:08,360 fit: [-1.73609894e-09  8.32409315e+02]
+INFO 2025-04-08 17:26:08,363 estimated endpoint: 832.4093145793291 uL
+INFO 2025-04-08 17:26:08,363 target is: 10, uL is 810.0cumvol is: 810.0
+INFO 2025-04-08 17:26:08,363 dispense from data 10 uL
+INFO 2025-04-08 17:26:09,373 fit: [-1.75177205e-09  8.32538870e+02]
+INFO 2025-04-08 17:26:09,379 estimated endpoint: 832.5388703888432 uL
+INFO 2025-04-08 17:26:09,379 target is: 5, uL is 820.0cumvol is: 820.0
+INFO 2025-04-08 17:26:09,380 dispense from data 5 uL
+INFO 2025-04-08 17:26:10,385 fit: [-1.68071208e-09  8.31490124e+02]
+INFO 2025-04-08 17:26:10,392 estimated endpoint: 831.4901244813378 uL
+INFO 2025-04-08 17:26:10,392 target is: 3, uL is 825.0cumvol is: 825.0
+INFO 2025-04-08 17:26:10,392 dispense from data 3 uL
+INFO 2025-04-08 17:26:11,397 fit: [-1.61222062e-09  8.30991596e+02]
+INFO 2025-04-08 17:26:11,404 estimated endpoint: 830.9915961540952 uL
+INFO 2025-04-08 17:26:11,404 target is: 1, uL is 828.0cumvol is: 828.0
+INFO 2025-04-08 17:26:11,404 dispense from data 1 uL
+INFO 2025-04-08 17:26:12,410 fit: [-1.52785638e-09  8.30639487e+02]
+INFO 2025-04-08 17:26:12,416 estimated endpoint: 830.6394868587641 uL
+INFO 2025-04-08 17:26:12,416 target is: 1, uL is 829.0cumvol is: 829.0
+INFO 2025-04-08 17:26:12,416 dispense from data 1 uL
+INFO 2025-04-08 17:26:13,422 fit: [-1.57620331e-09  8.30776016e+02]
+INFO 2025-04-08 17:26:13,428 estimated endpoint: 830.776016273726 uL
+INFO 2025-04-08 17:26:13,429 target is: 0.5, uL is 830.0cumvol is: 830.0
+INFO 2025-04-08 17:26:13,429 dispense from data 0.5 uL
+INFO 2025-04-08 17:26:14,434 fit: [-1.70799556e-09  8.30998610e+02]
+INFO 2025-04-08 17:26:14,441 estimated endpoint: 830.9986098817006 uL
+INFO 2025-04-08 17:26:14,441 target is: 0.5, uL is 830.5cumvol is: 830.5
+INFO 2025-04-08 17:26:14,441 dispense from data 0.5 uL
+INFO 2025-04-08 17:26:15,446 fit: [-2.72858039e-09  8.31681400e+02]
+INFO 2025-04-08 17:26:15,453 estimated endpoint: 831.6814003328359 uL
+INFO 2025-04-08 17:26:15,453 target is: 0.5, uL is 831.0cumvol is: 831.0
+INFO 2025-04-08 17:26:15,453 dispense from data 0.5 uL
+INFO 2025-04-08 17:26:16,456 fit: [-4.50748309e-09  8.32442169e+02]
+INFO 2025-04-08 17:26:16,463 estimated endpoint: 832.4421688503367 uL
+INFO 2025-04-08 17:26:16,463 target is: 0.5, uL is 831.5cumvol is: 831.5
+INFO 2025-04-08 17:26:16,463 dispense from data 0.5 uL
+INFO 2025-04-08 17:26:17,465 fit: [-6.07022765e-09  8.32942169e+02]
+INFO 2025-04-08 17:26:17,471 estimated endpoint: 832.9421688463872 uL
+INFO 2025-04-08 17:26:17,471 target is: 0.5, uL is 832.0cumvol is: 832.0
+INFO 2025-04-08 17:26:17,471 dispense from data 0.5 uL
+INFO 2025-04-08 17:26:18,474 fit: [-8.17477581e-09  8.33442169e+02]
+INFO 2025-04-08 17:26:18,481 estimated endpoint: 833.4421688424376 uL
+INFO 2025-04-08 17:26:18,481 target is: 0.5, uL is 832.5cumvol is: 832.5
+INFO 2025-04-08 17:26:18,481 dispense from data 0.5 uL
+INFO 2025-04-08 17:26:19,487 fit: [-1.10089709e-08  8.33942169e+02]
+INFO 2025-04-08 17:26:19,493 estimated endpoint: 833.9421688384888 uL
+INFO 2025-04-08 17:26:19,493 target is: 1, uL is 833.0cumvol is: 833.0
+INFO 2025-04-08 17:26:19,493 dispense from data 1 uL
+INFO 2025-04-08 17:26:20,498 fit: [-1.68785810e-08  8.34726354e+02]
+INFO 2025-04-08 17:26:20,504 estimated endpoint: 834.7263543088203 uL
+INFO 2025-04-08 17:26:20,504 target is: 1, uL is 834.0cumvol is: 834.0
+INFO 2025-04-08 17:26:20,504 dispense from data 1 uL
+INFO 2025-04-08 17:26:21,510 fit: [-2.51625923e-08  8.35500728e+02]
+INFO 2025-04-08 17:26:21,516 estimated endpoint: 835.5007275728101 uL
+INFO 2025-04-08 17:26:21,516 target is: 1, uL is 835.0cumvol is: 835.0
+INFO 2025-04-08 17:26:21,516 dispense from data 1 uL
+INFO 2025-04-08 17:26:22,521 fit: [-3.67143462e-08  8.36229104e+02]
+INFO 2025-04-08 17:26:22,527 estimated endpoint: 836.2291036722747 uL
+INFO 2025-04-08 17:26:22,527 target is: 1, uL is 836.0cumvol is: 836.0
+INFO 2025-04-08 17:26:22,527 dispense from data 1 uL
+INFO 2025-04-08 17:26:23,528 fit: [-6.65851755e-08  8.37229104e+02]
+INFO 2025-04-08 17:26:23,535 estimated endpoint: 837.2291036645512 uL
+INFO 2025-04-08 17:26:23,535 target is: 5, uL is 837.0cumvol is: 837.0
+INFO 2025-04-08 17:26:23,535 dispense from data 5 uL
+INFO 2025-04-08 17:26:24,541 fit: [-2.39797878e-07  8.40937267e+02]
+INFO 2025-04-08 17:26:24,541 estimated endpoint: 840.9372674048794 uL
+INFO 2025-04-08 17:26:24,541 target is: 5, uL is 842.0cumvol is: 842.0
+INFO 2025-04-08 17:26:24,541 dispense from data 5 uL
+INFO 2025-04-08 17:26:25,553 fit: [-7.94212888e-07  8.46958678e+02]
+INFO 2025-04-08 17:26:25,560 estimated endpoint: 846.9586781986915 uL
+INFO 2025-04-08 17:26:25,560 target is: 5, uL is 847.0cumvol is: 847.0
+INFO 2025-04-08 17:26:25,560 dispense from data 5 uL
+INFO 2025-04-08 17:26:26,564 fit: [-2.34291323e-06  8.56127972e+02]
+INFO 2025-04-08 17:26:26,570 estimated endpoint: 856.1279717129562 uL
+INFO 2025-04-08 17:26:26,570 target is: 10, uL is 852.0cumvol is: 852.0
+INFO 2025-04-08 17:26:26,570 dispense from data 10 uL
+INFO 2025-04-08 17:26:27,575 fit: [-7.71659846e-06  8.77179732e+02]
+INFO 2025-04-08 17:26:27,581 estimated endpoint: 877.1797323145595 uL
+INFO 2025-04-08 17:26:27,581 target is: False, uL is 862.0cumvol is: 862.0
+WARNING 2025-04-08 17:26:27,581 endpoint reached: 831.4901244813378 uL
+ERROR 2025-04-08 17:26:50,096 Titration failed: could not convert string to float: 'B-08'
+ERROR 2025-04-08 17:34:32,757 Titration failed: could not convert string to float: 'B-08'
+INFO 2025-04-08 17:38:43,372 Starting application
+INFO 2025-04-08 17:38:43,372 Pump controller: MFORCE
+INFO 2025-04-08 17:38:50,470 Connecting serial devices
+INFO 2025-04-08 17:38:50,470 Pump set to MFORCE
+INFO 2025-04-08 17:38:50,471 Meter set to A221
+INFO 2025-04-08 17:38:50,471 Meter connected on /dev/cu.debug-console
+INFO 2025-04-08 17:38:50,471 MFORCE pump connected on /dev/cu.debug-console
+INFO 2025-04-08 17:38:50,471 No standard pump available
+INFO 2025-04-08 17:38:58,416 Loaded flask calibration from /Users/dnicholson/Documents/GitHub/winkler-titrator/src/main/python/model/winklerbottlecal.csv
+ERROR 2025-04-08 17:39:09,853 Titration failed: Bottle ID  not found in calibration data
+INFO 2025-04-08 17:40:43,654 Loaded flask calibration from /Users/dnicholson/Documents/GitHub/winkler-titrator/src/main/python/model/winklerbottlecal.csv
+INFO 2025-04-08 17:43:54,882 Starting application
+INFO 2025-04-08 17:43:54,882 Pump controller: MFORCE
+INFO 2025-04-08 17:44:04,071 Loaded flask calibration from /Users/dnicholson/Documents/GitHub/winkler-titrator/src/main/python/model/winklerbottlecal.csv
+ERROR 2025-04-08 17:44:08,366 Titration failed: Bottle ID  not found in calibration data
+ERROR 2025-04-08 17:44:21,294 Titration failed: Bottle ID fs not found in calibration data
+INFO 2025-04-08 17:46:11,976 Starting application
+INFO 2025-04-08 17:46:11,976 Pump controller: MFORCE
+INFO 2025-04-08 17:46:19,484 Loaded flask calibration from /Users/dnicholson/Documents/GitHub/winkler-titrator/src/main/python/model/winklerbottlecal.csv
+INFO 2025-04-08 17:46:35,239 Connecting serial devices
+INFO 2025-04-08 17:46:35,239 Pump set to MFORCE
+INFO 2025-04-08 17:46:35,239 Meter set to A221
+INFO 2025-04-08 17:46:35,240 Meter connected on /dev/cu.debug-console
+INFO 2025-04-08 17:46:35,240 MFORCE pump connected on /dev/cu.debug-console
+INFO 2025-04-08 17:46:35,240 No standard pump available
+ERROR 2025-04-08 17:46:43,578 Titration failed: 'QComboBox' object has no attribute 'text'
+ERROR 2025-04-08 17:47:45,064 Titration failed: 'QComboBox' object has no attribute 'text'
+INFO 2025-04-08 17:47:50,753 Starting application
+INFO 2025-04-08 17:47:50,753 Pump controller: MFORCE
+INFO 2025-04-08 17:47:56,522 Connecting serial devices
+INFO 2025-04-08 17:47:56,522 Pump set to MFORCE
+INFO 2025-04-08 17:47:56,522 Meter set to A221
+INFO 2025-04-08 17:47:56,523 Meter connected on /dev/cu.debug-console
+INFO 2025-04-08 17:47:56,523 MFORCE pump connected on /dev/cu.debug-console
+INFO 2025-04-08 17:47:56,523 No standard pump available
+INFO 2025-04-08 17:48:01,048 Loaded flask calibration from /Users/dnicholson/Documents/GitHub/winkler-titrator/src/main/python/model/winklerbottlecal.csv
+INFO 2025-04-08 17:48:04,682 dispense from data 50.0 uL
+INFO 2025-04-08 17:48:05,694 dispense from data 50.0 uL
+INFO 2025-04-08 17:48:06,705 dispense from data 50.0 uL
+INFO 2025-04-08 17:48:07,716 dispense from data 50.0 uL
+INFO 2025-04-08 17:48:08,722 1st estimated endpoint: 792.3434791403039 uL
+INFO 2025-04-08 17:48:08,727 target: 150
+INFO 2025-04-08 17:48:08,727 dispense from data 150 uL
+INFO 2025-04-08 17:48:09,733 fit: [-1.61767253e-10  7.30268153e+02]
+INFO 2025-04-08 17:48:09,739 estimated endpoint: 730.2681533314443 uL
+INFO 2025-04-08 17:48:09,739 target is: 150, uL is 350.0cumvol is: 350.0
+INFO 2025-04-08 17:48:09,739 dispense from data 150 uL
+INFO 2025-04-08 17:48:10,744 fit: [-1.72142936e-10  7.62646832e+02]
+INFO 2025-04-08 17:48:10,744 estimated endpoint: 762.6468315770694 uL
+INFO 2025-04-08 17:48:10,750 target is: 50, uL is 500.0cumvol is: 500.0
+INFO 2025-04-08 17:48:10,750 dispense from data 50 uL
+INFO 2025-04-08 17:48:11,752 fit: [-1.78562147e-10  7.78444872e+02]
+INFO 2025-04-08 17:48:11,754 estimated endpoint: 778.4448717476955 uL
+INFO 2025-04-08 17:48:11,757 target is: 50, uL is 550.0cumvol is: 550.0
+INFO 2025-04-08 17:48:11,757 dispense from data 50 uL
+INFO 2025-04-08 17:48:12,763 fit: [-1.90710224e-10  7.98728735e+02]
+INFO 2025-04-08 17:48:12,769 estimated endpoint: 798.728735011822 uL
+INFO 2025-04-08 17:48:12,769 target is: 50, uL is 600.0cumvol is: 600.0
+INFO 2025-04-08 17:48:12,769 dispense from data 50 uL
+INFO 2025-04-08 17:48:13,774 fit: [-2.01795244e-10  8.12916677e+02]
+INFO 2025-04-08 17:48:13,780 estimated endpoint: 812.9166766544504 uL
+INFO 2025-04-08 17:48:13,780 target is: 50, uL is 650.0cumvol is: 650.0
+INFO 2025-04-08 17:48:13,780 dispense from data 50 uL
+INFO 2025-04-08 17:48:14,786 fit: [-2.04293009e-10  8.15897269e+02]
+INFO 2025-04-08 17:48:14,792 estimated endpoint: 815.8972692770209 uL
+INFO 2025-04-08 17:48:14,792 target is: 50, uL is 700.0cumvol is: 700.0
+INFO 2025-04-08 17:48:14,792 dispense from data 50 uL
+INFO 2025-04-08 17:48:15,798 fit: [-2.15107986e-10  8.24855565e+02]
+INFO 2025-04-08 17:48:15,804 estimated endpoint: 824.8555647163134 uL
+INFO 2025-04-08 17:48:15,804 target is: 20, uL is 750.0cumvol is: 750.0
+INFO 2025-04-08 17:48:15,804 dispense from data 20 uL
+INFO 2025-04-08 17:48:16,806 fit: [-2.21191786e-10  8.28113562e+02]
+INFO 2025-04-08 17:48:16,806 estimated endpoint: 828.1135619926619 uL
+INFO 2025-04-08 17:48:16,806 target is: 20, uL is 770.0cumvol is: 770.0
+INFO 2025-04-08 17:48:16,806 dispense from data 20 uL
+INFO 2025-04-08 17:48:17,818 fit: [-2.30537475e-10  8.31685460e+02]
+INFO 2025-04-08 17:48:17,825 estimated endpoint: 831.6854599957907 uL
+INFO 2025-04-08 17:48:17,825 target is: 20, uL is 790.0cumvol is: 790.0
+INFO 2025-04-08 17:48:17,825 dispense from data 20 uL
+INFO 2025-04-08 17:48:18,830 fit: [-2.32768204e-10  8.32304466e+02]
+INFO 2025-04-08 17:48:18,837 estimated endpoint: 832.3044657995907 uL
+INFO 2025-04-08 17:48:18,837 target is: 10, uL is 810.0cumvol is: 810.0
+INFO 2025-04-08 17:48:18,837 dispense from data 10 uL
+INFO 2025-04-08 17:48:19,842 fit: [-2.35204874e-10  8.32492034e+02]
+INFO 2025-04-08 17:48:19,849 estimated endpoint: 832.4920341955459 uL
+INFO 2025-04-08 17:48:19,849 target is: 5, uL is 820.0cumvol is: 820.0
+INFO 2025-04-08 17:48:19,849 dispense from data 5 uL
+INFO 2025-04-08 17:48:20,854 fit: [-2.25921960e-10  8.31471838e+02]
+INFO 2025-04-08 17:48:20,854 estimated endpoint: 831.4718378849537 uL
+INFO 2025-04-08 17:48:20,861 target is: 3, uL is 825.0cumvol is: 825.0
+INFO 2025-04-08 17:48:20,861 dispense from data 3 uL
+INFO 2025-04-08 17:48:21,862 fit: [-2.16953061e-10  8.30987055e+02]
+INFO 2025-04-08 17:48:21,862 estimated endpoint: 830.9870549299725 uL
+INFO 2025-04-08 17:48:21,868 target is: 1, uL is 828.0cumvol is: 828.0
+INFO 2025-04-08 17:48:21,869 dispense from data 1 uL
+INFO 2025-04-08 17:48:22,874 fit: [-2.05710314e-10  8.30638319e+02]
+INFO 2025-04-08 17:48:22,881 estimated endpoint: 830.6383188459708 uL
+INFO 2025-04-08 17:48:22,881 target is: 1, uL is 829.0cumvol is: 829.0
+INFO 2025-04-08 17:48:22,881 dispense from data 1 uL
+INFO 2025-04-08 17:48:23,886 fit: [-2.12275968e-10  8.30775658e+02]
+INFO 2025-04-08 17:48:23,893 estimated endpoint: 830.7756580445217 uL
+INFO 2025-04-08 17:48:23,893 target is: 0.5, uL is 830.0cumvol is: 830.0
+INFO 2025-04-08 17:48:23,893 dispense from data 0.5 uL
+INFO 2025-04-08 17:48:24,896 fit: [-2.30059359e-10  8.30998486e+02]
+INFO 2025-04-08 17:48:24,903 estimated endpoint: 830.9984862488388 uL
+INFO 2025-04-08 17:48:24,903 target is: 0.5, uL is 830.5cumvol is: 830.5
+INFO 2025-04-08 17:48:24,903 dispense from data 0.5 uL
+INFO 2025-04-08 17:48:25,909 fit: [-3.67541942e-10  8.31681274e+02]
+INFO 2025-04-08 17:48:25,915 estimated endpoint: 831.6812743904975 uL
+INFO 2025-04-08 17:48:25,915 target is: 0.5, uL is 831.0cumvol is: 831.0
+INFO 2025-04-08 17:48:25,916 dispense from data 0.5 uL
+INFO 2025-04-08 17:48:26,921 fit: [-6.07186413e-10  8.32442040e+02]
+INFO 2025-04-08 17:48:26,928 estimated endpoint: 832.4420401550666 uL
+INFO 2025-04-08 17:48:26,928 target is: 0.5, uL is 831.5cumvol is: 831.5
+INFO 2025-04-08 17:48:26,928 dispense from data 0.5 uL
+INFO 2025-04-08 17:48:27,932 fit: [-8.17716754e-10  8.32942040e+02]
+INFO 2025-04-08 17:48:27,940 estimated endpoint: 832.9420401549941 uL
+INFO 2025-04-08 17:48:27,940 target is: 0.5, uL is 832.0cumvol is: 832.0
+INFO 2025-04-08 17:48:27,940 dispense from data 0.5 uL
+INFO 2025-04-08 17:48:28,946 fit: [-1.10124449e-09  8.33442040e+02]
+INFO 2025-04-08 17:48:28,962 estimated endpoint: 833.4420401549226 uL
+INFO 2025-04-08 17:48:28,963 target is: 0.5, uL is 832.5cumvol is: 832.5
+INFO 2025-04-08 17:48:28,970 dispense from data 0.5 uL
+INFO 2025-04-08 17:48:29,975 fit: [-1.48308007e-09  8.33942040e+02]
+INFO 2025-04-08 17:48:29,982 estimated endpoint: 833.9420401548514 uL
+INFO 2025-04-08 17:48:29,983 target is: 1, uL is 833.0cumvol is: 833.0
+INFO 2025-04-08 17:48:29,983 dispense from data 1 uL
+INFO 2025-04-08 17:48:30,985 fit: [-2.27387606e-09  8.34726225e+02]
+INFO 2025-04-08 17:48:30,992 estimated endpoint: 834.726224560524 uL
+INFO 2025-04-08 17:48:30,992 target is: 1, uL is 834.0cumvol is: 834.0
+INFO 2025-04-08 17:48:30,992 dispense from data 1 uL
+INFO 2025-04-08 17:48:31,997 fit: [-3.38999282e-09  8.35500602e+02]
+INFO 2025-04-08 17:48:32,005 estimated endpoint: 835.5006018005821 uL
+INFO 2025-04-08 17:48:32,005 target is: 1, uL is 835.0cumvol is: 835.0
+INFO 2025-04-08 17:48:32,005 dispense from data 1 uL
+INFO 2025-04-08 17:48:33,006 fit: [-4.94640954e-09  8.36228978e+02]
+INFO 2025-04-08 17:48:33,013 estimated endpoint: 836.2289778122483 uL
+INFO 2025-04-08 17:48:33,013 target is: 1, uL is 836.0cumvol is: 836.0
+INFO 2025-04-08 17:48:33,013 dispense from data 1 uL
+INFO 2025-04-08 17:48:34,019 fit: [-8.97122552e-09  8.37228978e+02]
+INFO 2025-04-08 17:48:34,025 estimated endpoint: 837.2289778121083 uL
+INFO 2025-04-08 17:48:34,026 target is: 5, uL is 837.0cumvol is: 837.0
+INFO 2025-04-08 17:48:34,026 dispense from data 5 uL
+INFO 2025-04-08 17:48:35,031 fit: [-3.23099307e-08  8.40936936e+02]
+INFO 2025-04-08 17:48:35,038 estimated endpoint: 840.9369363461478 uL
+INFO 2025-04-08 17:48:35,038 target is: 5, uL is 842.0cumvol is: 842.0
+INFO 2025-04-08 17:48:35,038 dispense from data 5 uL
+INFO 2025-04-08 17:48:36,039 fit: [-1.07008771e-07  8.46957288e+02]
+INFO 2025-04-08 17:48:36,045 estimated endpoint: 846.957288013511 uL
+INFO 2025-04-08 17:48:36,046 target is: 5, uL is 847.0cumvol is: 847.0
+INFO 2025-04-08 17:48:36,046 dispense from data 5 uL
+INFO 2025-04-08 17:48:37,049 fit: [-3.15621884e-07  8.56121496e+02]
+INFO 2025-04-08 17:48:37,050 estimated endpoint: 856.1214962152922 uL
+INFO 2025-04-08 17:48:37,050 target is: 10, uL is 852.0cumvol is: 852.0
+INFO 2025-04-08 17:48:37,050 dispense from data 10 uL
+INFO 2025-04-08 17:48:38,057 fit: [-1.03927657e-06  8.77150331e+02]
+INFO 2025-04-08 17:48:38,057 estimated endpoint: 877.1503309382938 uL
+INFO 2025-04-08 17:48:38,060 target is: False, uL is 862.0cumvol is: 862.0
+WARNING 2025-04-08 17:48:38,065 endpoint reached: 831.4718378849537 uL
+INFO 2025-04-08 17:54:38,549 Starting application
+INFO 2025-04-08 17:54:38,549 Pump controller: MFORCE
+INFO 2025-04-08 17:54:43,405 Connecting serial devices
+INFO 2025-04-08 17:54:43,405 Pump set to MFORCE
+INFO 2025-04-08 17:54:43,405 Meter set to A221
+INFO 2025-04-08 17:54:43,406 Meter connected on /dev/cu.debug-console
+INFO 2025-04-08 17:54:43,406 MFORCE pump connected on /dev/cu.debug-console
+INFO 2025-04-08 17:54:43,406 No standard pump available
+INFO 2025-04-08 17:54:53,537 Loaded flask calibration from /Users/dnicholson/Documents/GitHub/winkler-titrator/src/main/python/model/winklerbottlecal.csv
+INFO 2025-04-08 17:55:06,931 dispense from data 30.0 uL
+INFO 2025-04-08 17:55:07,943 dispense from data 30.0 uL
+INFO 2025-04-08 17:55:08,954 dispense from data 30.0 uL
+INFO 2025-04-08 17:55:09,955 dispense from data 30.0 uL
+INFO 2025-04-08 17:55:10,972 1st estimated endpoint: 1116.0018127110654 uL
+INFO 2025-04-08 17:55:10,972 target ranges are: [596.00181271 796.00181271 896.00181271 936.00181271 966.00181271
+ 986.00181271 991.00181271 993.00181271]
+INFO 2025-04-08 17:55:10,973 gran target 716.0018127110654
+INFO 2025-04-08 17:55:10,973 vol target 596.0018127110654
+INFO 2025-04-08 17:55:10,973 target: 596.0
+INFO 2025-04-08 17:55:10,973 dispense from data 596.0 uL
+INFO 2025-04-08 17:55:11,978 fit: [-1.81785441e-10  8.08079222e+02]
+INFO 2025-04-08 17:55:11,984 estimated endpoint: 808.0792223890933 uL
+INFO 2025-04-08 17:55:11,985 target ranges are: [-307.92077761 -107.92077761   -7.92077761   32.07922239   62.07922239
+   82.07922239   87.07922239   89.07922239]
+INFO 2025-04-08 17:55:11,985 gran target 748.0792223890933
+INFO 2025-04-08 17:55:11,985 vol target 32.079222389093275
+INFO 2025-04-08 17:55:11,985 target is: 32.0, uL is 716.0cumvol is: 716.0
+INFO 2025-04-08 17:55:11,985 dispense from data 32.0 uL
+INFO 2025-04-08 17:55:12,990 fit: [-1.81357600e-10  8.10957927e+02]
+INFO 2025-04-08 17:55:12,997 estimated endpoint: 810.9579267944795 uL
+INFO 2025-04-08 17:55:12,997 target ranges are: [-337.04207321 -137.04207321  -37.04207321    2.95792679   32.95792679
+   52.95792679   57.95792679   59.95792679]
+INFO 2025-04-08 17:55:12,997 gran target 780.9579267944795
+INFO 2025-04-08 17:55:12,997 vol target 32.95792679447948
+INFO 2025-04-08 17:55:12,997 target is: 33.0, uL is 748.0cumvol is: 748.0
+INFO 2025-04-08 17:55:12,997 dispense from data 33.0 uL
+INFO 2025-04-08 17:55:14,002 fit: [-1.83641460e-10  8.15262947e+02]
+INFO 2025-04-08 17:55:14,009 estimated endpoint: 815.2629471190645 uL
+INFO 2025-04-08 17:55:14,009 target ranges are: [-365.73705288 -165.73705288  -65.73705288  -25.73705288    4.26294712
+   24.26294712   29.26294712   31.26294712]
+INFO 2025-04-08 17:55:14,009 gran target 805.2629471190645
+INFO 2025-04-08 17:55:14,009 vol target 24.262947119064506
+INFO 2025-04-08 17:55:14,009 target is: 24.0, uL is 781.0cumvol is: 781.0
+INFO 2025-04-08 17:55:14,009 dispense from data 24.0 uL
+INFO 2025-04-08 17:55:15,015 fit: [-2.28116886e-10  8.31305761e+02]
+INFO 2025-04-08 17:55:15,022 estimated endpoint: 831.3057613575031 uL
+INFO 2025-04-08 17:55:15,022 target ranges are: [-373.69423864 -173.69423864  -73.69423864  -33.69423864   -3.69423864
+   16.30576136   21.30576136   23.30576136]
+INFO 2025-04-08 17:55:15,022 gran target 821.3057613575031
+INFO 2025-04-08 17:55:15,022 vol target 16.305761357503116
+INFO 2025-04-08 17:55:15,022 target is: 16.0, uL is 805.0cumvol is: 805.0
+INFO 2025-04-08 17:55:15,022 dispense from data 16.0 uL
+INFO 2025-04-08 17:55:16,028 fit: [-2.29067751e-10  8.31608123e+02]
+INFO 2025-04-08 17:55:16,035 estimated endpoint: 831.6081227676209 uL
+INFO 2025-04-08 17:55:16,035 target ranges are: [-389.39187723 -189.39187723  -89.39187723  -49.39187723  -19.39187723
+    0.60812277    5.60812277    7.60812277]
+INFO 2025-04-08 17:55:16,035 gran target 826.6081227676209
+INFO 2025-04-08 17:55:16,035 vol target 5.608122767620898
+INFO 2025-04-08 17:55:16,035 target is: 6.0, uL is 821.0cumvol is: 821.0
+INFO 2025-04-08 17:55:16,035 dispense from data 6.0 uL
+INFO 2025-04-08 17:55:17,041 fit: [-2.31231397e-10  8.31757043e+02]
+INFO 2025-04-08 17:55:17,048 estimated endpoint: 831.7570431468818 uL
+INFO 2025-04-08 17:55:17,048 target ranges are: [-3.95391877e+02 -1.95391877e+02 -9.53918772e+01 -5.53918772e+01
+ -2.53918772e+01 -5.39187723e+00 -3.91877232e-01  1.60812277e+00]
+INFO 2025-04-08 17:55:17,048 target is: False, uL is 827.0cumvol is: 827.0
+INFO 2025-04-08 17:55:17,049 4.608122767620898 uL dispensed to reach endpoint
+WARNING 2025-04-08 17:55:17,049 endpoint reached: 831.6081227676209 uL
+INFO 2025-04-08 17:55:23,209 dispense from data 30.0 uL
+INFO 2025-04-08 17:55:24,217 dispense from data 30.0 uL
+INFO 2025-04-08 17:55:25,227 dispense from data 30.0 uL
+INFO 2025-04-08 17:55:26,231 dispense from data 30.0 uL
+INFO 2025-04-08 17:55:27,246 1st estimated endpoint: 1116.0018127110654 uL
+INFO 2025-04-08 17:55:27,246 target: 150
+INFO 2025-04-08 17:55:27,247 dispense from data 150 uL
+INFO 2025-04-08 17:55:28,252 fit: [-1.65887027e-10  7.44913709e+02]
+INFO 2025-04-08 17:55:28,258 estimated endpoint: 744.9137090353889 uL
+INFO 2025-04-08 17:55:28,258 target is: 150, uL is 270.0cumvol is: 270.0
+INFO 2025-04-08 17:55:28,258 dispense from data 150 uL
+INFO 2025-04-08 17:55:29,264 fit: [-1.61492392e-10  7.33188037e+02]
+INFO 2025-04-08 17:55:29,264 estimated endpoint: 733.188037207855 uL
+INFO 2025-04-08 17:55:29,264 target is: 150, uL is 420.0cumvol is: 420.0
+INFO 2025-04-08 17:55:29,264 dispense from data 150 uL
+INFO 2025-04-08 17:55:30,291 fit: [-1.73338404e-10  7.69978756e+02]
+INFO 2025-04-08 17:55:30,291 estimated endpoint: 769.9787555385635 uL
+INFO 2025-04-08 17:55:30,292 target is: 50, uL is 570.0cumvol is: 570.0
+INFO 2025-04-08 17:55:30,292 dispense from data 50 uL
+INFO 2025-04-08 17:55:31,298 fit: [-1.85583989e-10  7.93705689e+02]
+INFO 2025-04-08 17:55:31,298 estimated endpoint: 793.7056887564455 uL
+INFO 2025-04-08 17:55:31,298 target is: 50, uL is 620.0cumvol is: 620.0
+INFO 2025-04-08 17:55:31,298 dispense from data 50 uL
+INFO 2025-04-08 17:55:32,306 fit: [-2.04101166e-10  8.17423389e+02]
+INFO 2025-04-08 17:55:32,308 estimated endpoint: 817.4233886211033 uL
+INFO 2025-04-08 17:55:32,313 target is: 50, uL is 670.0cumvol is: 670.0
+INFO 2025-04-08 17:55:32,313 dispense from data 50 uL
+INFO 2025-04-08 17:55:33,318 fit: [-2.07392441e-10  8.20825622e+02]
+INFO 2025-04-08 17:55:33,321 estimated endpoint: 820.8256215257487 uL
+INFO 2025-04-08 17:55:33,326 target is: 50, uL is 720.0cumvol is: 720.0
+INFO 2025-04-08 17:55:33,326 dispense from data 50 uL
+INFO 2025-04-08 17:55:34,331 fit: [-2.15605796e-10  8.26560919e+02]
+INFO 2025-04-08 17:55:34,334 estimated endpoint: 826.5609187121511 uL
+INFO 2025-04-08 17:55:34,339 target is: 20, uL is 770.0cumvol is: 770.0
+INFO 2025-04-08 17:55:34,339 dispense from data 20 uL
+INFO 2025-04-08 17:55:35,345 fit: [-2.20085815e-10  8.29131236e+02]
+INFO 2025-04-08 17:55:35,352 estimated endpoint: 829.1312364020633 uL
+INFO 2025-04-08 17:55:35,352 target is: 10, uL is 790.0cumvol is: 790.0
+INFO 2025-04-08 17:55:35,353 dispense from data 10 uL
+INFO 2025-04-08 17:55:36,354 fit: [-2.27465669e-10  8.31143035e+02]
+INFO 2025-04-08 17:55:36,356 estimated endpoint: 831.1430351210302 uL
+INFO 2025-04-08 17:55:36,362 target is: 10, uL is 800.0cumvol is: 800.0
+INFO 2025-04-08 17:55:36,362 dispense from data 10 uL
+INFO 2025-04-08 17:55:37,367 fit: [-2.35930650e-10  8.32742482e+02]
+INFO 2025-04-08 17:55:37,374 estimated endpoint: 832.7424822132334 uL
+INFO 2025-04-08 17:55:37,374 target is: 10, uL is 810.0cumvol is: 810.0
+INFO 2025-04-08 17:55:37,374 dispense from data 10 uL
+INFO 2025-04-08 17:55:38,379 fit: [-2.29686163e-10  8.31932847e+02]
+INFO 2025-04-08 17:55:38,387 estimated endpoint: 831.9328473248238 uL
+INFO 2025-04-08 17:55:38,387 target is: 5, uL is 820.0cumvol is: 820.0
+INFO 2025-04-08 17:55:38,387 dispense from data 5 uL
+INFO 2025-04-08 17:55:39,393 fit: [-2.28084800e-10  8.31583436e+02]
+INFO 2025-04-08 17:55:39,393 estimated endpoint: 831.5834364607759 uL
+INFO 2025-04-08 17:55:39,393 target is: 3, uL is 825.0cumvol is: 825.0
+INFO 2025-04-08 17:55:39,393 dispense from data 3 uL
+INFO 2025-04-08 17:55:40,402 fit: [-2.16161794e-10  8.30987052e+02]
+INFO 2025-04-08 17:55:40,404 estimated endpoint: 830.9870523542928 uL
+INFO 2025-04-08 17:55:40,404 target is: 1, uL is 828.0cumvol is: 828.0
+INFO 2025-04-08 17:55:40,404 dispense from data 1 uL
+INFO 2025-04-08 17:55:41,414 fit: [-2.04960114e-10  8.30638318e+02]
+INFO 2025-04-08 17:55:41,417 estimated endpoint: 830.6383181831926 uL
+INFO 2025-04-08 17:55:41,417 target is: 1, uL is 829.0cumvol is: 829.0
+INFO 2025-04-08 17:55:41,417 dispense from data 1 uL
+INFO 2025-04-08 17:55:42,427 fit: [-2.11501855e-10  8.30775658e+02]
+INFO 2025-04-08 17:55:42,427 estimated endpoint: 830.7756578411987 uL
+INFO 2025-04-08 17:55:42,427 target is: 1, uL is 830.0cumvol is: 830.0
+INFO 2025-04-08 17:55:42,427 dispense from data 1 uL
+INFO 2025-04-08 17:55:43,438 fit: [-2.51127888e-10  8.31228978e+02]
+INFO 2025-04-08 17:55:43,440 estimated endpoint: 831.2289777414838 uL
+INFO 2025-04-08 17:55:43,445 target is: 0.5, uL is 831.0cumvol is: 831.0
+INFO 2025-04-08 17:55:43,445 dispense from data 0.5 uL
+INFO 2025-04-08 17:55:44,451 fit: [-4.15733486e-10  8.31998486e+02]
+INFO 2025-04-08 17:55:44,451 estimated endpoint: 831.9984861785223 uL
+INFO 2025-04-08 17:55:44,458 target is: 0.5, uL is 831.5cumvol is: 831.5
+INFO 2025-04-08 17:55:44,458 dispense from data 0.5 uL
+INFO 2025-04-08 17:55:45,461 fit: [-6.64174225e-10  8.32681274e+02]
+INFO 2025-04-08 17:55:45,462 estimated endpoint: 832.6812743188643 uL
+INFO 2025-04-08 17:55:45,464 target is: 0.5, uL is 832.0cumvol is: 832.0
+INFO 2025-04-08 17:55:45,469 dispense from data 0.5 uL
+INFO 2025-04-08 17:55:46,474 fit: [-1.09722872e-09  8.33442040e+02]
+INFO 2025-04-08 17:55:46,476 estimated endpoint: 833.442040081864 uL
+INFO 2025-04-08 17:55:46,481 target is: 0.5, uL is 832.5cumvol is: 832.5
+INFO 2025-04-08 17:55:46,481 dispense from data 0.5 uL
+INFO 2025-04-08 17:55:47,487 fit: [-1.47767193e-09  8.33942040e+02]
+INFO 2025-04-08 17:55:47,494 estimated endpoint: 833.9420400817934 uL
+INFO 2025-04-08 17:55:47,494 target is: 0.5, uL is 833.0cumvol is: 833.0
+INFO 2025-04-08 17:55:47,494 dispense from data 0.5 uL
+INFO 2025-04-08 17:55:48,497 fit: [-1.9900266e-09  8.3444204e+02]
+INFO 2025-04-08 17:55:48,505 estimated endpoint: 834.4420400817227 uL
+INFO 2025-04-08 17:55:48,505 target is: 1, uL is 833.5cumvol is: 833.5
+INFO 2025-04-08 17:55:48,505 dispense from data 1 uL
+INFO 2025-04-08 17:55:49,510 fit: [-3.05113257e-09  8.35226224e+02]
+INFO 2025-04-08 17:55:49,518 estimated endpoint: 835.2262244867878 uL
+INFO 2025-04-08 17:55:49,518 target is: 1, uL is 834.5cumvol is: 834.5
+INFO 2025-04-08 17:55:49,518 dispense from data 1 uL
+INFO 2025-04-08 17:55:50,524 fit: [-4.54876054e-09  8.36000602e+02]
+INFO 2025-04-08 17:55:50,524 estimated endpoint: 836.0006017291032 uL
+INFO 2025-04-08 17:55:50,524 target is: 1, uL is 835.5cumvol is: 835.5
+INFO 2025-04-08 17:55:50,524 dispense from data 1 uL
+INFO 2025-04-08 17:55:51,537 fit: [-6.63719188e-09  8.36728978e+02]
+INFO 2025-04-08 17:55:51,537 estimated endpoint: 836.728977740718 uL
+INFO 2025-04-08 17:55:51,544 target is: 1, uL is 836.5cumvol is: 836.5
+INFO 2025-04-08 17:55:51,544 dispense from data 1 uL
+INFO 2025-04-08 17:55:52,549 fit: [-1.22012036e-08  8.37773107e+02]
+INFO 2025-04-08 17:55:52,550 estimated endpoint: 837.7731074997834 uL
+INFO 2025-04-08 17:55:52,550 target is: 5, uL is 837.5cumvol is: 837.5
+INFO 2025-04-08 17:55:52,557 dispense from data 5 uL
+INFO 2025-04-08 17:55:53,562 fit: [-4.56976699e-08  8.41792635e+02]
+INFO 2025-04-08 17:55:53,562 estimated endpoint: 841.7926345708996 uL
+INFO 2025-04-08 17:55:53,562 target is: 5, uL is 842.5cumvol is: 842.5
+INFO 2025-04-08 17:55:53,562 dispense from data 5 uL
+INFO 2025-04-08 17:55:54,573 fit: [-1.66040926e-07  8.49337587e+02]
+INFO 2025-04-08 17:55:54,581 estimated endpoint: 849.3375872125516 uL
+INFO 2025-04-08 17:55:54,581 target is: 5, uL is 847.5cumvol is: 847.5
+INFO 2025-04-08 17:55:54,581 dispense from data 5 uL
+INFO 2025-04-08 17:55:55,586 fit: [-4.18127848e-07  8.59216880e+02]
+INFO 2025-04-08 17:55:55,593 estimated endpoint: 859.216879613714 uL
+INFO 2025-04-08 17:55:55,593 target is: 10, uL is 852.5cumvol is: 852.5
+INFO 2025-04-08 17:55:55,593 dispense from data 10 uL
+INFO 2025-04-08 17:55:56,598 fit: [-1.09857229e-06  8.78686278e+02]
+INFO 2025-04-08 17:55:56,601 estimated endpoint: 878.6862780772979 uL
+INFO 2025-04-08 17:55:56,601 target is: False, uL is 862.5cumvol is: 862.5
+WARNING 2025-04-08 17:55:56,601 endpoint reached: 831.5834364607759 uL
