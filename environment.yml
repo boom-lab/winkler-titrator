@@ -1,16 +1,17 @@
-name: winkler-fbs
+name: winkler
 channels:
 - qttesting
 - conda-forge
 - defaults
 dependencies:
-- python=3.6
-- gsw=3.4.0
+- python=3.12
+- gsw
 - matplotlib
 - pyserial
-- xlrd=1.2.0
+- xlrd
+- numpy
+- openpyxl
 - pip 
 - pip:
-  - pyqt5
-  - fbs
-  - PyInstaller==3.4
+  - pyqt6
+  - pyinstaller>=6.3.0
