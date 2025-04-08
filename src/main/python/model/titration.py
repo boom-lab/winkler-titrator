@@ -12,7 +12,7 @@ from time import strftime,gmtime,sleep
 import json
 import logging
 
-from PyQt6.QtWidgets import QInputDialog, QLineEdit
+from PyQt5.QtWidgets import QInputDialog, QLineEdit
 
 class titration():
     """
@@ -100,9 +100,9 @@ class titration():
             4. cleanup and save result
         """
         if not self.pump.DEBUG:
-            if not self.pump.connection_status:
+            if not self.pump.is_open:
                 logging.INFO('pump not connected')
-            elif not self.meter.connection_status:
+            elif not self.meter.is_open:
                 logging.warning('meter not connected')
             elif self.is_complete:
                 logging.warning('sample already titrated')

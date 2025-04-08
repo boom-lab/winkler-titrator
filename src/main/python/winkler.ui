@@ -167,6 +167,9 @@ border-color: rgb(0, 116, 0);</string>
               <property name="value" stdset="0">
                <double>0.000000000000000</double>
               </property>
+              <property name="intValue" stdset="0">
+               <number>0</number>
+              </property>
              </widget>
             </item>
             <item>
@@ -208,6 +211,9 @@ border-color: rgb(0, 116, 0);</string>
         </property>
         <property name="currentIndex">
          <number>1</number>
+        </property>
+        <property name="usesScrollButtons">
+         <bool>true</bool>
         </property>
         <property name="documentMode">
          <bool>false</bool>
@@ -342,16 +348,6 @@ border-color: rgb(0, 116, 0);</string>
                </item>
                <item>
                 <widget class="QComboBox" name="comboBox_standard"/>
-               </item>
-               <item>
-                <widget class="QCheckBox" name="checkBox_debug">
-                 <property name="text">
-                  <string>Debug Mode (No Hardware Required)</string>
-                 </property>
-                 <property name="toolTip">
-                  <string>Enable debug mode to run without physical devices</string>
-                 </property>
-                </widget>
                </item>
               </layout>
              </item>
@@ -1371,44 +1367,35 @@ Thiosulfate</string>
      <x>0</x>
      <y>0</y>
      <width>1419</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionSave"/>
-    <addaction name="actionLoad"/>
-    <addaction name="separator"/>
-    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuLoad">
+    <property name="title">
+     <string>Load</string>
+    </property>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuLoad"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionSave">
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
-  <action name="actionLoad">
-   <property name="text">
-    <string>Load</string>
-   </property>
-  </action>
-  <action name="actionQuit">
-   <property name="text">
-    <string>Quit</string>
-   </property>
-  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>MplWidget</class>
    <extends>QWidget</extends>
    <header>mplwidget</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
  <connections/>
+ <slots>
+  <slot>flask_clicked()</slot>
+ </slots>
 </ui>

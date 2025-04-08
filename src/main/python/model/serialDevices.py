@@ -21,22 +21,17 @@ class meter(serial.Serial):
     Serial device object for Thermo Orion Meter
     Be sure meter probe and serial cables are connected
     """
-    def __init__(self, port, mVpos=5, Tpos=7, type='thermo', debug=False):
+    def __init__(self,port,mVpos=5,Tpos=7,type='thermo'):
         self.mVpos = mVpos
         self.Tpos = Tpos
         self.type = type
-        self.DEBUG = debug  # Store debug flag
-        self._debug_potential = 0.0
-        self._debug_temperature = 25.0
-        
-        if not debug:
-            super().__init__(port, timeout=10)
-            if type=='atlas':
-                self.write(b'*OK,0\r')
-                self.write(b'C,0\r')
-                time.sleep(0.2)
-                b = self.read(self.in_waiting)
-                print(b.decode())
+        super().__init__(port,timeout=10)
+        if type=='atlas':
+            self.write(b'*OK,0\r')
+            self.write(b'C,0\r')
+            time.sleep(0.2)
+            b = self.read(self.in_waiting)
+            print(b.decode())
 
     #def readline(self,eol=b'\n\r'): #need to change to \n\r for AXXX meters?
     def readline(self,eol='\r'):
@@ -114,138 +109,74 @@ class mforce_pump(serial.Serial):
     MUNIT=2432
     TERMINATOR = '\r\n'
 
-    def __init__(self, port, debug=False):
-        self.DEBUG = debug
-        self._debug_position = 0.0
-        self._debug_volume = 0.0
-        self._connection_status = False
-        
-        if not debug:
-            super().__init__(port, timeout=10)
-            self.reset_input_buffer()
-            self.write(b'print pos' + self.TERMINATOR.encode('utf-8'))
-            time.sleep(0.2)
-            if self.in_waiting:
-                bline = self.readline()
-                try:
-                    self._debug_position = float(bline)
-                    self._connection_status = True
-                except:
-                    logging.error(f"Failed to parse initial position: {bline}")
-                    self._connection_status = False
-
-    @property
-    def is_open(self):
-        """Check if the serial port is open"""
-        if self.DEBUG:
-            return True
-        return super().is_open
-
-    @property
-    def connection_status(self):
-        """Check if the pump is connected and responding"""
-        if self.DEBUG:
-            return True
-        if not self.is_open:
-            return False
-        try:
-            # Try to get position to verify connection
-            self.reset_input_buffer()
-            msg = f"{self.addr}PR P{self.TERMINATOR}"
-            self.write(msg.encode('utf-8'))
-            time.sleep(0.2)
-            if self.in_waiting:
-                bline = self.readline()
-                bline = self.readline()
-                float(bline)  # Try to parse response
-                return True
-            return False
-        except:
-            return False
-
-    def getVar(self, var, eol=TERMINATOR):
-        if self.DEBUG:
-            if var.lower() == 'pos':
-                return self._debug_position
-            return 0.0
-            
+    def getVar(self,var,eol=TERMINATOR):
         self.reset_input_buffer()
-        msg = f"{self.addr}PR {var.lower()}{eol}"
-        self.write(msg.encode('utf-8'))
+        #bmsg = ('PR ' + var.lower() + eol).encode('utf-8')
+        bmsg = (self.addr + 'PR ' + var.lower() + eol).encode('utf-8')
+        print(var.lower)
+        print(var.lower())
+        self.write(bmsg)
         time.sleep(.5)
         if self.in_waiting:
             bline = self.readline()
+            # if command is echoed, read next line
+            print(bline)
+            print(bmsg)
+            #time.sleep(.1)
+            #if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
             bline = self.readline()
             print(bline)
             val = float(bline)
             return val
         else:
-            logging.error("No response from pump")
-            return None
+            print('no response -- check connnection')
 
-    def setPos(self, val, eol=TERMINATOR):
-        if self.DEBUG:
-            self._debug_position = val
-            return
-            
-        msg = f"{self.addr}P {val}{eol}"
-        self.write(msg.encode('utf-8'))
+    def setVar(self,var,val,eol=TERMINATOR):
+            valstr = str(val)
+            self.write((self.addr + var + ' ' + valstr + eol).encode('utf-8'))
 
-    def getPos(self, eol=TERMINATOR):
-        if self.DEBUG:
-            return self._debug_position
-            
+    def setPos(self,val,eol=TERMINATOR):
+        valstr = str(val)
+        self.write((self.addr + 'P ' + valstr + eol).encode('utf-8'))
+
+    def getPos(self,eol=TERMINATOR):
         self.reset_input_buffer()
-        msg = f"{self.addr}PR P{eol}"
-        self.write(msg.encode('utf-8'))
+        bmsg = (self.addr + 'PR P' + eol).encode('utf-8')
+        self.write(bmsg)
         time.sleep(0.2)
         if self.in_waiting:
             bline = self.readline()
             bline = self.readline()
             # if command is echoed, read next line
-            if bline[len(eol)-len(msg.encode('utf-8')):] == msg.encode('utf-8')[:-len(eol)]:
+            if bline[len(eol)-len(bmsg):] == bmsg[:-len(eol)]:
                 bline = self.readline()
             pos = float(bline)/self.MUNIT
             return pos
         else:
-            logging.error("No response from pump")
-            return None
+            print('no response -- check connnection')
 
-    def fill(self, eol=TERMINATOR):
-        if self.DEBUG:
-            self._debug_position = 0.0
-            self._debug_volume = 0.0
-            return
-            
-        logging.warning('milligat pump - no fill')
+    def fill(self,eol=TERMINATOR):
+        print('milligat pump - no fill')
 
-    def dispense(self, uL, eol=TERMINATOR):
-        if self.DEBUG:
-            # Simulate dispensing
-            volume = float(uL)
-            self._debug_position += volume
-            self._debug_volume += volume
-            time.sleep(0.1)  # Simulate some delay
-            return
-            
+    def dispense(self,uL,eol=TERMINATOR):
         # dispense - relative pump movement
+        # 1 ul = 23104 steps
         steps = int(float(uL))*self.MUNIT
-        msg = f"{self.addr}MR {steps}{eol}"
-        self.write(msg.encode('utf-8'))
+        print (self.addr + 'MR ' + str(steps))
+        self.write((self.addr + 'MR ' + str(steps) + eol).encode('utf-8'))
 
-    def mova(self, uL, eol=TERMINATOR):
+
+    def mova(self,uL,eol=TERMINATOR):
         # dispense - move pump to absolute position
         steps = int(float(uL))*self.MUNIT
-        msg = f"{self.addr}MA {steps}{eol}"
-        print(msg)
-        self.write(msg.encode('utf-8'))
+        print (self.addr + 'MA ' + str(steps))
+        self.write((self.addr + 'MA ' + str(steps) + eol).encode('utf-8'))
 
-    def setVM(self, uL, eol=TERMINATOR):
+    def setVM(self,uL,eol=TERMINATOR):
         # dispense - set rate
         steps = int(float(uL))*self.MUNIT
-        msg = f"{self.addr}VM {steps}{eol}"
-        print(msg)
-        self.write(msg.encode('utf-8'))
+        print('VM ' + str(steps))
+        self.write((self.addr + 'VM ' + str(steps) + eol).encode('utf-8'))
 
     def wait_for_dispense(self,uL,eol=TERMINATOR):
         #uLynx
@@ -338,83 +269,158 @@ class kloehn_pump(serial.Serial):
     Be sure pump is powered and serial cable connected
     """
     TERMINATOR = '\r\n'
-    
-    def __init__(self, port, steps=48000, syringe_vol=1000, VM='500', InAddr='1', OutAddr='2', PumpAddr='/1', debug=False):
-        self.DEBUG = debug
-        self._debug_position = 0.0
-        self._debug_volume = 0.0
+    def __init__(self,port,steps=48000,syringe_vol=1000,VM='500',InAddr='1',OutAddr='2',PumpAddr='/1'):
+
+        eol = '\r\n'
         self.SF = float(steps)/float(syringe_vol)
         self.VM = VM
         self.syringe_vol = syringe_vol
         self.steps = steps
         self.pump_addr = PumpAddr
-        self.InPos = (PumpAddr + 'o' + InAddr + 'R' + self.TERMINATOR).encode('utf-8')
-        self.OutPos = (PumpAddr + 'o' + OutAddr + 'R' + self.TERMINATOR).encode('utf-8')
-        
-        if not debug:
-            super().__init__(port, timeout=10)
-            # Initialize pump
-            self.write(('/1~Y' + OutAddr + 'R' + self.TERMINATOR).encode('utf-8'))
-            time.sleep(0.1)
-            self.write(('/1Y4R'+ self.TERMINATOR).encode('utf-8'))
-            time.sleep(self.wait_for_dispense(float(self.steps)/float(self.VM)+0.2))
-            # Set max velocity
-            bmsg = (PumpAddr + 'V'+str(VM)+'R'+ self.TERMINATOR).encode('utf-8')
-            self.write(bmsg)
+        self.InPos = (PumpAddr + 'o' + InAddr + 'R' + eol).encode('utf-8');
+        self.OutPos = (PumpAddr + 'o' + OutAddr + 'R' + eol).encode('utf-8');
+        print('Inlet Valve position command is' + str(self.InPos))
+        super().__init__(port,timeout=10)
 
-    def getPos(self, eol=TERMINATOR):
-        if self.DEBUG:
-            return self._debug_position
-            
+        #intitialize command required on power-up
+        self.write(('/1~Y' + OutAddr + 'R' + eol).encode('utf-8'))
+        time.sleep(0.1)
+        self.write(('/1Y4R'+ eol).encode('utf-8'))
+        time.sleep(self.wait_for_dispense(float(self.steps)/float(self.VM)+0.2))
+        #set max velocity (steps/sec)
+        bmsg = (PumpAddr + 'V'+str(VM)+'R'+ eol).encode('utf-8')
+        self.write(bmsg)
+        #logging.INFO('wrote ' +  str(bmsg))
+        print('connecting kloehn pump'+ ' VM msg is ' + str(bmsg))
+        #logging.INFO('connecting kloehn pump')
+        #bmsg = ('/1' + 'V' + self.VM + 'R' + eol).encode('utf-8')
+
+
+
+    # redefine readline to work for \r line termination
+#    def isBusy(self,var,eol=TERMINATOR):
+#        self.reset_input_buffer()
+#        bmsg = (self.pump_addr + eol).encode('utf-8')
+#        self.write(bmsg)
+#        time.sleep(0.1)
+#        bline = self.readline()
+#        if str(bline).ends_with = '@':
+#            return True
+#        elseif str(bline).st
+#            return False
+
+    def setPos(self,pos=0,eol=TERMINATOR):
+        #self.write(self.InPos)
+        time.sleep(1)
+        ### FIX THIS
+        #self.mova(self.syringe_vol)
+
+    def getPos(self,eol=TERMINATOR):
+        """
+        returns syringe volume already dispensed (uL)
+        (0 when full, syring_vol when empty)
+        """
         self.read(self.in_waiting)
         self.write((self.pump_addr + '?' + eol).encode('utf-8'))
         time.sleep(0.1)
-        b = self.read(self.in_waiting)
+        b =self.read(self.in_waiting)
         l = str(b).split("`")
         l2 = l[1].split("\\")
         posstr = str(l2[0])
         pos = int(posstr)
         return (float(self.steps)-pos)/self.SF
 
-    def dispense(self, uL, eol=TERMINATOR):
-        if self.DEBUG:
-            # Simulate dispensing
-            volume = float(uL)
-            self._debug_position += volume
-            self._debug_volume += volume
-            time.sleep(0.1)  # Simulate some delay
-            return
-            
+    # funtion to pass any command to pump (not tested)
+    def sendCommand(self,msg,eol=TERMINATOR):
+        self.read(self.in_waiting)
+        bmsg = (msg.lower() + eol).encode('utf-8')
+        self.write(bmsg)
+        bline = self.read(self.in_waiting)
+        print(bline)
+        return str(bline)
+
+
+    def getValvePos(self,eol=TERMINATOR):
+        self.read(self.in_waiting)
+        self.write((self.pump_addr + '?8' + eol).encode('utf-8'))
+        time.sleep(0.1)
+        b =self.read(self.in_waiting)
+        l = str(b).split("`")
+        l2 = l[1].split("\\")
+        posstr = str(l2[0])
+        print('valve position:' + posstr)
+        return(posstr)
+
+
+    # move absolute amount
+    def mova(self,uL,eol=TERMINATOR):
+        # dispense - move pump to absolute position
+        val = float(uL)
+        step = round(val*self.SF)
+        stepstr = str(step)
+        print(stepstr)
+        self.write(('/1A' + stepstr + 'R' + eol).encode('utf-8'))
+
+    def dispense(self,uL,eol=TERMINATOR):
         stepstr = str(int(float(uL)*self.SF+0.5))
-        self.write(self.OutPos)
+        print('step: '+ stepstr)
+        self.write(self.OutPos);
         time.sleep(0.5)
-        self.write(self.OutPos)
+        self.write(self.OutPos);
         time.sleep(1)
         self.write((self.pump_addr +'D' + stepstr + 'R' + eol).encode('utf-8'))
         time.sleep(self.wait_for_dispense(uL))
 
-    def fill(self, eol=TERMINATOR):
-        if self.DEBUG:
-            self._debug_position = 0.0
-            self._debug_volume = 0.0
-            return
-            
-        self.write(self.InPos)
+    def load(self,uL,eol=TERMINATOR):
+        stepstr = str(int(float(uL)*self.SF+0.5))
+        print('step: '+ stepstr)
+        self.write(self.InPos);
+        time.sleep(0.5)
+        self.write(self.InPos);
+        time.sleep(0.5)
+        self.write((self.pump_addr +'P' + stepstr + 'R' + eol).encode('utf-8'))
+        time.sleep(self.wait_for_dispense(uL))
+
+    def fill(self,eol=TERMINATOR):
+        """
+        valve to inlet position and fill syringe completely
+        """
+        print('filling' + str(self.steps))
+        self.write(self.InPos);
         time.sleep(1.0)
         try:
             cvol = self.getPos()
         except:
+            # assume empty if position read fails
             cvol = self.syringe_vol
         self.write((self.pump_addr + 'A' + str(self.steps) + 'R' + eol).encode('utf-8'))
+        print('max velocity is: ' + self.VM)
         time.sleep(float(cvol)*float(self.SF)/float(self.VM))
 
-    def wait_for_dispense(self, uL):
+    def empty(self,eol=TERMINATOR):
+        """
+        valve to outlet position and empty syringe completely
+        """
+        self.read(self.in_waiting)
+        self.write(self.OutPos);
+        time.sleep(0.5)
+        self.read(self.in_waiting)
+        try:
+            cvol = self.getPos()
+        except:
+            # assume full if position read fails
+            cvol = 0
+        self.read(self.in_waiting)
+        #self.write((self.pump_addr + 'A0R' + eol).encode('utf-8'))
+        time.sleep(0.1)
+        # move to full empty position
+        self.write((self.pump_addr + 'A0R' + eol).encode('utf-8'))
+        time.sleep((float(self.steps)-float(cvol)*float(self.SF))/float(self.VM))
+
+    def wait_for_dispense(self,uL):
         """
         calculates how long it will take for syringe to dispense a given volume
         """
-        if self.DEBUG:
-            return 0.1  # Simulate a short delay
-            
         # maximum rate in uL sec-1
         uL = float(uL)
         max_rate = float(self.VM)/self.SF
