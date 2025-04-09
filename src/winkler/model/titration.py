@@ -18,7 +18,7 @@ class titration():
     """
     Class representing a Winkler titration of a single sample (or std)
     """
-    root_dir = os.path.join(os.path.expanduser('~'),'winkler-titrator')
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 
     def __init__(self,meter,pump,botid,vbot,type,Mthios,thio_t,datadir=os.path.join(root_dir,'data'),mode='normal'):
 
@@ -168,7 +168,7 @@ class titration():
         self.gran_fac()
         self.end_time = strftime("%Y%m%d%H%M%S", gmtime())
         #self.O2 = self.concentration()
-        # self.toJSON()
+        self.toJSON()
         #self.pump.fill()
 
     # def show_titration_result(self):
@@ -337,11 +337,13 @@ class titration():
         mV_est = np.interp(vol,uLg,mVg)
         return(mV_est)
 
+# Constants
+R = 8.314462175    # Ideal gas constant
+F = 9.6485339924e4 # Faraday Constant Coulombs mol-1
+TK0 = 273.15
+
 def gran(uL,mV,T,vbot):
     # compute gran factor
-    R = 8.314462175    #Ideal gas constant
-    F = 9.6485339924e4 #Faraday Constant Coulumbs mol-1
-    TK0 = 273.15
     vbotL = 1e-3 * vbot  # vbot is already a float volume
     vL = 1e-6 * uL
     EV = 1e-3 * mV
@@ -353,9 +355,6 @@ def gran(uL,mV,T,vbot):
 #def gran2mV(uL,gF,T,vbot=125):
 def gran2mV(uL,gF,T,vbot):
     # invert gran factor to get equivalent mV reading
-    R = 8.314462175    #Ideal gas constant
-    F = 9.6485339924e4 #Faraday Constant Coulumbs mol-1
-    TK0 = 273.15
     vbotL = 1e-3 * vbot
     vL = 1e-6 * uL
     #EV = 1e-3 * mV

@@ -8,15 +8,16 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import QThread, pyqtSignal
 import serial.tools.list_ports
-import winkler
-from model import serialDevices as sd
-from model import iomod
-from model import titration as ti
 import numpy as np
 import configparser
 
+from ..model import serialDevices as sd
+from ..model import iomod
+from ..model import titration as ti
+from .ui_main import Ui_MainWindow
+
 # Setup configuration
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..','..'))
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 config = configparser.ConfigParser()
 config.read(os.path.join(root_dir, 'wink.ini'))
 Mthios = config['PUMP']['Mthios']
@@ -63,7 +64,7 @@ class ChartUpdater(QThread):
                 self.filesize = os.path.getsize(self.filename)
                 self.sig_chart.emit()
 
-class AppWindow(QMainWindow, winkler.Ui_MainWindow):
+class AppWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -154,15 +155,15 @@ class AppWindow(QMainWindow, winkler.Ui_MainWindow):
 
 
     def connect(self):
-        #print(self.comboBox_meter.currentText())
-        #print(self.comboBox_pump.currentText())
-        logging.info('connecting serial devices')
-        logging.info('pump set to ' + config['PUMP']['Controller'])
+        """Connect to meter and pump devices"""
+        logging.info('Connecting serial devices')
+        logging.info(f"Pump set to {config['PUMP']['Controller']}")
         logging.info(f"Meter set to {config['METER']['Series']}")
+
+        # Connect meter
         try:
-            print(config['METER']['Series'].lower())
-            if config['METER']['Series'].lower() == 'atlas':
-                print('connecting atlas')
+            meter_series = config['METER']['Series'].lower()
+            if meter_series == 'atlas':
                 self.meter = sd.meter(self.comboBox_meter.currentText())
             else:
                 self.meter = sd.meter(
@@ -320,7 +321,7 @@ class AppWindow(QMainWindow, winkler.Ui_MainWindow):
             # Determine titration mode
             mode = 'rapid' if self.checkBox_rapid.isChecked() else 'normal'
             
-            self.titr = ti.titration(
+            self.titr = ti(
                 self.meter,
                 self.pump,
                 botid,  # botid - keep as string

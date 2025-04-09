@@ -5,9 +5,12 @@ Winkler Titrator - Main entry point
 
 import sys
 from PyQt6.QtWidgets import QApplication
-from main import AppWindow
+from PyQt6 import uic
+
+from .ui.winkler import AppWindow
 
 def main():
+    """Launch the Winkler Titrator application."""
     app = QApplication(sys.argv)
     window = AppWindow()
     window.show()

@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'src/main/python/winkler.ui'
+# Form implementation generated from reading ui file 'src/winkler/ui/ui_main.ui'
 #
 # Created by: PyQt6 UI code generator 6.9.0
 #
@@ -7,6 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from .mplwidget import MplWidget
 
 
 class Ui_MainWindow(object):
@@ -669,4 +670,3 @@ class Ui_MainWindow(object):
         self.tabs.setTabText(self.tabs.indexOf(self.tab_PumpControl), _translate("MainWindow", "Pump Controls"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuLoad.setTitle(_translate("MainWindow", "Load"))
-from mplwidget import MplWidget

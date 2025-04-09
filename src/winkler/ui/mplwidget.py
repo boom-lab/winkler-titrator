@@ -1,13 +1,13 @@
 # Imports
 from PyQt6 import QtWidgets
 import matplotlib
-matplotlib.use('QtAgg')  # Set the backend before other matplotlib imports
+matplotlib.use('qtagg')
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as Canvas
 
 
 # Matplotlib canvas class to create figure
-class MplCanvas(Canvas):
+class MplCanvas(FigureCanvas):
     def __init__(self):
         self.fig = Figure()
         self.ax = self.fig.add_subplot(111)
@@ -21,8 +21,9 @@ class MplCanvas(Canvas):
 # Matplotlib widget
 class MplWidget(QtWidgets.QWidget):
     def __init__(self, parent=None):
-        super().__init__(parent)   # Use super() for cleaner initialization
-        self.canvas = MplCanvas()  # Create canvas object
-        self.vbl = QtWidgets.QVBoxLayout()  # Set box for plotting
-        self.vbl.addWidget(self.canvas)
-        self.setLayout(self.vbl)
+        QtWidgets.QWidget.__init__(self, parent)
+        self.canvas = FigureCanvas(Figure())
+        vertical_layout = QtWidgets.QVBoxLayout()
+        vertical_layout.addWidget(self.canvas)
+        self.canvas.ax = self.canvas.figure.add_subplot(111)
+        self.setLayout(vertical_layout)
